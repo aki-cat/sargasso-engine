@@ -19,8 +19,8 @@ MeshRaw MeshGenerator::generate_square() {
 Mat4 MeshGenerator::generate_sample_camera(const float width, const float height) {
     Mat4 projection =
         Mat4::perspective_projection(static_cast<float>(M_PI_4), width / height, 0.01f, 1000.0f);
-    Mat4 view = Mat4::look_at(Vec3(4.0f, 3.0f, 3.0f),   // Position
-                              Vec3(0.0f, 0.0f, 0.0f));  // Up vector
+    Mat4 view = Mat4::look_at(Vec3(4.0f, 3.0f, 3.0f),  // Position
+                              Vec3::zero());
 
     return projection * view;
 }

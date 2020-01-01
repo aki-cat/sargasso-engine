@@ -21,7 +21,10 @@ Graphics::Graphics() {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 
-    _window = glfwCreateWindow(960, 540, SargassoEngine::ENGINE_NAME, NULL, NULL);
+    _width = 960;
+    _height = 540;
+
+    _window = glfwCreateWindow(_width, _height, SargassoEngine::ENGINE_NAME, NULL, NULL);
     log("Window created!");
 
     // Initialize window
@@ -42,8 +45,15 @@ Graphics::Graphics() {
         logf_error("Failed to load shaders:\n\t%", exception);
     }
 
-    _camera.copy(MeshGenerator::generate_sample_camera(static_cast<float>(_width),
-                                                       static_cast<float>(_height)));
+    logf("window size = (%, %)", _width, _height);
+
+    const float fov = static_cast<float>(M_PI_4);
+    const float aspect = static_cast<float>(_width) / static_cast<float>(_height);
+
+    Mat4 projection = Mat4::perspective_projection(fov, aspect, 0.01f, 1000.0f);
+    Mat4 view = Mat4::look_at(Vec3(4.0f, 3.0f, 3.0f), Vec3::zero());
+    Mat4 result = projection * view;
+    _camera.copy(result);
 }
 
 Graphics::~Graphics() {

@@ -23,12 +23,6 @@ class Mat4 {
     Mat4();
     Mat4(Points16 points);
 
-    // data
-    float &a11, &a12, &a13, &a14;
-    float &a21, &a22, &a23, &a24;
-    float &a31, &a32, &a33, &a34;
-    float &a41, &a42, &a43, &a44;
-
     // transformation methods
     Mat4 translated(const Vec3& v) const;
     Mat4& translate(const Vec3& v);
@@ -91,24 +85,7 @@ Mat4& operator*=(Mat4& m, const float a);
 
 inline Mat4::Mat4() : Mat4({1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1}) {}
 
-inline Mat4::Mat4(Points16 points)
-    : a11{_points.p[0]},
-      a12{_points.p[1]},
-      a13{_points.p[2]},
-      a14{_points.p[3]},
-      a21{_points.p[4]},
-      a22{_points.p[5]},
-      a23{_points.p[6]},
-      a24{_points.p[7]},
-      a31{_points.p[8]},
-      a32{_points.p[9]},
-      a33{_points.p[10]},
-      a34{_points.p[11]},
-      a41{_points.p[12]},
-      a42{_points.p[13]},
-      a43{_points.p[14]},
-      a44{_points.p[15]},
-      _points{points} {}
+inline Mat4::Mat4(Points16 points) : _points{points} {}
 
 // Useful static members
 
@@ -138,12 +115,12 @@ inline Mat4 Mat4::perspective_projection(float fov, float aspect, float z_near, 
 
     Mat4 m = Mat4::zero();
 
-    m.a11 = rect_width;
-    m.a22 = rect_height;
-    m.a33 = p;
+    m[0] = rect_width;
+    m[5] = rect_height;
+    m[10] = p;
 
-    m.a32 = -1.0f;
-    m.a23 = q;
+    m[9] = -1.0f;
+    m[6] = q;
 
     return m;
 }
@@ -159,21 +136,21 @@ inline Mat4 Mat4::look_at(const Vec3& from, const Vec3& target, const Vec3& up) 
 
     Mat4 m = Mat4::identity();
 
-    m.a11 = xaxis.x;
-    m.a12 = xaxis.y;
-    m.a13 = xaxis.z;
+    m[0] = xaxis.x;
+    m[1] = xaxis.y;
+    m[2] = xaxis.z;
 
-    m.a21 = yaxis.x;
-    m.a22 = yaxis.y;
-    m.a23 = yaxis.z;
+    m[4] = yaxis.x;
+    m[5] = yaxis.y;
+    m[6] = yaxis.z;
 
-    m.a31 = -zaxis.x;
-    m.a32 = -zaxis.y;
-    m.a33 = -zaxis.z;
+    m[8] = -zaxis.x;
+    m[9] = -zaxis.y;
+    m[10] = -zaxis.z;
 
-    m.a14 = -xaxis.dot(from);
-    m.a24 = -yaxis.dot(from);
-    m.a34 = -zaxis.dot(from);
+    m[3] = -xaxis.dot(from);
+    m[7] = -yaxis.dot(from);
+    m[11] = -zaxis.dot(from);
 
     return m;
 }
@@ -257,22 +234,9 @@ inline Mat4& Mat4::round() {
 }
 
 inline Mat4& Mat4::copy(const Mat4& m) {
-    a11 = m.a11;
-    a12 = m.a12;
-    a13 = m.a13;
-    a14 = m.a14;
-    a21 = m.a21;
-    a22 = m.a22;
-    a23 = m.a23;
-    a24 = m.a24;
-    a31 = m.a31;
-    a32 = m.a32;
-    a33 = m.a33;
-    a34 = m.a34;
-    a41 = m.a41;
-    a42 = m.a42;
-    a43 = m.a43;
-    a44 = m.a44;
+    for (uint32_t i = 0; i < Points16::len; i++) {
+        _points[i] = m[i];
+    }
     return (*this);
 }
 
