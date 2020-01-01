@@ -57,11 +57,11 @@ class Quat {
     float norm_squared() const;
 
     // convenient
-    static const Quat& identity;
-    static const Quat& zero;
-    static const Quat& i;
-    static const Quat& j;
-    static const Quat& k;
+    static Quat identity();
+    static Quat zero();
+    static Quat i();
+    static Quat j();
+    static Quat k();
 
     // conversions
     operator std::string();
@@ -100,7 +100,7 @@ Quat& operator-=(Quat& a, const Quat& b);
 
 */
 
-Quat::Quat(float _w, float _x, float _y, float _z)
+inline Quat::Quat(float _w, float _x, float _y, float _z)
     : w{_points.p[0]}, x{_points.p[1]}, y{_points.p[2]}, z{_points.p[3]}, _points{} {
     _points.p[0] = _w;
     _points.p[1] = _x;
@@ -108,15 +108,34 @@ Quat::Quat(float _w, float _x, float _y, float _z)
     _points.p[3] = _z;
 }
 
-Quat::Quat() : Quat(1.0f, 0.0f, 0.0f, 0.0f) {}
+inline Quat::Quat() : Quat(1.0f, 0.0f, 0.0f, 0.0f) {}
 
 // Static members
 
-const Quat& Quat::identity = Quat(1.0f, 0.0f, 0.0f, 0.0f);
-const Quat& Quat::zero = Quat(0.0f, 0.0f, 0.0f, 0.0f);
-const Quat& Quat::i = Quat(0.0f, 1.0f, 0.0f, 0.0f);
-const Quat& Quat::j = Quat(0.0f, 0.0f, 1.0f, 0.0f);
-const Quat& Quat::k = Quat(0.0f, 0.0f, 0.0f, 1.0f);
+inline Quat Quat::identity() {
+    static const Quat q = Quat(1.0f, 0.0f, 0.0f, 0.0f);
+    return q;
+}
+
+inline Quat Quat::zero() {
+    static const Quat q = Quat(0.0f, 0.0f, 0.0f, 0.0f);
+    return q;
+}
+
+inline Quat Quat::i() {
+    static const Quat q = Quat(0.0f, 1.0f, 0.0f, 0.0f);
+    return q;
+}
+
+inline Quat Quat::j() {
+    static const Quat q = Quat(0.0f, 0.0f, 1.0f, 0.0f);
+    return q;
+}
+
+inline Quat Quat::k() {
+    static const Quat q = Quat(0.0f, 0.0f, 0.0f, 1.0f);
+    return q;
+}
 
 // Methods
 
@@ -155,31 +174,35 @@ inline Quat& Quat::conjugate() {
 
 inline Quat Quat::conjugated() const { return Quat(w, -x, -y, -z); }
 
-inline float Quat::norm() const { return sqrt(w * w + x * x + y * y + z * z); }
+inline float Quat::norm() const { return static_cast<float>(sqrt(w * w + x * x + y * y + z * z)); }
 
 inline float Quat::norm_squared() const { return w * w + x * x + y * y + z * z; }
 
 // Conversion operators
 
-Quat::operator std::string() { return to_string(); }
+inline Quat::operator std::string() { return to_string(); }
 
 // Imutable operators
 
-bool operator==(const Quat& a, const Quat& b) {
+inline bool operator==(const Quat& a, const Quat& b) {
     return fabs(a.w - b.w) <= FLT_EPSILON && fabs(a.x - b.x) <= FLT_EPSILON &&
            fabs(a.y - b.y) <= FLT_EPSILON && fabs(a.z - b.z) <= FLT_EPSILON;
 }
 
-bool operator!=(const Quat& a, const Quat& b) {
+inline bool operator!=(const Quat& a, const Quat& b) {
     return fabs(a.w - b.w) > FLT_EPSILON || fabs(a.x - b.x) > FLT_EPSILON ||
            fabs(a.y - b.y) > FLT_EPSILON || fabs(a.z - b.z) > FLT_EPSILON;
 }
 
-Quat operator*(const float a, const Quat& q) { return Quat(a * q.w, a * q.x, a * q.y, a * q.z); }
+inline Quat operator*(const float a, const Quat& q) {
+    return Quat(a * q.w, a * q.x, a * q.y, a * q.z);
+}
 
-Quat operator*(const Quat& q, const float a) { return Quat(a * q.w, a * q.x, a * q.y, a * q.z); }
+inline Quat operator*(const Quat& q, const float a) {
+    return Quat(a * q.w, a * q.x, a * q.y, a * q.z);
+}
 
-Quat operator/(const Quat& q, const float a) {
+inline Quat operator/(const Quat& q, const float a) {
     const float factor = 1 / a;
     return Quat(factor * q.w, factor * q.x, factor * q.y, factor * q.z);
 }
@@ -192,26 +215,26 @@ a | w -x -y -z |   b | w |
   | z  y  x  w |     | z |
 
 */
-Quat operator*(const Quat& a, const Quat& b) {
+inline Quat operator*(const Quat& a, const Quat& b) {
     return Quat(a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z,
                 a.x * b.w + a.w * b.x - a.z * b.y - a.y * b.z,
                 a.y * b.w + a.z * b.x + a.w * b.y - a.x * b.z,
                 a.z * b.w + a.y * b.x + a.x * b.y + a.w * b.z);
 }
 
-Quat operator+(const Quat& a, const Quat& b) {
+inline Quat operator+(const Quat& a, const Quat& b) {
     return Quat(a.w + b.w, a.x + b.x, a.y + b.y, a.z + b.z);
 }
 
-Quat operator-(const Quat& a, const Quat& b) {
+inline Quat operator-(const Quat& a, const Quat& b) {
     return Quat(a.w - b.w, a.x - b.x, a.y - b.y, a.z - b.z);
 }
 
-Quat operator-(const Quat& q) { return Quat(-q.w, -q.x, -q.y, -q.z); }
+inline Quat operator-(const Quat& q) { return Quat(-q.w, -q.x, -q.y, -q.z); }
 
 // Mutable operators
 
-Quat& operator*=(Quat& q, const float a) {
+inline Quat& operator*=(Quat& q, const float a) {
     q.w *= a;
     q.x *= a;
     q.y *= a;
@@ -219,7 +242,7 @@ Quat& operator*=(Quat& q, const float a) {
     return q;
 }
 
-Quat& operator/=(Quat& q, const float a) {
+inline Quat& operator/=(Quat& q, const float a) {
     q.w /= a;
     q.x /= a;
     q.y /= a;
@@ -227,7 +250,7 @@ Quat& operator/=(Quat& q, const float a) {
     return q;
 }
 
-Quat& operator+=(Quat& a, const Quat& b) {
+inline Quat& operator+=(Quat& a, const Quat& b) {
     a.w += b.w;
     a.x += b.x;
     a.y += b.y;
@@ -235,7 +258,7 @@ Quat& operator+=(Quat& a, const Quat& b) {
     return a;
 }
 
-Quat& operator-=(Quat& a, const Quat& b) {
+inline Quat& operator-=(Quat& a, const Quat& b) {
     a.w -= b.w;
     a.x -= b.x;
     a.y -= b.y;

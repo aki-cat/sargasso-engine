@@ -1,5 +1,4 @@
 import build_glfw as GLFWBuilder
-import build_glm as GLMBuilder
 from pathlib import Path
 
 import os
@@ -36,16 +35,12 @@ CXXFLAGS = [
 LIB_GLEW_BUILD_FLAG_CMD = "pkg-config glew --libs --static --cflags"
 GLFWBuilder.build()
 
-# GLM Library
-GLMBuilder.build()
-
 # Environment setup
 env = Environment(
-    # CC="gcc-9",
-    # CXX="g++-9",
+    CC="gcc-9",
+    CXX="g++-9",
     CCFLAGS=CXXFLAGS,
-    CPPPATH=[str(SOURCE_DIRECTORY)],
-    parse_flags=["-isystem" + GLMBuilder.LIB_GLM_INCLUDE_PATH])
+    CPPPATH=[str(SOURCE_DIRECTORY)])
 
 env.ParseConfig(GLFWBuilder.LIB_GLFW_BUILD_FLAG_CMD)
 env.ParseConfig(LIB_GLEW_BUILD_FLAG_CMD)

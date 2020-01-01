@@ -23,7 +23,11 @@ void Tests::translate_zeroVector_equalMesh() {
     const Vec3 vertices[3] = {{1.0f, 2.0f, 3.0f}, {4.0f, 5.0f, 6.0f}, {7.0f, 8.0f, 9.0f}};
     Mesh mesh = Mesh(vertices, 3);
 
-    const Mesh translated_mesh = mesh.translate(Vec3());
+    const Mesh translated_mesh = mesh.translate(Vec3::zero());
+
+    logf("expected %; got %", vertices[0].to_string(), translated_mesh.get_vertex(0).to_string());
+    logf("expected %; got %", vertices[1].to_string(), translated_mesh.get_vertex(1).to_string());
+    logf("expected %; got %", vertices[2].to_string(), translated_mesh.get_vertex(2).to_string());
 
     assert(translated_mesh.get_vertex(0) == vertices[0]);
     assert(translated_mesh.get_vertex(1) == vertices[1]);

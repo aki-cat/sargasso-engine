@@ -45,18 +45,18 @@ class Vec3 {
     Vec3& scale(const float s);
 
     // convenient
-    static const Vec3& zero;
-    static const Vec3& up;
-    static const Vec3& down;
-    static const Vec3& front;
-    static const Vec3& back;
-    static const Vec3& left;
-    static const Vec3& right;
+    static Vec3 zero();
+    static Vec3 up();
+    static Vec3 down();
+    static Vec3 front();
+    static Vec3 back();
+    static Vec3 left();
+    static Vec3 right();
 
     // convenient axes
-    static const Vec3& x_axis;
-    static const Vec3& y_axis;
-    static const Vec3& z_axis;
+    static Vec3 x_axis();
+    static Vec3 y_axis();
+    static Vec3 z_axis();
 
     // conversions
     operator std::string();
@@ -96,27 +96,66 @@ Vec3& operator-=(Vec3& a, const Vec3& b);
 
 */
 
-Vec3::Vec3(float _x, float _y, float _z)
+inline Vec3::Vec3(float _x, float _y, float _z)
     : x{_points.p[0]}, y{_points.p[1]}, z{_points.p[2]}, _points{} {
     _points.p[0] = _x;
     _points.p[1] = _y;
     _points.p[2] = _z;
 }
 
-Vec3::Vec3() : Vec3(0.0f, 0.0f, 0.0f) {}
+inline Vec3::Vec3() : Vec3(0.0f, 0.0f, 0.0f) {}
 
 // Static members
 
-const Vec3& Vec3::zero = Vec3();
-const Vec3& Vec3::up = Vec3(+0.0f, +1.0f, +0.0f);
-const Vec3& Vec3::down = Vec3(+0.0f, -1.0f, +0.0f);
-const Vec3& Vec3::front = Vec3(+0.0f, +0.0f, -1.0f);
-const Vec3& Vec3::back = Vec3(+0.0f, +0.0f, +1.0f);
-const Vec3& Vec3::left = Vec3(-1.0f, +0.0f, +0.0f);
-const Vec3& Vec3::right = Vec3(+1.0f, +0.0f, +0.0f);
-const Vec3& Vec3::x_axis = Vec3(+1.0f, +0.0f, +0.0f);
-const Vec3& Vec3::y_axis = Vec3(+0.0f, +1.0f, +0.0f);
-const Vec3& Vec3::z_axis = Vec3(+0.0f, +0.0f, +1.0f);
+inline Vec3 Vec3::zero() {
+    static const Vec3 v = Vec3();
+    return v;
+}
+
+inline Vec3 Vec3::up() {
+    static const Vec3 v = Vec3(+0.0f, +1.0f, +0.0f);
+    return v;
+}
+
+inline Vec3 Vec3::down() {
+    static const Vec3 v = Vec3(+0.0f, -1.0f, +0.0f);
+    return v;
+}
+
+inline Vec3 Vec3::front() {
+    static const Vec3 v = Vec3(+0.0f, +0.0f, -1.0f);
+    return v;
+}
+
+inline Vec3 Vec3::back() {
+    static const Vec3 v = Vec3(+0.0f, +0.0f, +1.0f);
+    return v;
+}
+
+inline Vec3 Vec3::left() {
+    static const Vec3 v = Vec3(-1.0f, +0.0f, +0.0f);
+    return v;
+}
+
+inline Vec3 Vec3::right() {
+    static const Vec3 v = Vec3(+1.0f, +0.0f, +0.0f);
+    return v;
+}
+
+inline Vec3 Vec3::x_axis() {
+    static const Vec3 v = Vec3(+1.0f, +0.0f, +0.0f);
+    return v;
+}
+
+inline Vec3 Vec3::y_axis() {
+    static const Vec3 v = Vec3(+0.0f, +1.0f, +0.0f);
+    return v;
+}
+
+inline Vec3 Vec3::z_axis() {
+    static const Vec3 v = Vec3(+0.0f, +0.0f, +1.0f);
+    return v;
+}
 
 // Methods
 
@@ -176,63 +215,67 @@ inline Vec3& Vec3::scale(const float s) { return *this *= s; }
 
 // Conversion operators
 
-Vec3::operator std::string() { return to_string(); }
+inline Vec3::operator std::string() { return to_string(); }
 
 // Imutable operators
 
-bool operator==(const Vec3& a, const Vec3& b) {
+inline bool operator==(const Vec3& a, const Vec3& b) {
     return fabs(a.x - b.x) <= FLT_EPSILON && fabs(a.y - b.y) <= FLT_EPSILON &&
            fabs(a.z - b.z) <= FLT_EPSILON;
 }
 
-bool operator!=(const Vec3& a, const Vec3& b) {
+inline bool operator!=(const Vec3& a, const Vec3& b) {
     return fabs(a.x - b.x) > FLT_EPSILON || fabs(a.y - b.y) > FLT_EPSILON ||
            fabs(a.z - b.z) > FLT_EPSILON;
 }
 
-Vec3 operator*(const float a, const Vec3& v) { return Vec3(v.x * a, v.y * a, v.z * a); }
+inline Vec3 operator*(const float a, const Vec3& v) { return Vec3(v.x * a, v.y * a, v.z * a); }
 
-Vec3 operator*(const Vec3& v, const float a) { return Vec3(v.x * a, v.y * a, v.z * a); }
+inline Vec3 operator*(const Vec3& v, const float a) { return Vec3(v.x * a, v.y * a, v.z * a); }
 
-Vec3 operator/(const Vec3& v, const float a) {
+inline Vec3 operator/(const Vec3& v, const float a) {
     const float factor = 1 / a;
     return Vec3(v.x * factor, v.y * factor, v.z * factor);
 }
 
-Vec3 operator+(const Vec3& a, const Vec3& b) { return Vec3(a.x + b.x, a.y + b.y, a.z + b.z); }
+inline Vec3 operator+(const Vec3& a, const Vec3& b) {
+    return Vec3(a.x + b.x, a.y + b.y, a.z + b.z);
+}
 
-Vec3 operator-(const Vec3& a, const Vec3& b) { return Vec3(a.x - b.x, a.y - b.y, a.z - b.z); }
+inline Vec3 operator-(const Vec3& a, const Vec3& b) {
+    return Vec3(a.x - b.x, a.y - b.y, a.z - b.z);
+}
 
-Vec3 operator-(const Vec3& v) { return Vec3(-v.x, -v.y, -v.z); }
+inline Vec3 operator-(const Vec3& v) { return Vec3(-v.x, -v.y, -v.z); }
 
-float operator*(const Vec3& a, const Vec3& b) { return a.dot(b); }
+inline float operator*(const Vec3& a, const Vec3& b) { return a.dot(b); }
 
-Vec3 operator^(const Vec3& a, const Vec3& b) { return a.cross(b); }
+inline Vec3 operator^(const Vec3& a, const Vec3& b) { return a.cross(b); }
 
 // Mutable operators
 
-Vec3& operator*=(Vec3& v, const float a) {
+inline Vec3& operator*=(Vec3& v, const float a) {
     v.x *= a;
     v.y *= a;
     v.z *= a;
     return v;
 }
 
-Vec3& operator/=(Vec3& v, const float a) {
+inline Vec3& operator/=(Vec3& v, const float a) {
     v.x /= a;
     v.y /= a;
     v.z /= a;
     return v;
 }
 
-Vec3& operator+=(Vec3& a, const Vec3& b) {
+inline Vec3& operator+=(Vec3& a, const Vec3& b) {
     a.x += b.x;
     a.y += b.y;
     a.z += b.z;
     return a;
 }
 
-Vec3& operator-=(Vec3& a, const Vec3& b) {
+inline Vec3& operator-=(Vec3& a, const Vec3& b) {
     a.x -= b.x;
     a.y -= b.y;
     a.z -= b.z;

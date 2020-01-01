@@ -42,7 +42,8 @@ Graphics::Graphics() {
         logf_error("Failed to load shaders:\n\t%", exception);
     }
 
-    _camera.copy(MeshGenerator::generate_sample_camera(_width, _height));
+    _camera.copy(MeshGenerator::generate_sample_camera(static_cast<float>(_width),
+                                                       static_cast<float>(_height)));
 }
 
 Graphics::~Graphics() {

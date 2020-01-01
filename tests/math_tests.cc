@@ -37,8 +37,8 @@ void Tests::operatorMul_dotProduct_expectedResult() {
     Vec3 u(7, -1, -6);
 
     assert(fabs(v * u + 19) < FLT_EPSILON);
-    assert(fabs(v * Vec3::zero) < FLT_EPSILON);
-    assert(fabs(u * Vec3::zero) < FLT_EPSILON);
+    assert(fabs(v * Vec3::zero()) < FLT_EPSILON);
+    assert(fabs(u * Vec3::zero()) < FLT_EPSILON);
     assert(fabs(u * Vec3(1, 1, 1)) < FLT_EPSILON);
 
     _SARGASSO_TEST_PASSED();
@@ -50,7 +50,7 @@ void Tests::operatorMul_scalarProduct_expectedResult() {
     Vec3 v(2, 3, 5);
 
     assert(v * 5 == Vec3(10, 15, 25));
-    assert(v * 0 == Vec3::zero);
+    assert(v * 0 == Vec3::zero());
     assert(v * -1 == Vec3(-2, -3, -5));
 
     _SARGASSO_TEST_PASSED();
@@ -99,8 +99,8 @@ void Tests::operatorMul_matrixAndVec3_expectedResult() {
 void Tests::rotateMatrix_quarterCircle_expectedResult() {
     _SARGASSO_TEST_START("Mat4", "rotate", "QuarterCircleRotation", "ReturnExpectedResult");
 
-    Mat4 m = Mat4::identity;
-    m.rotate(Vec3::y_axis, static_cast<float>(M_PI) / 2);
+    Mat4 m = Mat4::identity();
+    m.rotate(Vec3::y_axis(), static_cast<float>(M_PI) / 2);
 
     Vec3 v(1, 1, 1);
 
@@ -117,7 +117,7 @@ void Tests::rotatedQuat_quarterCircle_expectedResult() {
                          "ReturnExpectedResult");
 
     Vec3 v(1, 1, 1);
-    Quat q = Transform::quaternion_from_rotation(Vec3::y_axis, static_cast<float>(M_PI) / 2);
+    Quat q = Transform::quaternion_from_rotation(Vec3::y_axis(), static_cast<float>(M_PI) / 2);
 
     const Vec3 result = Transform::rotated(v, q);
     const Vec3 expected(1, 1, -1);

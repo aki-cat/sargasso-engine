@@ -43,8 +43,8 @@ class Mat4 {
     Mat4& copy(const Mat4& m);
 
     // useful constant matrices
-    static const Mat4& identity;
-    static const Mat4& zero;
+    static Mat4 identity();
+    static Mat4 zero();
 
     // useful dynamic matrices
     static Mat4 perspective_projection(float fov, float aspect, float z_near, float z_far);
@@ -89,9 +89,9 @@ Mat4& operator*=(Mat4& m, const float a);
 
 // Constructors
 
-Mat4::Mat4() : Mat4({1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1}) {}
+inline Mat4::Mat4() : Mat4({1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1}) {}
 
-Mat4::Mat4(Points16 points)
+inline Mat4::Mat4(Points16 points)
     : a11{_points.p[0]},
       a12{_points.p[1]},
       a13{_points.p[2]},
@@ -112,13 +112,19 @@ Mat4::Mat4(Points16 points)
 
 // Useful static members
 
-const Mat4& Mat4::identity = Mat4({1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1});
+inline Mat4 Mat4::identity() {
+    static const Mat4 m = Mat4({1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1});
+    return m;
+}
 
-const Mat4& Mat4::zero = Mat4({0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+inline Mat4 Mat4::zero() {
+    static const Mat4 m = Mat4({0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+    return m;
+}
 
 // Useful dynamic matrices
 
-Mat4 Mat4::perspective_projection(float fov, float aspect, float z_near, float z_far) {
+inline Mat4 Mat4::perspective_projection(float fov, float aspect, float z_near, float z_far) {
     float rect_height;
     float rect_width;
     float p;
@@ -130,7 +136,7 @@ Mat4 Mat4::perspective_projection(float fov, float aspect, float z_near, float z
     p = z_far / (z_near - z_far);
     q = z_near * p;
 
-    Mat4 m = Mat4::zero;
+    Mat4 m = Mat4::zero();
 
     m.a11 = rect_width;
     m.a22 = rect_height;
@@ -142,7 +148,7 @@ Mat4 Mat4::perspective_projection(float fov, float aspect, float z_near, float z
     return m;
 }
 
-Mat4 Mat4::look_at(const Vec3& from, const Vec3& target, const Vec3& up) {
+inline Mat4 Mat4::look_at(const Vec3& from, const Vec3& target, const Vec3& up) {
     Vec3 zaxis = Vec3({target.x - from.x, target.y - from.y, target.z - from.z}).normalized();
 
     // xaxis = zaxis x up
@@ -151,7 +157,7 @@ Mat4 Mat4::look_at(const Vec3& from, const Vec3& target, const Vec3& up) {
     // yaxis = xaxis x zaxis
     Vec3 yaxis = xaxis.cross(zaxis);
 
-    Mat4 m = Mat4::identity;
+    Mat4 m = Mat4::identity();
 
     m.a11 = xaxis.x;
     m.a12 = xaxis.y;
@@ -172,38 +178,40 @@ Mat4 Mat4::look_at(const Vec3& from, const Vec3& target, const Vec3& up) {
     return m;
 }
 
-Mat4 Mat4::look_at(const Vec3& from, const Vec3& target) { return look_at(from, target, Vec3::up); }
+inline Mat4 Mat4::look_at(const Vec3& from, const Vec3& target) {
+    return look_at(from, target, Vec3::up());
+}
 
 // Methods
 
-Mat4 Mat4::translated(const Vec3& v) const {
-    Mat4 m = Mat4::identity;
+inline Mat4 Mat4::translated(const Vec3& v) const {
+    Mat4 m = Mat4::identity();
     m[3] += v.x;
     m[7] += v.y;
     m[11] += v.z;
     return (*this) * m;
 }
 
-Mat4& Mat4::translate(const Vec3& v) {
-    Mat4 m = Mat4::identity;
+inline Mat4& Mat4::translate(const Vec3& v) {
+    Mat4 m = Mat4::identity();
     m[3] += v.x;
     m[7] += v.y;
     m[11] += v.z;
     return (*this) *= m;
 }
 
-Mat4 Mat4::scaled(const float a) const { return (*this) * a; }
+inline Mat4 Mat4::scaled(const float a) const { return (*this) * a; }
 
-Mat4& Mat4::scale(const float a) {
+inline Mat4& Mat4::scale(const float a) {
     for (uint32_t i = 0; i < Points16::len; i++) {
         _points[i] *= a;
     }
     return *this;
 }
 
-Mat4 Mat4::rotated(const Vec3& axis, const float angle) const {
+inline Mat4 Mat4::rotated(const Vec3& axis, const float angle) const {
     Quat q = Transform::quaternion_from_rotation(axis, angle);
-    Mat4 m = Mat4::identity;
+    Mat4 m = Mat4::identity();
 
     m[0] = 1 - 2 * (q.y * q.y + q.z * q.z);
     m[1] = 2 * (q.x * q.y - q.z * q.w);
@@ -220,9 +228,9 @@ Mat4 Mat4::rotated(const Vec3& axis, const float angle) const {
     return (*this) * m.round();
 }
 
-Mat4& Mat4::rotate(const Vec3& axis, const float angle) {
+inline Mat4& Mat4::rotate(const Vec3& axis, const float angle) {
     Quat q = Transform::quaternion_from_rotation(axis, angle);
-    Mat4 m = Mat4::identity;
+    Mat4 m = Mat4::identity();
 
     m[0] = 1 - 2 * (q.y * q.y + q.z * q.z);
     m[1] = 2 * (q.x * q.y - q.z * q.w);
@@ -248,7 +256,7 @@ inline Mat4& Mat4::round() {
     return (*this);
 }
 
-Mat4& Mat4::copy(const Mat4& m) {
+inline Mat4& Mat4::copy(const Mat4& m) {
     a11 = m.a11;
     a12 = m.a12;
     a13 = m.a13;
@@ -268,7 +276,7 @@ Mat4& Mat4::copy(const Mat4& m) {
     return (*this);
 }
 
-std::string Mat4::to_string() const {
+inline std::string Mat4::to_string() const {
     return format("Mat4 { % % % % }\n", _points[0], _points[1], _points[2], _points[3]) +
            format("     { % % % % }\n", _points[4], _points[5], _points[6], _points[7]) +
            format("     { % % % % }\n", _points[8], _points[9], _points[10], _points[11]) +
@@ -277,15 +285,15 @@ std::string Mat4::to_string() const {
 
 // Conversion operators
 
-Mat4::operator std::string() { return to_string(); }
+inline Mat4::operator std::string() { return to_string(); }
 
-float Mat4::operator[](const uint32_t n) const { return _points[n]; }
+inline float Mat4::operator[](const uint32_t n) const { return _points[n]; }
 
-float& Mat4::operator[](const uint32_t n) { return _points[n]; }
+inline float& Mat4::operator[](const uint32_t n) { return _points[n]; }
 
 // Imutable operators
 
-bool operator==(const Mat4& a, const Mat4& b) {
+inline bool operator==(const Mat4& a, const Mat4& b) {
     for (uint32_t i = 0; i < Points16::len; i++) {
         if (fabs(a[i] - b[i]) > FLT_EPSILON) {
             return false;
@@ -294,7 +302,7 @@ bool operator==(const Mat4& a, const Mat4& b) {
     return true;
 }
 
-bool operator!=(const Mat4& a, const Mat4& b) {
+inline bool operator!=(const Mat4& a, const Mat4& b) {
     for (uint32_t i = 0; i < Points16::len; i++) {
         if (fabs(a[i] - b[i]) > FLT_EPSILON) {
             return true;
@@ -303,7 +311,7 @@ bool operator!=(const Mat4& a, const Mat4& b) {
     return false;
 }
 
-Mat4 operator+(const Mat4& a, const Mat4& b) {
+inline Mat4 operator+(const Mat4& a, const Mat4& b) {
     Mat4 m{};
     for (uint32_t i = 0; i < Points16::len; i++) {
         m[i] = a[i] + b[i];
@@ -311,7 +319,7 @@ Mat4 operator+(const Mat4& a, const Mat4& b) {
     return m;
 }
 
-Mat4 operator-(const Mat4& a, const Mat4& b) {
+inline Mat4 operator-(const Mat4& a, const Mat4& b) {
     Mat4 m{};
     for (uint32_t i = 0; i < Points16::len; i++) {
         m[i] = a[i] - b[i];
@@ -319,7 +327,7 @@ Mat4 operator-(const Mat4& a, const Mat4& b) {
     return m;
 }
 
-Mat4 operator*(const Mat4& a, const Mat4& b) {
+inline Mat4 operator*(const Mat4& a, const Mat4& b) {
     return Mat4({a[0] * b[0] + a[1] * b[4] + a[2] * b[8] + a[3] * b[12],
                  a[0] * b[1] + a[1] * b[5] + a[2] * b[9] + a[3] * b[13],
                  a[0] * b[2] + a[1] * b[6] + a[2] * b[10] + a[3] * b[14],
@@ -339,13 +347,13 @@ Mat4 operator*(const Mat4& a, const Mat4& b) {
 }
 
 // We always assume vector is susceptible to translations (w = 1)
-Vec3 operator*(const Mat4& m, const Vec3& v) {
+inline Vec3 operator*(const Mat4& m, const Vec3& v) {
     return Vec3(m[0] * v.x + m[1] * v.y + m[2] * v.z + m[3],
                 m[4] * v.x + m[5] * v.y + m[6] * v.z + m[7],
                 m[8] * v.x + m[9] * v.y + m[10] * v.z + m[11]);
 }
 
-Mat4 operator*(const Mat4& m, const float a) {
+inline Mat4 operator*(const Mat4& m, const float a) {
     Mat4 n{};
     for (uint32_t i = 0; i < Points16::len; i++) {
         n[i] = m[i] * a;
@@ -353,7 +361,7 @@ Mat4 operator*(const Mat4& m, const float a) {
     return n;
 }
 
-Mat4 operator*(const float a, const Mat4& m) {
+inline Mat4 operator*(const float a, const Mat4& m) {
     Mat4 n{};
     for (uint32_t i = 0; i < Points16::len; i++) {
         n[i] = m[i] * a;
@@ -361,7 +369,7 @@ Mat4 operator*(const float a, const Mat4& m) {
     return n;
 }
 
-Mat4 operator-(const Mat4& m) {
+inline Mat4 operator-(const Mat4& m) {
     Mat4 n{};
     for (uint32_t i = 0; i < Points16::len; i++) {
         n[i] = -m[i];
@@ -371,21 +379,21 @@ Mat4 operator-(const Mat4& m) {
 
 // Mutable operators
 
-Mat4& operator+=(Mat4& a, const Mat4& b) {
+inline Mat4& operator+=(Mat4& a, const Mat4& b) {
     for (uint32_t i = 0; i < Points16::len; i++) {
         a[i] += b[i];
     }
     return a;
 }
 
-Mat4& operator-=(Mat4& a, const Mat4& b) {
+inline Mat4& operator-=(Mat4& a, const Mat4& b) {
     for (uint32_t i = 0; i < Points16::len; i++) {
         a[i] -= b[i];
     }
     return a;
 }
 
-Mat4& operator*=(Mat4& a, const Mat4& b) {
+inline Mat4& operator*=(Mat4& a, const Mat4& b) {
     Points16 p({a[0] * b[0] + a[1] * b[4] + a[2] * b[8] + a[3] * b[12],
                 a[0] * b[1] + a[1] * b[5] + a[2] * b[9] + a[3] * b[13],
                 a[0] * b[2] + a[1] * b[6] + a[2] * b[10] + a[3] * b[14],
@@ -408,7 +416,7 @@ Mat4& operator*=(Mat4& a, const Mat4& b) {
     return a;
 }
 
-Mat4& operator*=(Mat4& m, const float a) {
+inline Mat4& operator*=(Mat4& m, const float a) {
     for (uint32_t i = 0; i < Points16::len; i++) {
         m[i] *= a;
     }
