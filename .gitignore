@@ -1,0 +1,13 @@
+# Metafiles
+.DS_Store
+
+# SCons
+.sconsign.dblite
+
+# Build
+/build/
+/bin/
+*.o
+
+# VSCode
+.vscode/
