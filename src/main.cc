@@ -3,16 +3,12 @@
 
 #include "glfw.h"
 
-using std::cout;
-using std::endl;
-using std::time;
-
 using CoffeeEngine::GLFW;
 
 const int DELAY_SECONDS = 15;
 
 int main() {
-  cout << "Hello world" << endl;
+  std::cout << "Hello world" << std::endl;
 
   GLFW glfw_instance = GLFW();
   if (!glfw_instance.is_initialized()) {
@@ -24,21 +20,21 @@ int main() {
     return -1;
   }
 
-  time_t start_time = time(nullptr);
-  cout << "Start!" << endl;
+  time_t start_time = std::time(nullptr);
+  std::cout << "Start!" << std::endl;
 
   time_t current_time = start_time;
 
-  time_t now = time(nullptr);
+  time_t now = std::time(nullptr);
   while (now - start_time <= DELAY_SECONDS) {
     if (now > current_time) {
       current_time = now;
-      cout << current_time - start_time << endl;
+      std::cout << current_time - start_time << std::endl;
     }
-    now = time(nullptr);
+    now = std::time(nullptr);
   }
 
-  cout << "Done!" << endl;
+  std::cout << "Done!" << std::endl;
 
   return 0;
 }
