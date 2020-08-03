@@ -6,8 +6,12 @@
 
 # Build
 /build/
+/lib/
 /bin/
 *.o
 
 # VSCode
 .vscode/
+
+# Python
+__pycache__/
