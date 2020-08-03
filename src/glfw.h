@@ -3,7 +3,7 @@
 
 #include <GLFW/glfw3.h>
 
-namespace CoffeeEngine {
+namespace SargassoEngine {
 
 class GLFW {
  public:
@@ -20,6 +20,6 @@ class GLFW {
 
 void error_callback(int error, const char* description);
 
-}  // namespace CoffeeEngine
+}  // namespace SargassoEngine
 
 #endif

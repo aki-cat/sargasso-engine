@@ -5,7 +5,7 @@
 #include <exception>
 #include <iostream>
 
-namespace CoffeeEngine {
+namespace SargassoEngine {
 
 GLFW::GLFW() {
   std::cout << "Initializing GLFW..." << std::endl;
@@ -43,4 +43,4 @@ void error_callback(int error, const char* description) {
   std::cerr << std::string("Error: ") + std::string(description) << std::endl;
 }
 
-}  // namespace CoffeeEngine
+}  // namespace SargassoEngine

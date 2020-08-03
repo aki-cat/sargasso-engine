@@ -3,7 +3,7 @@
 
 #include "glfw.h"
 
-using CoffeeEngine::GLFW;
+using SargassoEngine::GLFW;
 
 const int DELAY_SECONDS = 15;
 
