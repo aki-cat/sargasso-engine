@@ -1,14 +1,25 @@
 #ifndef COFFEE_ENGINE_GLFW_H
 #define COFFEE_ENGINE_GLFW_H
 
+#include <GLFW/glfw3.h>
+
 namespace CoffeeEngine {
-namespace GLFW {
 
-void error_callback(int, const char*);
-bool init();
-void terminate();
+class GLFW {
+ public:
+  GLFW();
+  void create_window();
+  bool is_window_valid();
+  bool is_initialized();
+  ~GLFW();
 
-}  // namespace GLFW
+ private:
+  GLFWwindow* _window;
+  bool _initialized;
+};
+
+void error_callback(int error, const char* description);
+
 }  // namespace CoffeeEngine
 
 #endif

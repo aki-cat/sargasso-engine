@@ -7,12 +7,20 @@ using std::cout;
 using std::endl;
 using std::time;
 
-const int DELAY_SECONDS = 5;
+using CoffeeEngine::GLFW;
+
+const int DELAY_SECONDS = 15;
 
 int main() {
   cout << "Hello world" << endl;
 
-  if (!CoffeeEngine::GLFW::init()) {
+  GLFW glfw_instance = GLFW();
+  if (!glfw_instance.is_initialized()) {
+    return -1;
+  }
+
+  glfw_instance.create_window();
+  if (!glfw_instance.is_window_valid()) {
     return -1;
   }
 
@@ -31,7 +39,6 @@ int main() {
   }
 
   cout << "Done!" << endl;
-  CoffeeEngine::GLFW::terminate();
 
   return 0;
 }
