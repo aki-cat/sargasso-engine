@@ -16,10 +16,13 @@ bool init() {
     // Initialization failed
     return false;
   }
+
   glfwSetErrorCallback(error_callback);
-  glfwTerminate();
+
   return true;
 }
+
+void terminate() { glfwTerminate(); }
 
 }  // namespace GLFW
 }  // namespace CoffeeEngine

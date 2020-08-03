@@ -6,6 +6,7 @@ namespace GLFW {
 
 void error_callback(int, const char*);
 bool init();
+void terminate();
 
 }  // namespace GLFW
 }  // namespace CoffeeEngine
