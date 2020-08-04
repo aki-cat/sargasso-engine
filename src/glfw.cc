@@ -32,15 +32,21 @@ void GLFW::create_window() {
   glfwMakeContextCurrent(_window);
   glfwSetKeyCallback(_window, key_action_callback);
   glfwFocusWindow(_window);
-
-  glfwGetFramebufferSize(_window, &_width, &_height);
-  glViewport(0, 0, _width, _height);
+  glfwSwapInterval(1);
 }
 
 int GLFW::get_width() { return _width; }
 int GLFW::get_height() { return _height; }
 bool GLFW::is_initialized() { return _initialized; }
 bool GLFW::should_window_close() { return glfwWindowShouldClose(_window); }
+
+void GLFW::render() {
+  glfwGetFramebufferSize(_window, &_width, &_height);
+  glViewport(0, 0, _width, _height);
+  glClear(GL_COLOR_BUFFER_BIT);
+  glfwSwapBuffers(_window);
+  glfwPollEvents();
+}
 
 GLFW::~GLFW() {
   std::cout << "Terminating GLFW..." << std::endl;

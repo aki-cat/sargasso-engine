@@ -13,6 +13,7 @@ class GLFW {
   int get_height();
   bool is_initialized();
   bool should_window_close();
+  void render();
   ~GLFW();
 
  private:

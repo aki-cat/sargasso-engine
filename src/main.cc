@@ -25,6 +25,7 @@ int main() {
     double frame_start = glfwGetTime();
 
     frame_number++;
+    glfw_instance.render();
 
     delta = glfwGetTime() - frame_start;
   }
