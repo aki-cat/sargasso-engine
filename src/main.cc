@@ -1,11 +1,11 @@
 
+#include <time.h>
+
 #include <iostream>
 
 #include "glfw.h"
 
 using SargassoEngine::GLFW;
-
-const int DELAY_SECONDS = 15;
 
 int main() {
   std::cout << "Hello world" << std::endl;
@@ -16,22 +16,17 @@ int main() {
   }
 
   glfw_instance.create_window();
-  if (!glfw_instance.is_window_valid()) {
-    return -1;
-  }
 
-  time_t start_time = std::time(nullptr);
-  std::cout << "Start!" << std::endl;
+  double delta = 0.0;
+  uint64_t frame_number = 0;
 
-  time_t current_time = start_time;
+  while (!glfw_instance.should_window_close()) {
+    // main loop
+    double frame_start = glfwGetTime();
 
-  time_t now = std::time(nullptr);
-  while (now - start_time <= DELAY_SECONDS) {
-    if (now > current_time) {
-      current_time = now;
-      std::cout << current_time - start_time << std::endl;
-    }
-    now = std::time(nullptr);
+    frame_number++;
+
+    delta = glfwGetTime() - frame_start;
   }
 
   std::cout << "Done!" << std::endl;

@@ -18,7 +18,8 @@ GLFWBuilder.build()
 
 # Environment setup
 env = Environment(
-    CCFLAGS=["-O0", "-Werror", "-Wall"])
+    CCFLAGS=["-O0", "-Werror", "-Wall", "-DGL_SILENCE_DEPRECATION"])
 
 env.ParseConfig(GLFWBuilder.LIB_GLFW_BUILD_FLAG_CMD)
+env.AppendUnique(FRAMEWORKS=["OpenGL"])
 env.Program(BINARY_PATH, SOURCE_CXX_FILES)

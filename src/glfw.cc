@@ -22,12 +22,25 @@ void GLFW::create_window() {
   if (_window) {
     throw std::exception();
   }
-  _window = glfwCreateWindow(640, 480, "My Title", NULL, NULL);
+
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+
+  _window = glfwCreateWindow(640, 480, "Sargasso Engine", NULL, NULL);
+
+  // Initialize window
+  glfwMakeContextCurrent(_window);
+  glfwSetKeyCallback(_window, key_action_callback);
+  glfwFocusWindow(_window);
+
+  glfwGetFramebufferSize(_window, &_width, &_height);
+  glViewport(0, 0, _width, _height);
 }
 
-bool GLFW::is_window_valid() { return !!_window; }
-
+int GLFW::get_width() { return _width; }
+int GLFW::get_height() { return _height; }
 bool GLFW::is_initialized() { return _initialized; }
+bool GLFW::should_window_close() { return glfwWindowShouldClose(_window); }
 
 GLFW::~GLFW() {
   std::cout << "Terminating GLFW..." << std::endl;
@@ -41,6 +54,13 @@ GLFW::~GLFW() {
 
 void error_callback(int error, const char* description) {
   std::cerr << std::string("Error: ") + std::string(description) << std::endl;
+}
+
+void key_action_callback(GLFWwindow* window, int key, int scancode, int action,
+                         int mods) {
+  if (key == GLFW_KEY_F8 && action == GLFW_PRESS) {
+    glfwSetWindowShouldClose(window, GLFW_TRUE);
+  }
 }
 
 }  // namespace SargassoEngine
