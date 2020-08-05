@@ -8,13 +8,20 @@ namespace SargassoEngine {
 class GLFW {
  public:
   GLFW();
+  ~GLFW();
   void create_window();
   int get_width();
   int get_height();
   bool is_initialized();
   bool should_window_close();
   void render();
-  ~GLFW();
+
+  class Callbacks {
+   public:
+    static void error_callback(int error, const char* description);
+    static void key_action_callback(GLFWwindow* window, int key, int scancode,
+                                    int action, int mods);
+  };
 
  private:
   GLFWwindow* _window;
@@ -22,11 +29,6 @@ class GLFW {
   int _width;
   int _height;
 };
-
-void error_callback(int error, const char* description);
-void key_action_callback(GLFWwindow* window, int key, int scancode, int action,
-                         int mods);
-
 }  // namespace SargassoEngine
 
 #endif

@@ -15,7 +15,7 @@ GLFW::GLFW() {
     _initialized = false;
   }
   _initialized = true;
-  glfwSetErrorCallback(error_callback);
+  glfwSetErrorCallback(GLFW::Callbacks::error_callback);
 }
 
 void GLFW::create_window() {
@@ -30,7 +30,7 @@ void GLFW::create_window() {
 
   // Initialize window
   glfwMakeContextCurrent(_window);
-  glfwSetKeyCallback(_window, key_action_callback);
+  glfwSetKeyCallback(_window, GLFW::Callbacks::key_action_callback);
   glfwFocusWindow(_window);
   glfwSwapInterval(1);
 }
@@ -58,12 +58,12 @@ GLFW::~GLFW() {
   }
 }
 
-void error_callback(int error, const char* description) {
+void GLFW::Callbacks::error_callback(int error, const char* description) {
   std::cerr << std::string("Error: ") + std::string(description) << std::endl;
 }
 
-void key_action_callback(GLFWwindow* window, int key, int scancode, int action,
-                         int mods) {
+void GLFW::Callbacks::key_action_callback(GLFWwindow* window, int key,
+                                          int scancode, int action, int mods) {
   if (key == GLFW_KEY_F8 && action == GLFW_PRESS) {
     glfwSetWindowShouldClose(window, GLFW_TRUE);
   }
