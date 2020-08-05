@@ -3,9 +3,9 @@
 
 #include <iostream>
 
-#include "graphics.h"
+#include "modules/graphics.h"
 
-using SargassoEngine::Graphics;
+using SargassoEngine::Modules::Graphics;
 
 int main() {
   std::cout << "Hello world" << std::endl;

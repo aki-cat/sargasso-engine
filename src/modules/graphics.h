@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 
 namespace SargassoEngine {
+namespace Modules {
 
 class Graphics {
  public:
@@ -29,6 +30,8 @@ class Graphics {
   int _width;
   int _height;
 };
+
+}  // namespace Modules
 }  // namespace SargassoEngine
 
 #endif

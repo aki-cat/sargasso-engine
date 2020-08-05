@@ -1,4 +1,4 @@
-#include "graphics.h"
+#include "modules/graphics.h"
 
 #include <GLFW/glfw3.h>
 
@@ -6,6 +6,7 @@
 #include <iostream>
 
 namespace SargassoEngine {
+namespace Modules {
 
 Graphics::Graphics() {
   std::cout << "Initializing GLFW..." << std::endl;
@@ -72,4 +73,5 @@ void Graphics::Callbacks::key_action_callback(GLFWwindow* window, int key,
   }
 }
 
+}  // namespace Modules
 }  // namespace SargassoEngine
