@@ -3,29 +3,29 @@
 
 #include <iostream>
 
-#include "glfw.h"
+#include "graphics.h"
 
-using SargassoEngine::GLFW;
+using SargassoEngine::Graphics;
 
 int main() {
   std::cout << "Hello world" << std::endl;
 
-  GLFW glfw_instance = GLFW();
-  if (!glfw_instance.is_initialized()) {
+  Graphics graphics = Graphics();
+  if (!graphics.is_initialized()) {
     return -1;
   }
 
-  glfw_instance.create_window();
+  graphics.create_window();
 
   double delta = 0.0;
   uint64_t frame_number = 0;
 
-  while (!glfw_instance.should_window_close()) {
+  while (!graphics.should_window_close()) {
     // main loop
     double frame_start = glfwGetTime();
 
     frame_number++;
-    glfw_instance.render();
+    graphics.render();
 
     delta = glfwGetTime() - frame_start;
   }

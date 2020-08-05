@@ -1,4 +1,4 @@
-#include "glfw.h"
+#include "graphics.h"
 
 #include <GLFW/glfw3.h>
 
@@ -7,7 +7,7 @@
 
 namespace SargassoEngine {
 
-GLFW::GLFW() {
+Graphics::Graphics() {
   std::cout << "Initializing GLFW..." << std::endl;
   _window = nullptr;
   if (!glfwInit()) {
@@ -15,10 +15,10 @@ GLFW::GLFW() {
     _initialized = false;
   }
   _initialized = true;
-  glfwSetErrorCallback(GLFW::Callbacks::error_callback);
+  glfwSetErrorCallback(Graphics::Callbacks::error_callback);
 }
 
-void GLFW::create_window() {
+void Graphics::create_window() {
   if (_window) {
     throw std::exception();
   }
@@ -28,21 +28,21 @@ void GLFW::create_window() {
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_FALSE);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 
-  _window = glfwCreateWindow(640, 480, "Sargasso Engine", NULL, NULL);
+  _window = glfwCreateWindow(960, 540, "Sargasso Engine", NULL, NULL);
 
   // Initialize window
   glfwMakeContextCurrent(_window);
-  glfwSetKeyCallback(_window, GLFW::Callbacks::key_action_callback);
+  glfwSetKeyCallback(_window, Graphics::Callbacks::key_action_callback);
   glfwFocusWindow(_window);
   glfwSwapInterval(1);
 }
 
-int GLFW::get_width() { return _width; }
-int GLFW::get_height() { return _height; }
-bool GLFW::is_initialized() { return _initialized; }
-bool GLFW::should_window_close() { return glfwWindowShouldClose(_window); }
+int Graphics::get_width() { return _width; }
+int Graphics::get_height() { return _height; }
+bool Graphics::is_initialized() { return _initialized; }
+bool Graphics::should_window_close() { return glfwWindowShouldClose(_window); }
 
-void GLFW::render() {
+void Graphics::render() {
   glfwGetFramebufferSize(_window, &_width, &_height);
   glViewport(0, 0, _width, _height);
   glClear(GL_COLOR_BUFFER_BIT);
@@ -50,7 +50,7 @@ void GLFW::render() {
   glfwPollEvents();
 }
 
-GLFW::~GLFW() {
+Graphics::~Graphics() {
   std::cout << "Terminating GLFW..." << std::endl;
   if (_window) {
     glfwDestroyWindow(_window);
@@ -60,12 +60,13 @@ GLFW::~GLFW() {
   }
 }
 
-void GLFW::Callbacks::error_callback(int error, const char* description) {
+void Graphics::Callbacks::error_callback(int error, const char* description) {
   std::cerr << std::string("Error: ") + std::string(description) << std::endl;
 }
 
-void GLFW::Callbacks::key_action_callback(GLFWwindow* window, int key,
-                                          int scancode, int action, int mods) {
+void Graphics::Callbacks::key_action_callback(GLFWwindow* window, int key,
+                                              int scancode, int action,
+                                              int mods) {
   if (key == GLFW_KEY_F8 && action == GLFW_PRESS) {
     glfwSetWindowShouldClose(window, GLFW_TRUE);
   }

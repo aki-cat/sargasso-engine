@@ -5,10 +5,10 @@
 
 namespace SargassoEngine {
 
-class GLFW {
+class Graphics {
  public:
-  GLFW();
-  ~GLFW();
+  Graphics();
+  ~Graphics();
   void create_window();
   int get_width();
   int get_height();
