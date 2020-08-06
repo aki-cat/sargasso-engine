@@ -19,7 +19,8 @@ GLFWBuilder.build()
 
 # Environment setup
 env = Environment(
-    CCFLAGS=["-O0", "-Werror", "-Wall", "-DGL_SILENCE_DEPRECATION"],
+    CCFLAGS=["-O0", "-Werror", "-Wall",
+             "-pedantic", "-std=c++11", "-DGL_SILENCE_DEPRECATION"],
     CPPPATH=[str(SOURCE_DIRECTORY)])
 
 env.ParseConfig(GLFWBuilder.LIB_GLFW_BUILD_FLAG_CMD)

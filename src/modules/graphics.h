@@ -1,5 +1,5 @@
-#ifndef COFFEE_ENGINE_GLFW_H
-#define COFFEE_ENGINE_GLFW_H
+#ifndef SARGASSO_ENGINE_MODULES_GRAPHICS_H
+#define SARGASSO_ENGINE_MODULES_GRAPHICS_H
 
 #include <GLFW/glfw3.h>
 
@@ -10,26 +10,27 @@ class Graphics {
  public:
   Graphics();
   ~Graphics();
-  void create_window();
-  int get_width();
-  int get_height();
-  bool is_initialized();
-  bool should_window_close();
+  GLFWwindow* get_window();
+  const int get_width();
+  const int get_height();
+  const bool should_window_close();
   void render();
-
-  class Callbacks {
-   public:
-    static void error_callback(int error, const char* description);
-    static void key_action_callback(GLFWwindow* window, int key, int scancode,
-                                    int action, int mods);
-  };
 
  private:
   GLFWwindow* _window;
-  bool _initialized;
   int _width;
   int _height;
 };
+
+inline GLFWwindow* Graphics::get_window() { return _window; }
+
+inline const int Graphics::get_width() { return _width; }
+
+inline const int Graphics::get_height() { return _height; }
+
+inline const bool Graphics::should_window_close() {
+  return glfwWindowShouldClose(_window);
+}
 
 }  // namespace Modules
 }  // namespace SargassoEngine
