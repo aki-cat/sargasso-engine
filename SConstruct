@@ -14,8 +14,9 @@ SOURCE_CXX_FILES: str = \
 PROJECT_NAME: str = "SargassoEngine"
 BINARY_PATH: str = str(Path(SOURCE_PWD, "bin", PROJECT_NAME))
 
-CXXFLAGS = ["-O0", "-Werror", "-Wall", "-Wignored-qualifiers", "-Wtype-limits",
-            "-Wundef", "-Wc++11-compat", "-Wpedantic", "-std=c++11", "-DGL_SILENCE_DEPRECATION"]
+CXXFLAGS = [
+    "-O0", "-Werror", "-Wall", "-Wignored-qualifiers", "-Wtype-limits", "-Wcast-qual", "-Wcast-align", "-Wundef", "-Wc++11-compat", "-Wpedantic", "-Wbad-function-cast", "-Wconversion", "-Wparentheses", "-Wempty-body",
+    "-std=c++11", "-DGL_SILENCE_DEPRECATION"]
 
 # GLFW Library
 GLFWBuilder.build()
