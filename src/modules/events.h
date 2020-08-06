@@ -9,7 +9,6 @@ namespace Modules {
 class Events {
  public:
   Events();
-  Events(const Events&) = delete;
   ~Events();
   void register_window(GLFWwindow* window);
   void deregister_window(GLFWwindow* window);
