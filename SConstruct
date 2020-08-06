@@ -14,13 +14,15 @@ SOURCE_CXX_FILES: str = \
 PROJECT_NAME: str = "SargassoEngine"
 BINARY_PATH: str = str(Path(SOURCE_PWD, "bin", PROJECT_NAME))
 
+CXXFLAGS = ["-O0", "-Werror", "-Wall", "-Wignored-qualifiers", "-Wtype-limits",
+            "-Wundef", "-Wc++11-compat", "-Wpedantic", "-std=c++11", "-DGL_SILENCE_DEPRECATION"]
+
 # GLFW Library
 GLFWBuilder.build()
 
 # Environment setup
 env = Environment(
-    CCFLAGS=["-O0", "-Werror", "-Wall",
-             "-pedantic", "-std=c++11", "-DGL_SILENCE_DEPRECATION"],
+    CCFLAGS=CXXFLAGS,
     CPPPATH=[str(SOURCE_DIRECTORY)])
 
 env.ParseConfig(GLFWBuilder.LIB_GLFW_BUILD_FLAG_CMD)

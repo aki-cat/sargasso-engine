@@ -11,9 +11,9 @@ class Graphics {
   Graphics();
   ~Graphics();
   GLFWwindow* get_window();
-  const int get_width();
-  const int get_height();
-  const bool should_window_close();
+  int get_width();
+  int get_height();
+  bool should_window_close();
   void render();
 
  private:
@@ -24,11 +24,11 @@ class Graphics {
 
 inline GLFWwindow* Graphics::get_window() { return _window; }
 
-inline const int Graphics::get_width() { return _width; }
+inline int Graphics::get_width() { return _width; }
 
-inline const int Graphics::get_height() { return _height; }
+inline int Graphics::get_height() { return _height; }
 
-inline const bool Graphics::should_window_close() {
+inline bool Graphics::should_window_close() {
   return glfwWindowShouldClose(_window);
 }
 
