@@ -8,6 +8,7 @@
 using SargassoEngine::FrontEnd;
 using SargassoEngine::Modules::Events;
 using SargassoEngine::Modules::Graphics;
+using SargassoEngine::Modules::Time;
 
 int main() {
   std::cout << "Hello world" << std::endl;
@@ -19,26 +20,28 @@ int main() {
 
   std::cout << "Init successful!" << std::endl;
 
-  double delta = 0.0;
   uint64_t frame_number = 0;
 
   front_end.start();
 
   Graphics &graphics = front_end.get_module<Graphics>();
   Events &events = front_end.get_module<Events>();
+  Time &time = front_end.get_module<Time>();
   while (!graphics.should_window_close()) {
     // main loop
-    double frame_start = glfwGetTime();
+    time.start_frame();
+    std::cout << "Frame time: " << time.get_delta() << std::endl;
 
     frame_number++;
     graphics.render();
     events.poll_events();
 
-    delta = glfwGetTime() - frame_start;
+    time.end_frame();
   }
 
   front_end.stop();
 
+  std::cout << "Ran " << frame_number << " frames!" << std::endl;
   std::cout << "Done!" << std::endl;
 
   return 0;

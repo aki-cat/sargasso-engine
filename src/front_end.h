@@ -5,11 +5,13 @@
 
 #include "modules/events.h"
 #include "modules/graphics.h"
+#include "modules/time.h"
 
 namespace SargassoEngine {
 
 using SargassoEngine::Modules::Events;
 using SargassoEngine::Modules::Graphics;
+using SargassoEngine::Modules::Time;
 
 class FrontEnd {
  public:
@@ -26,6 +28,7 @@ class FrontEnd {
   bool _initialized;
   Graphics *_graphics;
   Events *_events;
+  Time *_time;
 };
 
 inline void FrontEnd::start() {
@@ -46,6 +49,11 @@ inline Graphics &FrontEnd::get_module() {
 template <>
 inline Events &FrontEnd::get_module() {
   return *_events;
+}
+
+template <>
+inline Time &FrontEnd::get_module() {
+  return *_time;
 }
 
 }  // namespace SargassoEngine
