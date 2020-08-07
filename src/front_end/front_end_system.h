@@ -32,16 +32,6 @@ class FrontEndSystem {
   Time *_time;
 };
 
-inline void FrontEndSystem::start() {
-  _events->register_window(_graphics->get_window());
-}
-
-inline void FrontEndSystem::stop() {
-  _events->deregister_window(_graphics->get_window());
-}
-
-inline bool FrontEndSystem::is_initialized() { return _initialized; }
-
 template <>
 inline Graphics &FrontEndSystem::get_module() {
   return *_graphics;

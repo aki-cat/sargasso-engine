@@ -29,3 +29,13 @@ FrontEndSystem::~FrontEndSystem() {
     glfwTerminate();
   }
 }
+
+void FrontEndSystem::start() {
+  _events->register_window(_graphics->get_window());
+}
+
+void FrontEndSystem::stop() {
+  _events->deregister_window(_graphics->get_window());
+}
+
+bool FrontEndSystem::is_initialized() { return _initialized; }
