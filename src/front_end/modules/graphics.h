@@ -1,9 +1,10 @@
-#ifndef SARGASSO_ENGINE_MODULES_GRAPHICS_H
-#define SARGASSO_ENGINE_MODULES_GRAPHICS_H
+#ifndef SARGASSO_ENGINE_FRONT_END_GRAPHICS_H
+#define SARGASSO_ENGINE_FRONT_END_GRAPHICS_H
 
 #include <GLFW/glfw3.h>
 
 namespace SargassoEngine {
+namespace FrontEnd {
 namespace Modules {
 
 class Graphics {
@@ -33,6 +34,7 @@ inline bool Graphics::should_window_close() {
 }
 
 }  // namespace Modules
+}  // namespace FrontEnd
 }  // namespace SargassoEngine
 
 #endif

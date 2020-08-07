@@ -1,11 +1,11 @@
 
-#include "modules/events.h"
+#include "front_end/modules/events.h"
 
 #include <GLFW/glfw3.h>
 
 #include <iostream>
 
-using SargassoEngine::Modules::Events;
+using SargassoEngine::FrontEnd::Modules::Events;
 
 Events::Events() { glfwSetErrorCallback(Events::Callbacks::error_callback); }
 Events::~Events() {}

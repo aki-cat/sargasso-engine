@@ -1,9 +1,10 @@
-#ifndef SARGASSO_ENGINE_MODULES_EVENTS_H
-#define SARGASSO_ENGINE_MODULES_EVENTS_H
+#ifndef SARGASSO_ENGINE_FRONT_END_EVENTS_H
+#define SARGASSO_ENGINE_FRONT_END_EVENTS_H
 
 #include <GLFW/glfw3.h>
 
 namespace SargassoEngine {
+namespace FrontEnd {
 namespace Modules {
 
 class Events {
@@ -26,6 +27,7 @@ class Events {
 inline void Events::poll_events() { glfwPollEvents(); }
 
 }  // namespace Modules
+}  // namespace FrontEnd
 }  // namespace SargassoEngine
 
 #endif

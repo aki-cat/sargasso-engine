@@ -1,10 +1,10 @@
-#include "modules/graphics.h"
+#include "front_end/modules/graphics.h"
 
 #include <GLFW/glfw3.h>
 
 #include <exception>
 
-using SargassoEngine::Modules::Graphics;
+using SargassoEngine::FrontEnd::Modules::Graphics;
 
 Graphics::Graphics() {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);

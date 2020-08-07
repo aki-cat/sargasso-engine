@@ -1,11 +1,11 @@
 
-#include "front_end.h"
+#include "front_end/front_end_system.h"
 
 #include <iostream>
 
-using SargassoEngine::FrontEnd;
+using SargassoEngine::FrontEnd::FrontEndSystem;
 
-FrontEnd::FrontEnd() {
+FrontEndSystem::FrontEndSystem() {
   std::cout << "Initializing GLFW..." << std::endl;
 
   if (!glfwInit()) {
@@ -19,7 +19,7 @@ FrontEnd::FrontEnd() {
   _initialized = true;
 }
 
-FrontEnd::~FrontEnd() {
+FrontEndSystem::~FrontEndSystem() {
   std::cout << "Terminating GLFW..." << std::endl;
 
   delete _events;

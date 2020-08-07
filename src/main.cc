@@ -1,19 +1,20 @@
 
 #include <iostream>
 
-#include "front_end.h"
-#include "modules/events.h"
-#include "modules/graphics.h"
+#include "front_end/front_end_system.h"
+#include "front_end/modules/events.h"
+#include "front_end/modules/graphics.h"
+#include "front_end/modules/time.h"
 
-using SargassoEngine::FrontEnd;
-using SargassoEngine::Modules::Events;
-using SargassoEngine::Modules::Graphics;
-using SargassoEngine::Modules::Time;
+using SargassoEngine::FrontEnd::FrontEndSystem;
+using SargassoEngine::FrontEnd::Modules::Events;
+using SargassoEngine::FrontEnd::Modules::Graphics;
+using SargassoEngine::FrontEnd::Modules::Time;
 
 int main() {
   std::cout << "Hello world" << std::endl;
 
-  FrontEnd front_end = FrontEnd();
+  FrontEndSystem front_end = FrontEndSystem();
   if (!front_end.is_initialized()) {
     return -1;
   }

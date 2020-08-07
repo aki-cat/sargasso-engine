@@ -1,11 +1,12 @@
-#ifndef SARGASSO_ENGINE_MODULES_TIME_H
-#define SARGASSO_ENGINE_MODULES_TIME_H
+#ifndef SARGASSO_ENGINE_FRONT_END_TIME_H
+#define SARGASSO_ENGINE_FRONT_END_TIME_H
 
 #include <GLFW/glfw3.h>
 
 #include <cassert>
 
 namespace SargassoEngine {
+namespace FrontEnd {
 namespace Modules {
 
 class Time {
@@ -36,6 +37,7 @@ inline void Time::end_frame() {
 }
 
 }  // namespace Modules
+}  // namespace FrontEnd
 }  // namespace SargassoEngine
 
 #endif
