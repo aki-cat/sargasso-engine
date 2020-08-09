@@ -6,6 +6,7 @@
 using SargassoEngine::FrontEnd::FrontEndSystem;
 
 FrontEndSystem::FrontEndSystem() {
+  std::cout << glfwGetVersionString() << std::endl;
   std::cout << "Initializing GLFW..." << std::endl;
 
   if (!glfwInit()) {
