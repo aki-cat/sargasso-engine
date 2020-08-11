@@ -1,8 +1,11 @@
+
 #include "front_end/modules/graphics.h"
 
 #include <GLFW/glfw3.h>
 
 #include <exception>
+
+#include "engine.h"
 
 using SargassoEngine::FrontEnd::Modules::Graphics;
 
@@ -12,7 +15,7 @@ Graphics::Graphics() {
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_FALSE);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 
-  _window = glfwCreateWindow(960, 540, "Sargasso Engine", NULL, NULL);
+  _window = glfwCreateWindow(960, 540, SargassoEngine::ENGINE_NAME, NULL, NULL);
 
   // Initialize window
   glfwMakeContextCurrent(_window);
