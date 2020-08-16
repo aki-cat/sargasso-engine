@@ -1,12 +1,14 @@
 #include "front_end/modules/graphics.h"
 
 #include "engine.h"
+#include "front_end/utility/shader_loader.h"
 
 #include <GL/glew.h>
 #include <exception>
 #include <iostream>
 
 using SargassoEngine::FrontEnd::Modules::Graphics;
+using SargassoEngine::FrontEnd::Utility::ShaderLoader;
 
 Graphics::Graphics() {
     std::cout << "Initializing window..." << std::endl;
@@ -20,11 +22,18 @@ Graphics::Graphics() {
     std::cout << "Window created!" << std::endl;
 
     // Initialize window
+    std::cout << "Setting GL context.." << std::endl;
     glfwMakeContextCurrent(_window);
     glfwFocusWindow(_window);
-    std::cout << "GL context set!" << std::endl;
 
+    std::cout << "Setting swap interval..." << std::endl;
     glfwSwapInterval(1);
+
+    std::cout << "Initializing glew..." << std::endl;
+    glewInit();
+
+    std::cout << "Loading shaders..." << std::endl;
+    _program_id = ShaderLoader::load();
 }
 
 Graphics::~Graphics() {
@@ -33,9 +42,11 @@ Graphics::~Graphics() {
     }
 }
 
-void Graphics::render() {
+void Graphics::start_rendering_buffer() {
     glfwGetFramebufferSize(_window, &_width, &_height);
-    glViewport(0, 0, _width, _height);
-    glClear(GL_COLOR_BUFFER_BIT);
-    glfwSwapBuffers(_window);
+    // glViewport(0, 0, _width, _height);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glUseProgram(_program_id);
 }
+
+void Graphics::stop_rendering_buffer() { glfwSwapBuffers(_window); }

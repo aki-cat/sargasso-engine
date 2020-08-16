@@ -6,6 +6,7 @@
 #include "front_end/modules/events.h"
 #include "front_end/modules/graphics.h"
 #include "front_end/modules/time.h"
+#include "front_end/utility/shader_loader.h"
 
 #include <GLFW/glfw3.h>
 #include <iostream>
@@ -14,6 +15,7 @@ using SargassoEngine::FrontEnd::FrontEndSystem;
 using SargassoEngine::FrontEnd::Modules::Events;
 using SargassoEngine::FrontEnd::Modules::Graphics;
 using SargassoEngine::FrontEnd::Modules::Time;
+using SargassoEngine::FrontEnd::Utility::ShaderLoader;
 
 static const GLfloat g_vertex_buffer_data[] = {
     +1.0f, -1.0f, +0.0f,
@@ -56,9 +58,6 @@ int main() {
         return -1;
     }
 
-    std::cout << "Initializing glew..." << std::endl;
-    glewInit();
-
     std::cout << "Creating vertex array object..." << std::endl;
     glGenVertexArrays(1, &vao_id);
     glBindVertexArray(vao_id);
@@ -84,8 +83,9 @@ int main() {
         std::cout << "Frame time: " << time.get_delta() << std::endl;
 
         frame_number++;
-        graphics.render();
+        graphics.start_rendering_buffer();
         render_triangle(vertex_buffer);
+        graphics.stop_rendering_buffer();
 
         events.poll_events();
 

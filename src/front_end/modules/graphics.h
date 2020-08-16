@@ -16,12 +16,14 @@ class Graphics {
     int get_width();
     int get_height();
     bool should_window_close();
-    void render();
+    void start_rendering_buffer();
+    void stop_rendering_buffer();
 
    private:
     GLFWwindow* _window;
     int _width;
     int _height;
+    GLuint _program_id;
 };
 
 inline GLFWwindow* Graphics::get_window() { return _window; }
