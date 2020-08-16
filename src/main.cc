@@ -80,7 +80,6 @@ int main() {
     while (!graphics.should_window_close()) {
         // main loop
         time.start_frame();
-        std::cout << "Frame time: " << time.get_delta() << std::endl;
 
         frame_number++;
         graphics.start_rendering_buffer();

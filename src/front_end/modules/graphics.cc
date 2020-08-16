@@ -34,7 +34,7 @@ Graphics::Graphics() {
     glewInit();
 
     std::cout << "Loading shaders..." << std::endl;
-    _program_id = ShaderLoader::load();
+    _program_id = ShaderLoader::load_defult_shaders();
 }
 
 Graphics::~Graphics() {
