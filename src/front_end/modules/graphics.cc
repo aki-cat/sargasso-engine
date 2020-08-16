@@ -34,7 +34,11 @@ Graphics::Graphics() {
     glewInit();
 
     std::cout << "Loading shaders..." << std::endl;
-    _program_id = ShaderLoader::load_defult_shaders();
+    try {
+        _program_id = ShaderLoader::load_default_shaders();
+    } catch (const std::string& exception) {
+        std::cerr << "Failed to load d shaders:\n\t" << exception << std::endl;
+    }
 }
 
 Graphics::~Graphics() {

@@ -14,7 +14,7 @@ constexpr const char* SHADER_VERTEX_FILE_PATH = "src/front_end/utility/shaders/b
 constexpr const char* SHADER_FRAGMENT_FILE_PATH =
     "src/front_end/utility/shaders/basic_fragment.glsl";
 
-GLuint ShaderLoader::load_defult_shaders() {
+GLuint ShaderLoader::load_default_shaders() {
     std::cout << "Creating shaders" << std::endl;
 
     // Create the shaders
@@ -40,7 +40,7 @@ GLuint ShaderLoader::load_defult_shaders() {
         glGetProgramiv(program_id, GL_INFO_LOG_LENGTH, &log_length);
         std::vector<char> program_error_message((size_t)log_length);
         glGetProgramInfoLog(program_id, log_length, NULL, program_error_message.data());
-        std::cerr << program_error_message.data() << std::endl;
+        throw std::string(program_error_message.data());
     }
 
     glDetachShader(program_id, vertex_shader_id);
@@ -57,7 +57,7 @@ GLuint ShaderLoader::load_shader(const std::string& shader_path, ShaderType shad
         const std::string& shader = File::read_file(shader_path);
         return create_shader(shader.c_str(), shader_type);
     } catch (const std::string& exception) {
-        std::cerr << exception << std::endl;
+        std::cerr << "Failed to load shader @ " << shader_path << "\n\t" << exception << std::endl;
         return 0;
     }
 }
@@ -78,7 +78,7 @@ GLuint ShaderLoader::create_shader(const char* shader_code, ShaderType shader_ty
         std::vector<char> vertex_shader_error_message((size_t)log_length);
         glGetShaderInfoLog(shader_id, log_length, NULL, vertex_shader_error_message.data());
 
-        throw vertex_shader_error_message;
+        throw std::string(vertex_shader_error_message.data());
     }
 
     return shader_id;
