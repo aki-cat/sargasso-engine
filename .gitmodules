@@ -1,3 +1,6 @@
 [submodule "third_party/glew"]
 	path = third_party/glew
-	url = gh:nigels-com/glew.git
+	url = git@github.com:nigels-com/glew.git
+[submodule "third_party/glfw"]
+	path = third_party/glfw
+	url = git@github.com:glfw/glfw.git
