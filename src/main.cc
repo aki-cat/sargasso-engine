@@ -18,11 +18,67 @@ using SargassoEngine::FrontEnd::Modules::Time;
 using SargassoEngine::FrontEnd::Utility::ShaderLoader;
 
 static const GLfloat g_vertex_buffer_data[] = {
-    +1.0f, -1.0f, +0.0f,
+    // front face
+    +0.0f,
+    +0.0f,
+    +0.0f,
+    +1.0f,
 
-    -1.0f, -1.0f, +0.0f,
+    +0.5f,
+    +0.0f,
+    +0.0f,
+    +1.0f,
 
-    +0.0f, +1.0f, +0.0f,
+    +0.5f,
+    +0.5f,
+    +0.0f,
+    +1.0f,
+
+    +0.5f,
+    +0.5f,
+    +0.0f,
+    +1.0f,
+
+    +0.0f,
+    +0.5f,
+    +0.0f,
+    +1.0f,
+
+    +0.0f,
+    +0.0f,
+    +0.0f,
+    +1.0f,
+
+    // left face
+    +0.0f,
+    +0.0f,
+    -0.5f,
+    +1.0f,
+
+    +0.0f,
+    +0.0f,
+    +0.0f,
+    +1.0f,
+
+    +0.0f,
+    +0.5f,
+    +0.0f,
+    +1.0f,
+
+    +0.0f,
+    +0.5f,
+    +0.0f,
+    +1.0f,
+
+    +0.0f,
+    -0.5f,
+    +0.5f,
+    +1.0f,
+
+    +0.0f,
+    +0.0f,
+    -0.5f,
+    +1.0f,
 };
 
 static GLuint vao_id;
@@ -34,7 +90,7 @@ void render_triangle(const GLuint& vertex_buffer) {
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
     glVertexAttribPointer(
         0,  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-        3,  // size
+        4,  // size
         GL_FLOAT,  // type
         GL_FALSE,  // normalized?
         0,         // stride
@@ -44,7 +100,7 @@ void render_triangle(const GLuint& vertex_buffer) {
     // Draw the triangle !
 
     // Starting from vertex 0; 3 vertices total -> 1 triangle
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawArrays(GL_TRIANGLES, 0, sizeof(g_vertex_buffer_data));
     glDisableVertexAttribArray(0);
 }
 
