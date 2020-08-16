@@ -13,6 +13,7 @@ using SargassoEngine::FrontEnd::Utility::ShaderLoader;
 Graphics::Graphics() {
     std::cout << "Initializing window..." << std::endl;
 
+    glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
@@ -43,10 +44,13 @@ Graphics::~Graphics() {
 }
 
 void Graphics::start_rendering_buffer() {
+    // Called before rendering a frame
     glfwGetFramebufferSize(_window, &_width, &_height);
-    // glViewport(0, 0, _width, _height);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glUseProgram(_program_id);
 }
 
-void Graphics::stop_rendering_buffer() { glfwSwapBuffers(_window); }
+void Graphics::stop_rendering_buffer() {
+    // Called after rendering a frame
+    glfwSwapBuffers(_window);
+}
