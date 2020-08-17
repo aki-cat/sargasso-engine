@@ -1,8 +1,6 @@
 #ifndef SARGASSO_ENGINE_FRONT_END_H
 #define SARGASSO_ENGINE_FRONT_END_H
 
-#include <GL/glew.h>
-// ayy
 #include "front_end/modules/events.h"
 #include "front_end/modules/graphics.h"
 #include "front_end/modules/time.h"

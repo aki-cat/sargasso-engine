@@ -133,6 +133,8 @@ int main() {
     Graphics& graphics = front_end.get_module<Graphics>();
     Events& events = front_end.get_module<Events>();
     Time& time = front_end.get_module<Time>();
+
+    std::cout << "Starting main loop..." << std::endl;
     while (!graphics.should_window_close()) {
         // main loop
         time.start_frame();
@@ -146,6 +148,7 @@ int main() {
 
         time.end_frame();
     }
+    std::cout << "Main loop stopped!" << std::endl;
 
     front_end.stop();
 

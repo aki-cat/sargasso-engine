@@ -1,6 +1,7 @@
 #ifndef SARGASSO_ENGINE_FRONT_END_EVENTS_H
 #define SARGASSO_ENGINE_FRONT_END_EVENTS_H
 
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 namespace SargassoEngine {

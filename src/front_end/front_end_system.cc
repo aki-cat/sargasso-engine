@@ -33,8 +33,14 @@ FrontEndSystem::~FrontEndSystem() {
     }
 }
 
-void FrontEndSystem::start() { _events->register_window(_graphics->get_window()); }
+void FrontEndSystem::start() {
+    std::cout << "Registering window callbacks..." << std::endl;
+    _events->register_window(_graphics->get_window());
+}
 
-void FrontEndSystem::stop() { _events->deregister_window(_graphics->get_window()); }
+void FrontEndSystem::stop() {
+    std::cout << "Deregistering window callbacks..." << std::endl;
+    _events->deregister_window(_graphics->get_window());
+}
 
 bool FrontEndSystem::is_initialized() { return _initialized; }
