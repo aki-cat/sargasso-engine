@@ -1,21 +1,23 @@
-// Include this before everything
-#include <GL/glew.h>
-// Include this before everything
-
 #include "front_end/front_end_system.h"
 #include "front_end/modules/events.h"
 #include "front_end/modules/graphics.h"
 #include "front_end/modules/time.h"
 #include "front_end/utility/shader_loader.h"
+#include "geometry/mesh_generator.h"
 
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <array>
+#include <glm/vec4.hpp>
 #include <iostream>
+#include <stdio.h>
 
 using SargassoEngine::FrontEnd::FrontEndSystem;
 using SargassoEngine::FrontEnd::Modules::Events;
 using SargassoEngine::FrontEnd::Modules::Graphics;
 using SargassoEngine::FrontEnd::Modules::Time;
 using SargassoEngine::FrontEnd::Utility::ShaderLoader;
+using SargassoEngine::Geometry::MeshGenerator;
 
 static const GLfloat g_vertex_buffer_data[] = {
     // front face
