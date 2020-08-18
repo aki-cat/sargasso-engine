@@ -19,90 +19,30 @@ using SargassoEngine::FrontEnd::Modules::Time;
 using SargassoEngine::FrontEnd::Utility::ShaderLoader;
 using SargassoEngine::Geometry::MeshGenerator;
 
-static const GLfloat g_vertex_buffer_data[] = {
-    // front face
-    +0.0f,
-    +0.0f,
-    +0.0f,
-    +1.0f,
-
-    +0.5f,
-    +0.0f,
-    +0.0f,
-    +1.0f,
-
-    +0.5f,
-    +0.5f,
-    +0.0f,
-    +1.0f,
-
-    +0.5f,
-    +0.5f,
-    +0.0f,
-    +1.0f,
-
-    +0.0f,
-    +0.5f,
-    +0.0f,
-    +1.0f,
-
-    +0.0f,
-    +0.0f,
-    +0.0f,
-    +1.0f,
-
-    // left face
-    +0.0f,
-    +0.0f,
-    -0.5f,
-    +1.0f,
-
-    +0.0f,
-    +0.0f,
-    +0.0f,
-    +1.0f,
-
-    +0.0f,
-    +0.5f,
-    +0.0f,
-    +1.0f,
-
-    +0.0f,
-    +0.5f,
-    +0.0f,
-    +1.0f,
-
-    +0.0f,
-    -0.5f,
-    +0.5f,
-    +1.0f,
-
-    +0.0f,
-    +0.0f,
-    -0.5f,
-    +1.0f,
-};
+static GLfloat g_vertex_buffer_data[24]{};
 
 static GLuint vao_id;
 static GLuint vertex_buffer;
 
-void render_triangle(const GLuint& vertex_buffer) {
+const static size_t VERTEX_DATA_SIZE = 4;
+
+void render_triangle(const GLuint vertex_buffer) {
     // 1st attribute buffer : vertices
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
     glVertexAttribPointer(
         0,  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-        4,  // size
-        GL_FLOAT,  // type
-        GL_FALSE,  // normalized?
-        0,         // stride
-        (void*)0   // array buffer offset
+        VERTEX_DATA_SIZE,  // size
+        GL_FLOAT,          // type
+        GL_FALSE,          // normalized?
+        0,                 // stride
+        (void*)0           // array buffer offset
     );
 
     // Draw the triangle !
 
     // Starting from vertex 0; 3 vertices total -> 1 triangle
-    glDrawArrays(GL_TRIANGLES, 0, sizeof(g_vertex_buffer_data));
+    glDrawArrays(GL_TRIANGLES, 0, sizeof(g_vertex_buffer_data) / VERTEX_DATA_SIZE);
     glDisableVertexAttribArray(0);
 }
 
@@ -119,6 +59,15 @@ int main() {
     std::cout << "Creating vertex array object..." << std::endl;
     glGenVertexArrays(1, &vao_id);
     glBindVertexArray(vao_id);
+
+    const auto& square_vertices = MeshGenerator::generate_square();
+    int vertex_count = 0;
+    for (const auto& vertex : square_vertices) {
+        for (int i = 0; i < 4; i++) {
+            g_vertex_buffer_data[vertex_count * 4 + i] = vertex[i];
+        }
+        vertex_count++;
+    }
 
     std::cout << "Creating vertex buffer..." << std::endl;
     glGenBuffers(1, &vertex_buffer);
