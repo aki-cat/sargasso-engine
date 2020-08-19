@@ -10,16 +10,18 @@ namespace Modules {
 
 class Time {
    public:
-    Time() : _delta(0.0), _start_frame_time(0.0), _frame_started(false) {}
+    explicit Time() {}
+    Time(const Time&) = delete;
+    Time(const Time&&) = delete;
     void reset();
     void start_frame();
     void end_frame();
     double get_delta();
 
    private:
-    double _delta;
-    double _start_frame_time;
-    bool _frame_started;
+    double _delta{0.0};
+    double _start_frame_time{0.0};
+    bool _frame_started{false};
 };
 
 }  // namespace Modules

@@ -10,7 +10,9 @@ namespace Modules {
 
 class Graphics {
    public:
-    Graphics();
+    explicit Graphics();
+    Graphics(const Graphics&) = delete;
+    Graphics(const Graphics&&) = delete;
     ~Graphics();
     GLFWwindow* get_window();
     int get_width();

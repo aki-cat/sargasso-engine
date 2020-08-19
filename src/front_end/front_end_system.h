@@ -17,7 +17,7 @@ using SargassoEngine::FrontEnd::Modules::Time;
 
 class FrontEndSystem {
    public:
-    FrontEndSystem();
+    explicit FrontEndSystem();
     ~FrontEndSystem();
     bool is_initialized();
     void start();
