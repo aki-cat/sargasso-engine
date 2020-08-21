@@ -14,7 +14,7 @@ class Graphics {
     Graphics(const Graphics&) = delete;
     Graphics(const Graphics&&) = delete;
     ~Graphics();
-    GLFWwindow* get_window();
+    GLFWwindow* get_window() const;
     int get_width();
     int get_height();
     bool should_window_close();
@@ -28,7 +28,7 @@ class Graphics {
     GLuint _program_id;
 };
 
-inline GLFWwindow* Graphics::get_window() { return _window; }
+inline GLFWwindow* Graphics::get_window() const { return _window; }
 
 inline int Graphics::get_width() { return _width; }
 

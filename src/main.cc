@@ -8,7 +8,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <array>
-#include <glm/vec4.hpp>
+#include <glm/vec3.hpp>
 #include <iostream>
 #include <stdio.h>
 
@@ -18,12 +18,12 @@ using SargassoEngine::FrontEnd::Modules::Graphics;
 using SargassoEngine::FrontEnd::Modules::Time;
 using SargassoEngine::FrontEnd::Utility::ShaderLoader;
 using SargassoEngine::Geometry::MeshGenerator;
+using SargassoEngine::Geometry::MeshRaw;
+using SargassoEngine::Geometry::POINTS_PER_VERTEX;
 using SargassoEngine::Geometry::SquareMesh;
 
 static GLuint vao_id;
 static GLuint vertex_buffer;
-
-const static int VERTEX_DATA_SIZE = 4;
 
 void render_triangle(const GLuint vertex_buffer, const int vertex_buffer_size) {
     // 1st attribute buffer : vertices
@@ -31,17 +31,17 @@ void render_triangle(const GLuint vertex_buffer, const int vertex_buffer_size) {
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
     glVertexAttribPointer(
         0,  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-        VERTEX_DATA_SIZE,  // size
-        GL_FLOAT,          // type
-        GL_FALSE,          // normalized?
-        0,                 // stride
-        (void*)0           // array buffer offset
+        POINTS_PER_VERTEX,  // size
+        GL_FLOAT,           // type
+        GL_FALSE,           // normalized?
+        0,                  // stride
+        (void*)0            // array buffer offset
     );
 
     // Draw the triangle !
 
     // Starting from vertex 0; 3 vertices total -> 1 triangle
-    glDrawArrays(GL_TRIANGLES, 0, vertex_buffer_size / VERTEX_DATA_SIZE);
+    glDrawArrays(GL_TRIANGLES, 0, vertex_buffer_size / POINTS_PER_VERTEX);
     glDisableVertexAttribArray(0);
 }
 

@@ -1,16 +1,18 @@
 
 #include <GL/glew.h>
-#include <glm/vec4.hpp>
+#include <glm/vec3.hpp>
 
 namespace SargassoEngine {
 namespace Geometry {
 
-template <size_t n>
-struct Mesh {
-    GLfloat vertex_points[n];
+static const int POINTS_PER_VERTEX = 3;
+
+template <size_t N>
+struct MeshRaw {
+    GLfloat vertex_points[N];
 };
 
-using SquareMesh = Mesh<24>;
+using SquareMesh = MeshRaw<18>;
 
 class MeshGenerator {
    public:
