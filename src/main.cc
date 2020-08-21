@@ -18,15 +18,14 @@ using SargassoEngine::FrontEnd::Modules::Graphics;
 using SargassoEngine::FrontEnd::Modules::Time;
 using SargassoEngine::FrontEnd::Utility::ShaderLoader;
 using SargassoEngine::Geometry::MeshGenerator;
-
-static GLfloat g_vertex_buffer_data[24]{};
+using SargassoEngine::Geometry::SquareMesh;
 
 static GLuint vao_id;
 static GLuint vertex_buffer;
 
-const static size_t VERTEX_DATA_SIZE = 4;
+const static int VERTEX_DATA_SIZE = 4;
 
-void render_triangle(const GLuint vertex_buffer) {
+void render_triangle(const GLuint vertex_buffer, const int vertex_buffer_size) {
     // 1st attribute buffer : vertices
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
@@ -42,7 +41,7 @@ void render_triangle(const GLuint vertex_buffer) {
     // Draw the triangle !
 
     // Starting from vertex 0; 3 vertices total -> 1 triangle
-    glDrawArrays(GL_TRIANGLES, 0, sizeof(g_vertex_buffer_data) / VERTEX_DATA_SIZE);
+    glDrawArrays(GL_TRIANGLES, 0, vertex_buffer_size / VERTEX_DATA_SIZE);
     glDisableVertexAttribArray(0);
 }
 
@@ -60,19 +59,12 @@ int main() {
     glGenVertexArrays(1, &vao_id);
     glBindVertexArray(vao_id);
 
-    const auto& square_vertices = MeshGenerator::generate_square();
-    int vertex_count = 0;
-    for (const auto& vertex : square_vertices) {
-        for (int i = 0; i < 4; i++) {
-            g_vertex_buffer_data[vertex_count * 4 + i] = vertex[i];
-        }
-        vertex_count++;
-    }
+    SquareMesh square_mesh = MeshGenerator::generate_square();
 
     std::cout << "Creating vertex buffer..." << std::endl;
     glGenBuffers(1, &vertex_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data,
+    glBufferData(GL_ARRAY_BUFFER, sizeof(square_mesh.vertex_points), square_mesh.vertex_points,
                  GL_STATIC_DRAW);
 
     std::cout << "Init successful!" << std::endl;
@@ -92,7 +84,7 @@ int main() {
 
         frame_number++;
         graphics.start_rendering_buffer();
-        render_triangle(vertex_buffer);
+        render_triangle(vertex_buffer, sizeof(square_mesh.vertex_points) / sizeof(GLfloat));
         graphics.stop_rendering_buffer();
 
         events.poll_events();

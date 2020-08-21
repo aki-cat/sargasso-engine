@@ -1,15 +1,22 @@
 
-#include <array>
+#include <GL/glew.h>
 #include <glm/vec4.hpp>
 
 namespace SargassoEngine {
 namespace Geometry {
 
+template <size_t n>
+struct Mesh {
+    GLfloat vertex_points[n];
+};
+
+using SquareMesh = Mesh<24>;
+
 class MeshGenerator {
    public:
     MeshGenerator() = delete;
     ~MeshGenerator() = delete;
-    static std::array<glm::vec4, 6> generate_square();
+    static SquareMesh generate_square();
 };
 
 }  // namespace Geometry
