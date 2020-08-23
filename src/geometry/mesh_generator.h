@@ -1,3 +1,5 @@
+#ifndef SARGASSO_ENGINE_MESH_GENERATOR_H
+#define SARGASSO_ENGINE_MESH_GENERATOR_H
 
 #include <GL/glew.h>
 #include <glm/vec3.hpp>
@@ -23,3 +25,5 @@ class MeshGenerator {
 
 }  // namespace Geometry
 }  // namespace SargassoEngine
+
+#endif
