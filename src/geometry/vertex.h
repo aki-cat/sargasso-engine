@@ -1,17 +1,23 @@
 #ifndef SARGASSO_ENGINE_VERTEX_H
 #define SARGASSO_ENGINE_VERTEX_H
 
-#include <glm/vec3.hpp>
+#include "common/math.h"
 
 namespace SargassoEngine {
 namespace Geometry {
 
+using namespace Common;
+
+static const int POINTS_PER_VERTEX = 3;
+
 struct Vertex {
-    glm::vec3 position;
+    Vertex() : position() {}
+    Vertex(float x, float y, float z) : position(x, y, z) {}
+    Vector3 position;
 
     // For now we're commenting these to avoid complexity:
-    // glm::vec3 normal;
-    // glm::vec2 uv;
+    // Vector3 normal;
+    // Vector2 uv;
 };
 
 }  // namespace Geometry

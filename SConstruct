@@ -12,8 +12,13 @@ SOURCE_DIRECTORY: Path = Path(SOURCE_PWD, "src")
 SOURCE_CXX_FILES: str = \
     [str(file_name) for file_name in SOURCE_DIRECTORY.glob("**/*.cc")]
 
+TEST_SOURCE_DIRECTORY: Path = Path(SOURCE_PWD, "tests")
+TEST_SOURCE_CXX_FILES: str = \
+    [str(file_name) for file_name in TEST_SOURCE_DIRECTORY.glob("**/*.cc")]
+
 PROJECT_NAME: str = "SargassoEngine"
 BINARY_PATH: str = str(Path(SOURCE_PWD, "bin", PROJECT_NAME))
+TESTS_PATH: str = str(Path(SOURCE_PWD, "bin", "RunTests"))
 
 LIB_GLEW_BUILD_FLAG_CMD = "pkg-config glew --libs --static"
 
@@ -37,3 +42,5 @@ env.ParseConfig(GLFWBuilder.LIB_GLFW_BUILD_FLAG_CMD)
 env.ParseConfig(LIB_GLEW_BUILD_FLAG_CMD)
 env.AppendUnique(FRAMEWORKS=["OpenGL"])
 env.Program(BINARY_PATH, SOURCE_CXX_FILES)
+
+env.Program(TESTS_PATH, TEST_SOURCE_CXX_FILES)

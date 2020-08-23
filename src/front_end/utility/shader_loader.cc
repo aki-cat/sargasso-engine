@@ -1,5 +1,7 @@
 
-#include "shader_loader.h"
+#include "front_end/utility/shader_loader.h"
+
+#include "common/containers.h"
 
 #include <GL/glew.h>
 #include <iostream>
@@ -7,6 +9,7 @@
 #include <string>
 #include <vector>
 
+using SargassoEngine::Common::DynamicArray;
 using SargassoEngine::FrontEnd::Utility::ShaderLoader;
 using ShaderType = ShaderLoader::ShaderType;
 
@@ -38,7 +41,7 @@ GLuint ShaderLoader::load_default_shaders() {
     if (!success) {
         int log_length;
         glGetProgramiv(program_id, GL_INFO_LOG_LENGTH, &log_length);
-        std::vector<char> program_error_message((size_t)log_length);
+        DynamicArray<char> program_error_message((size_t)log_length);
         glGetProgramInfoLog(program_id, log_length, NULL, program_error_message.data());
         throw std::string(program_error_message.data());
     }
@@ -75,7 +78,7 @@ GLuint ShaderLoader::create_shader(const char* shader_code, ShaderType shader_ty
         int log_length;
         glGetShaderiv(shader_id, GL_INFO_LOG_LENGTH, &log_length);
 
-        std::vector<char> vertex_shader_error_message((size_t)log_length);
+        DynamicArray<char> vertex_shader_error_message((size_t)log_length);
         glGetShaderInfoLog(shader_id, log_length, NULL, vertex_shader_error_message.data());
 
         throw std::string(vertex_shader_error_message.data());

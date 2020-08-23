@@ -1,3 +1,5 @@
+#ifndef SARGASSO_ENGINE_FILE_H
+#define SARGASSO_ENGINE_FILE_H
 
 #include <fstream>
 
@@ -11,3 +13,5 @@ class File {
 
 }  // namespace Common
 }  // namespace SargassoEngine
+
+#endif
