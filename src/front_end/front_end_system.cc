@@ -15,6 +15,8 @@ FrontEndSystem::FrontEndSystem() {
     std::cout << glfwGetVersionString() << std::endl;
     std::cout << "Initializing GLFW..." << std::endl;
 
+    glewExperimental = GL_TRUE;
+
     if (!glfwInit()) {
         std::cerr << "Init failed!" << std::endl;
         _initialized = false;

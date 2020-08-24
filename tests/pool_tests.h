@@ -8,7 +8,7 @@ using namespace Common;
 
 struct Dummy {
     const char* name;
-    int age;
+    uint32_t age;
 };
 
 void pool_tests() {

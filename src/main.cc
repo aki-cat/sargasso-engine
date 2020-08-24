@@ -14,10 +14,66 @@ using namespace SargassoEngine::FrontEnd::Modules;
 using namespace SargassoEngine::FrontEnd::Utility;
 using namespace SargassoEngine::Geometry;
 
-static GLuint vao_id;
-static GLuint vertex_buffer;
+void run(const FrontEndSystem& front_end, const GLuint buffer_id, const uint32_t buffer_size);
+void render_buffer(const GLuint vertex_buffer, const uint32_t vertex_buffer_size);
 
-void render_triangle(const GLuint vertex_buffer, const uint32_t vertex_buffer_size) {
+GLuint generate_vertex_array();
+GLuint generate_vertex_buffer(const MeshRaw& mesh);
+
+int main(int argc, char const* argv[]) {
+    std::cout << "Hello world" << std::endl;
+
+    const MeshRaw& sample_mesh = MeshGenerator::generate_square();
+    sample_mesh.print();
+
+    FrontEndSystem front_end = FrontEndSystem();
+    if (!front_end.is_initialized()) {
+        return -1;
+    }
+
+    // GLuint vao_id =
+    generate_vertex_array();
+    GLuint vertex_buffer = generate_vertex_buffer(sample_mesh);
+
+    std::cout << "Init successful!" << std::endl;
+
+    front_end.start();
+    run(front_end, vertex_buffer, sample_mesh.point_count);
+    front_end.stop();
+
+    std::cout << "Done!" << std::endl;
+
+    return 0;
+}
+
+void run(const FrontEndSystem& front_end, const GLuint buffer_id, const uint32_t buffer_size) {
+    Graphics& graphics = front_end.get_module<Graphics>();
+    Events& events = front_end.get_module<Events>();
+    Time& time = front_end.get_module<Time>();
+
+    std::cout << "Starting main loop..." << std::endl;
+    uint64_t frame_number = 0;
+
+    while (!graphics.should_window_close()) {
+        time.start_frame();
+        frame_number++;
+
+        graphics.start_rendering_buffer();
+
+        render_buffer(buffer_id, buffer_size);
+
+        graphics.stop_rendering_buffer();
+
+        events.poll_events();
+
+        time.end_frame();
+    }
+
+    std::cout << "Main loop stopped!" << std::endl;
+    std::cout << "Ran " << frame_number << " frames!" << std::endl;
+}
+
+void render_buffer(const GLuint vertex_buffer, const uint32_t vertex_buffer_size) {
     // 1st attribute buffer : vertices
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
@@ -37,65 +93,23 @@ void render_triangle(const GLuint vertex_buffer, const uint32_t vertex_buffer_si
     glDisableVertexAttribArray(0);
 }
 
-void run(const FrontEndSystem& front_end, const MeshRaw& mesh) {
-    Graphics& graphics = front_end.get_module<Graphics>();
-    Events& events = front_end.get_module<Events>();
-    Time& time = front_end.get_module<Time>();
-
-    std::cout << "Starting main loop..." << std::endl;
-    uint64_t frame_number = 0;
-
-    while (!graphics.should_window_close()) {
-        time.start_frame();
-        frame_number++;
-
-        graphics.start_rendering_buffer();
-
-        render_triangle(vertex_buffer, mesh.point_count);
-
-        graphics.stop_rendering_buffer();
-
-        events.poll_events();
-
-        time.end_frame();
-    }
-
-    std::cout << "Main loop stopped!" << std::endl;
-    std::cout << "Ran " << frame_number << " frames!" << std::endl;
-}
-
-int main(int argc, char const* argv[]) {
-    std::cout << "Hello world" << std::endl;
-
-    const MeshRaw& square_mesh = MeshGenerator::generate_square();
-    square_mesh.print();
-
-    glewExperimental = GL_TRUE;
-
-    FrontEndSystem front_end = FrontEndSystem();
-    if (!front_end.is_initialized()) {
-        return -1;
-    }
-
+GLuint generate_vertex_array() {
     std::cout << "Creating vertex array object..." << std::endl;
+    GLuint vao_id;
     glGenVertexArrays(1, &vao_id);
     glBindVertexArray(vao_id);
+    return vao_id;
+}
 
+GLuint generate_vertex_buffer(const MeshRaw& mesh) {
     std::cout << "Creating vertex buffer..." << std::endl;
-    glGenBuffers(1, &vertex_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)square_mesh.point_count * (GLsizeiptr)sizeof(GLfloat),
-                 square_mesh.points, GL_STATIC_DRAW);
+    GLuint buffer_id;
 
-    std::cout << "Init successful!" << std::endl;
+    GLsizeiptr byte_count = static_cast<GLsizeiptr>(mesh.point_count * (uint32_t)sizeof(GLfloat));
 
-    front_end.start();
+    glGenBuffers(1, &buffer_id);
+    glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
+    glBufferData(GL_ARRAY_BUFFER, byte_count, mesh.points, GL_STATIC_DRAW);
 
-    run(front_end, square_mesh);
-
-    front_end.stop();
-
-    std::cout << "Done!" << std::endl;
-
-    return 0;
+    return buffer_id;
 }

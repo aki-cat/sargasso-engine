@@ -11,10 +11,10 @@ namespace Common {
 template <typename T>
 class Pool {
    public:
-    using ID = int;
+    using ID = uint32_t;
     // class members
-    static const int DEFAULT_SIZE = 16;
-    static const int INVALID = -1;
+    static const uint32_t DEFAULT_SIZE = 16;
+    static const uint32_t INVALID = 0xffffffff;
 
     // constructors/destructors
     Pool();
@@ -30,8 +30,8 @@ class Pool {
     // private attributes
     T* _data;
     Dictionary<ID, bool> _used_slots;
-    int _used;
-    int _capacity;
+    uint32_t _used;
+    uint32_t _capacity;
 
     // private methods
     ID _next_free_id();
@@ -109,12 +109,12 @@ template <typename T>
 void Pool<T>::_grow() {
     // reference old data
     T* old_data = _data;
-    int old_capacity = _capacity;
+    uint32_t old_capacity = _capacity;
 
     // alloc space for new data
     _capacity *= 2;
     _data = new T[(size_t)_capacity];
-    for (int index = 0; index < old_capacity; index++) {
+    for (uint32_t index = 0; index < old_capacity; index++) {
         _data[index] = old_data[index];
     }
 
