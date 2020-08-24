@@ -18,6 +18,18 @@ using namespace Geometry;
 
 #define _SARGASSO_TEST_PASSED() printf("...OK!\n")
 
+#define assert_throws(expr, exception_t) \
+    {                                    \
+        int throws = -1;                 \
+        try {                            \
+            expr;                        \
+            throws = 0;                  \
+        } catch (exception_t) {          \
+            throws = 1;                  \
+        }                                \
+        assert(throws == 1);             \
+    }
+
 void vertex_pool_tests() {
     // Test block
     _SARGASSO_TEST("Pool<Vertex>", "create", "AddedConsecutiveVertices", "ReturnDifferentIds");
@@ -57,6 +69,14 @@ void vertex_pool_tests() {
     assert(&v1 != &v1_original);
     assert(&v1 != &v1_original);
     assert(&v2 != &v2_original);
+
+    _SARGASSO_TEST_PASSED();
+
+    // Test block
+    _SARGASSO_TEST("Pool<Vertex>", "destroy", "DestroyAddedElement", "ThrowsWhenTryingToAccessIt");
+
+    vertex_pool.destroy(v1_id);
+    assert_throws({ vertex_pool.get(v1_id); }, ...);
 
     _SARGASSO_TEST_PASSED();
 }
