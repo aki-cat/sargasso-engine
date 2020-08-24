@@ -18,7 +18,7 @@ void run(const FrontEndSystem& front_end, const GLuint buffer_id, const uint32_t
 void render_buffer(const GLuint vertex_buffer, const uint32_t vertex_buffer_size);
 
 GLuint generate_vertex_array();
-GLuint generate_vertex_buffer(const MeshRaw& mesh);
+GLuint generate_buffer(const MeshRaw& mesh);
 
 int main(int argc, char const* argv[]) {
     std::cout << "Hello world" << std::endl;
@@ -33,7 +33,7 @@ int main(int argc, char const* argv[]) {
 
     // GLuint vao_id =
     generate_vertex_array();
-    GLuint vertex_buffer = generate_vertex_buffer(sample_mesh);
+    GLuint vertex_buffer = generate_buffer(sample_mesh);
 
     std::cout << "Init successful!" << std::endl;
 
@@ -101,7 +101,7 @@ GLuint generate_vertex_array() {
     return vao_id;
 }
 
-GLuint generate_vertex_buffer(const MeshRaw& mesh) {
+GLuint generate_buffer(const MeshRaw& mesh) {
     std::cout << "Creating vertex buffer..." << std::endl;
     GLuint buffer_id;
 
