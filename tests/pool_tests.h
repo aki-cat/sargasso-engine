@@ -54,6 +54,16 @@ void pool_tests() {
     _SARGASSO_TEST_PASSED();
 
     // Test block
+    _SARGASSO_TEST("Pool<Dummy>", "get", "ChangedMutableElementReference", "ChangeAllReferences");
+
+    Dummy& v2_mut = dummy_pool.get(v2_id);
+    v2_mut.name = "Charles";
+    v2_mut.age = 97;
+    assert(v2_mut.age == v2.age && v2_mut.name == v2.name);
+
+    _SARGASSO_TEST_PASSED();
+
+    // Test block
     _SARGASSO_TEST("Pool<Dummy>", "destroy", "DestroyAddedElement", "ThrowsWhenTryingToAccessIt");
 
     dummy_pool.destroy(v1_id);

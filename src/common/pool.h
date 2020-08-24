@@ -24,6 +24,7 @@ class Pool {
     ID create(const T& object);
     void destroy(ID id);
     const T& get(ID id) const;
+    T& get(ID id);
 
    private:
     // private attributes
@@ -75,6 +76,14 @@ inline void Pool<T>::destroy(Pool<T>::ID slot) {
 
 template <typename T>
 inline const T& Pool<T>::get(Pool<T>::ID id) const {
+    if (!_used_slots.at(id)) {
+        throw "No such object";
+    }
+    return _data[id];
+}
+
+template <typename T>
+inline T& Pool<T>::get(Pool<T>::ID id) {
     if (!_used_slots.at(id)) {
         throw "No such object";
     }
