@@ -4,14 +4,10 @@
 #include "front_end/modules/time.h"
 #include "front_end/utility/shader_loader.h"
 #include "geometry/mesh_generator.h"
-#include "geometry/vertex.h"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <array>
-#include <glm/vec3.hpp>
 #include <iostream>
-#include <stdio.h>
 
 using namespace SargassoEngine::FrontEnd;
 using namespace SargassoEngine::FrontEnd::Modules;
@@ -37,7 +33,7 @@ void render_triangle(const GLuint vertex_buffer, const int vertex_buffer_size) {
     // Draw the triangle !
 
     // Starting from vertex 0; 3 vertices total -> 1 triangle
-    glDrawArrays(GL_TRIANGLES, 0, vertex_buffer_size / POINTS_PER_VERTEX);
+    glDrawArrays(GL_TRIANGLES, 0, vertex_buffer_size);
     glDisableVertexAttribArray(0);
 }
 
@@ -57,10 +53,21 @@ int main(int argc, char const* argv[]) {
 
     const MeshRaw square_mesh = MeshGenerator::generate_square();
 
+    std::cout << "--" << std::endl;
+    for (int i = 0; i < 6; i++) {
+        std::cout << "( ";
+        for (int j = 0; j < 3; j++) {
+            std::cout << square_mesh.points[i * 3 + j] << " ";
+        }
+        std::cout << ")" << std::endl;
+    }
+    std::cout << "--" << std::endl;
+
     std::cout << "Creating vertex buffer..." << std::endl;
     glGenBuffers(1, &vertex_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, square_mesh.point_count, square_mesh.points, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)square_mesh.point_count * (GLsizeiptr)sizeof(GLfloat),
+                 square_mesh.points, GL_STATIC_DRAW);
 
     std::cout << "Init successful!" << std::endl;
 
