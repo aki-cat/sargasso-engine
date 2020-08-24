@@ -6,9 +6,7 @@
 #include <iostream>
 
 namespace SargassoEngine {
-namespace Geometry {
-
-using namespace Common;
+namespace Common {
 
 template <typename T>
 class Pool {
@@ -115,7 +113,7 @@ void Pool<T>::_grow() {
     delete[] old_data;
 }
 
-}  // namespace Geometry
+}  // namespace Common
 }  // namespace SargassoEngine
 
 #endif

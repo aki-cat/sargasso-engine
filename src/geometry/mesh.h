@@ -2,8 +2,8 @@
 #define SARGASSO_ENGINE_MESH_H
 
 #include "common/containers.h"
+#include "common/pool.h"
 #include "geometry/mesh_raw.h"
-#include "geometry/pool.h"
 #include "geometry/vertex.h"
 
 namespace SargassoEngine {
