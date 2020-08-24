@@ -7,11 +7,13 @@ namespace SargassoEngine {
 namespace Geometry {
 
 struct MeshRaw {
-    MeshRaw(const Vertex* vertices, const int vertex_count);
+    MeshRaw(const Vertex* vertices, const uint32_t vertex_count);
     ~MeshRaw();
 
     float* points;
-    const int point_count;
+    const uint32_t point_count;
+
+    void print() const;
 };
 
 }  // namespace Geometry

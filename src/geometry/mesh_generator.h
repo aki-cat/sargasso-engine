@@ -10,7 +10,7 @@ class MeshGenerator {
    public:
     MeshGenerator() = delete;
     ~MeshGenerator() = delete;
-    static const MeshRaw& generate_square();
+    static const MeshRaw generate_square();
 };
 
 }  // namespace Geometry

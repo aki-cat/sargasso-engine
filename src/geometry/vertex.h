@@ -8,7 +8,7 @@ namespace Geometry {
 
 using namespace Common;
 
-static const int POINTS_PER_VERTEX = 3;
+static const uint32_t POINTS_PER_VERTEX = 3;
 
 struct Vertex {
     Vertex() : position() {}

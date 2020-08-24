@@ -24,7 +24,7 @@ class FrontEndSystem {
     void stop();
 
     template <typename T>
-    T& get_module();
+    T& get_module() const;
 
    private:
     bool _initialized;
@@ -34,17 +34,17 @@ class FrontEndSystem {
 };
 
 template <>
-inline Graphics& FrontEndSystem::get_module() {
+inline Graphics& FrontEndSystem::get_module() const {
     return *_graphics;
 }
 
 template <>
-inline Events& FrontEndSystem::get_module() {
+inline Events& FrontEndSystem::get_module() const {
     return *_events;
 }
 
 template <>
-inline Time& FrontEndSystem::get_module() {
+inline Time& FrontEndSystem::get_module() const {
     return *_time;
 }
 

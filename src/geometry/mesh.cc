@@ -19,7 +19,7 @@ Mesh::Mesh(const Vertex* vertices, int vertex_count) {
 
 const MeshRaw Mesh::raw() const {
     DynamicArray<Vertex> raw_vertices{};
-    int count = 0;
+    uint32_t count = 0;
 
     for (const Vertex& vertex : _vertices) {
         raw_vertices.push_back(vertex);

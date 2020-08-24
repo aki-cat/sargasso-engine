@@ -17,7 +17,7 @@ using namespace SargassoEngine::Geometry;
 static GLuint vao_id;
 static GLuint vertex_buffer;
 
-void render_triangle(const GLuint vertex_buffer, const int vertex_buffer_size) {
+void render_triangle(const GLuint vertex_buffer, const uint32_t vertex_buffer_size) {
     // 1st attribute buffer : vertices
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
@@ -33,12 +33,42 @@ void render_triangle(const GLuint vertex_buffer, const int vertex_buffer_size) {
     // Draw the triangle !
 
     // Starting from vertex 0; 3 vertices total -> 1 triangle
-    glDrawArrays(GL_TRIANGLES, 0, vertex_buffer_size);
+    glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(vertex_buffer_size));
     glDisableVertexAttribArray(0);
+}
+
+void run(const FrontEndSystem& front_end, const MeshRaw& mesh) {
+    Graphics& graphics = front_end.get_module<Graphics>();
+    Events& events = front_end.get_module<Events>();
+    Time& time = front_end.get_module<Time>();
+
+    std::cout << "Starting main loop..." << std::endl;
+    uint64_t frame_number = 0;
+
+    while (!graphics.should_window_close()) {
+        time.start_frame();
+        frame_number++;
+
+        graphics.start_rendering_buffer();
+
+        render_triangle(vertex_buffer, mesh.point_count);
+
+        graphics.stop_rendering_buffer();
+
+        events.poll_events();
+
+        time.end_frame();
+    }
+
+    std::cout << "Main loop stopped!" << std::endl;
+    std::cout << "Ran " << frame_number << " frames!" << std::endl;
 }
 
 int main(int argc, char const* argv[]) {
     std::cout << "Hello world" << std::endl;
+
+    const MeshRaw& square_mesh = MeshGenerator::generate_square();
+    square_mesh.print();
 
     glewExperimental = GL_TRUE;
 
@@ -51,18 +81,6 @@ int main(int argc, char const* argv[]) {
     glGenVertexArrays(1, &vao_id);
     glBindVertexArray(vao_id);
 
-    const MeshRaw square_mesh = MeshGenerator::generate_square();
-
-    std::cout << "--" << std::endl;
-    for (int i = 0; i < 6; i++) {
-        std::cout << "( ";
-        for (int j = 0; j < 3; j++) {
-            std::cout << square_mesh.points[i * 3 + j] << " ";
-        }
-        std::cout << ")" << std::endl;
-    }
-    std::cout << "--" << std::endl;
-
     std::cout << "Creating vertex buffer..." << std::endl;
     glGenBuffers(1, &vertex_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
@@ -71,33 +89,12 @@ int main(int argc, char const* argv[]) {
 
     std::cout << "Init successful!" << std::endl;
 
-    uint64_t frame_number = 0;
-
     front_end.start();
 
-    Graphics& graphics = front_end.get_module<Graphics>();
-    Events& events = front_end.get_module<Events>();
-    Time& time = front_end.get_module<Time>();
-
-    std::cout << "Starting main loop..." << std::endl;
-    while (!graphics.should_window_close()) {
-        // main loop
-        time.start_frame();
-
-        frame_number++;
-        graphics.start_rendering_buffer();
-        render_triangle(vertex_buffer, square_mesh.point_count);
-        graphics.stop_rendering_buffer();
-
-        events.poll_events();
-
-        time.end_frame();
-    }
-    std::cout << "Main loop stopped!" << std::endl;
+    run(front_end, square_mesh);
 
     front_end.stop();
 
-    std::cout << "Ran " << frame_number << " frames!" << std::endl;
     std::cout << "Done!" << std::endl;
 
     return 0;
