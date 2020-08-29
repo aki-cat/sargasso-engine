@@ -9,7 +9,7 @@ namespace SargassoEngine {
 namespace Tests {
 
 #define _SARGASSO_TEST(CLASS_NAME, METHOD_NAME, SITUATION, EXPECTED) \
-    logf("%s::%s} It should %s when %s", CLASS_NAME, METHOD_NAME, EXPECTED, SITUATION)
+    logf("%::%() -> It should % when %", CLASS_NAME, METHOD_NAME, EXPECTED, SITUATION)
 
 #define _SARGASSO_TEST_PASSED() log("...OK!")
 

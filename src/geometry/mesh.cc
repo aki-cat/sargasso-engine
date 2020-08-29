@@ -2,12 +2,14 @@
 #include "geometry/mesh.h"
 
 #include "common/containers.h"
+#include "common/format.h"
 #include "common/math.h"
 #include "common/pool.h"
 
-#include <iostream>
+#include <stdexcept>
 
 using namespace SargassoEngine::Geometry;
+using namespace SargassoEngine::Common;
 using namespace SargassoEngine::Common::Math;
 
 Mesh::Mesh(const Vector3* vertices, const uint32_t vertex_count) {
@@ -33,8 +35,8 @@ const MeshRaw Mesh::raw() const {
 
 Vector3 Mesh::get_vertex(const uint32_t vertex_index) const {
     if (vertex_index >= _vertices.size()) {
-        throw std::out_of_range(std::format("Vertex index out of range. Was {0}, expected n <= {1}",
-                                            vertex_index, _vertices.size()));
+        throw std::out_of_range(format("Vertex index out of range. Was {0}, expected n <= {1}",
+                                       vertex_index, _vertices.size()));
     }
     return _vertices.at(vertex_index);
 }
