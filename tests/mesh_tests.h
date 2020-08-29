@@ -4,10 +4,16 @@
 namespace SargassoEngine {
 namespace Tests {
 
+void mesh_tests();
+
+// translate
 void translate_zeroVector_equalMesh();
 void translate_anyVector_copiedInstance();
 void translate_anyVector_expectedTranslation();
-void mesh_tests();
+
+// rotate
+
+// scale
 
 }  // namespace Tests
 }  // namespace SargassoEngine
