@@ -13,3 +13,13 @@ const MeshRaw MeshGenerator::generate_square() {
 
     return MeshRaw(square_vertices, 6);
 }
+
+const Matrix4 MeshGenerator::generate_sample_camera() {
+    const float width = 960.0f, height = 540.0f;
+    Matrix4 projection = glm::perspective(glm::radians(45.0f), width / height, 0.01f, 1000.0f);
+    Matrix4 view = glm::lookAt(glm::vec3(4, 3, 3),   // Position
+                               glm::vec3(0, 0, 0),   // Target
+                               glm::vec3(0, 1, 0));  // Up vector
+
+    return projection * view;
+}

@@ -2,13 +2,15 @@
 
 #include "engine.h"
 #include "front_end/utility/shader_loader.h"
+#include "geometry/mesh_generator.h"
 
 #include <GL/glew.h>
 #include <exception>
 #include <iostream>
 
-using SargassoEngine::FrontEnd::Modules::Graphics;
-using SargassoEngine::FrontEnd::Utility::ShaderLoader;
+using namespace SargassoEngine::FrontEnd::Modules;
+using namespace SargassoEngine::FrontEnd::Utility;
+using namespace SargassoEngine::Geometry;
 
 Graphics::Graphics() {
     std::cout << "Initializing window..." << std::endl;
@@ -37,8 +39,10 @@ Graphics::Graphics() {
     try {
         _program_id = ShaderLoader::load_default_shaders();
     } catch (const std::string& exception) {
-        std::cerr << "Failed to load d shaders:\n\t" << exception << std::endl;
+        std::cerr << "Failed to load shaders:\n\t" << exception << std::endl;
     }
+
+    _camera = MeshGenerator::generate_sample_camera();
 }
 
 Graphics::~Graphics() {
@@ -51,10 +55,16 @@ void Graphics::start_rendering_buffer() {
     // Called before rendering a frame
     glfwGetFramebufferSize(_window, &_width, &_height);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    _set_shader_camera();
     glUseProgram(_program_id);
 }
 
 void Graphics::stop_rendering_buffer() {
     // Called after rendering a frame
     glfwSwapBuffers(_window);
+}
+
+void Graphics::_set_shader_camera() {
+    GLint camera_matrix_id = glGetUniformLocation(_program_id, "projection_view");
+    glUniformMatrix4fv(camera_matrix_id, 1, GL_FALSE, &_camera[0][0]);
 }

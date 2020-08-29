@@ -1,3 +1,4 @@
+#include "common/math.h"
 #include "front_end/front_end_system.h"
 #include "front_end/modules/events.h"
 #include "front_end/modules/graphics.h"
@@ -9,10 +10,13 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+using namespace SargassoEngine;
 using namespace SargassoEngine::FrontEnd;
 using namespace SargassoEngine::FrontEnd::Modules;
 using namespace SargassoEngine::FrontEnd::Utility;
 using namespace SargassoEngine::Geometry;
+using namespace SargassoEngine::Common;
+using namespace SargassoEngine::Common::Math;
 
 void run(const FrontEndSystem& front_end, const GLuint buffer_id, const uint32_t buffer_size);
 void render_buffer(const GLuint vertex_buffer, const uint32_t vertex_buffer_size);

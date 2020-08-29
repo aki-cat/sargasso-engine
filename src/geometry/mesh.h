@@ -8,6 +8,8 @@
 namespace SargassoEngine {
 namespace Geometry {
 
+using namespace Common;
+
 class Mesh {
    public:
     explicit Mesh(const Vertex* vertices, int vertex_count);

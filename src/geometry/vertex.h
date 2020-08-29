@@ -6,7 +6,7 @@
 namespace SargassoEngine {
 namespace Geometry {
 
-using namespace Common;
+using namespace Common::Math;
 
 static const uint32_t POINTS_PER_VERTEX = 3;
 
