@@ -1,13 +1,15 @@
 #ifndef SARGASSO_ENGINE_MESH_RAW_H
 #define SARGASSO_ENGINE_MESH_RAW_H
 
-#include "geometry/vertex.h"
+#include "common/math.h"
+
+using namespace SargassoEngine::Common::Math;
 
 namespace SargassoEngine {
 namespace Geometry {
 
 struct MeshRaw {
-    MeshRaw(const Vertex* vertices, const uint32_t vertex_count);
+    MeshRaw(const Vector3* vertices, const uint32_t vertex_count);
     ~MeshRaw();
 
     float* points;

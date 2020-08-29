@@ -3,22 +3,29 @@
 
 #include "common/containers.h"
 #include "geometry/mesh_raw.h"
-#include "geometry/vertex.h"
 
 namespace SargassoEngine {
 namespace Geometry {
 
 using namespace Common;
 
+static const uint32_t POINTS_PER_VERTEX = 3;
+
 class Mesh {
    public:
-    explicit Mesh(const Vertex* vertices, int vertex_count);
-    Mesh(const Mesh&) = delete;
-    Mesh(const Mesh&&) = delete;
+    // Constructors
+    explicit Mesh(const Vector3* vertices, uint32_t vertex_count);
+    // Methods
     const MeshRaw raw() const;
+    // Operations
+    Mesh translate(const Vector3& translation) const;
+    Mesh rotate(const Vector3& axis, float angle) const;
+    Mesh scale(float scale) const;
 
    private:
-    DynamicArray<Vertex> _vertices;
+    Mesh(const Mesh&);
+    Mesh(const Mesh&&);
+    DynamicArray<Vector3> _vertices;
 };
 
 }  // namespace Geometry

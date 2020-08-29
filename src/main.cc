@@ -4,6 +4,7 @@
 #include "front_end/modules/graphics.h"
 #include "front_end/modules/time.h"
 #include "front_end/utility/shader_loader.h"
+#include "geometry/mesh.h"
 #include "geometry/mesh_generator.h"
 
 #include <GL/glew.h>
