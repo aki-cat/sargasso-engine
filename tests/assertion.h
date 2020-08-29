@@ -1,16 +1,17 @@
 #ifndef SARGASSO_ENGINE_TESTS_ASSERTION_H
 #define SARGASSO_ENGINE_TESTS_ASSERTION_H
 
+#include "common/log.h"
+
 #include <cassert>
-#include <stdio.h>
 
 namespace SargassoEngine {
 namespace Tests {
 
 #define _SARGASSO_TEST(CLASS_NAME, METHOD_NAME, SITUATION, EXPECTED) \
-    printf("\n%s::%s It should %s when %s\n", CLASS_NAME, METHOD_NAME, EXPECTED, SITUATION)
+    logf("%s::%s} It should %s when %s", CLASS_NAME, METHOD_NAME, EXPECTED, SITUATION)
 
-#define _SARGASSO_TEST_PASSED() printf("...OK!\n")
+#define _SARGASSO_TEST_PASSED() log("...OK!")
 
 #define assert_throws(expr, exception_t) \
     {                                    \

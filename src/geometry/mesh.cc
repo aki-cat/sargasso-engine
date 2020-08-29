@@ -10,7 +10,7 @@
 using namespace SargassoEngine::Geometry;
 using namespace SargassoEngine::Common::Math;
 
-Mesh::Mesh(const Vector3* vertices, uint32_t vertex_count) {
+Mesh::Mesh(const Vector3* vertices, const uint32_t vertex_count) {
     _vertices = DynamicArray<Vector3>();
 
     std::cout << "size of vertex array: " << vertex_count << std::endl;
@@ -31,8 +31,15 @@ const MeshRaw Mesh::raw() const {
     return MeshRaw(raw_vertices.data(), count);
 }
 
+Vector3 Mesh::get_vertex(const uint32_t vertex_index) const {
+    if (vertex_index >= _vertices.size()) {
+        throw std::out_of_range(std::format("Vertex index out of range. Was {0}, expected n <= {1}",
+                                            vertex_index, _vertices.size()));
+    }
+    return _vertices.at(vertex_index);
+}
+
 Mesh Mesh::translate(const Vector3& translation) const {
-    // TODO: translate
     DynamicArray<Vector3> vertices{};
 
     for (const Vector3& vertex : _vertices) {

@@ -1,3 +1,5 @@
+#ifndef SARGASSO_ENGINE_POOL_TESTS_H
+#define SARGASSO_ENGINE_POOL_TESTS_H
 
 #include "common/pool.h"
 
@@ -73,5 +75,6 @@ void pool_tests() {
 }
 
 }  // namespace Tests
-
 }  // namespace SargassoEngine
+
+#endif
