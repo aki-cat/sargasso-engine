@@ -15,6 +15,13 @@ inline void logf(const std::string& fmt, Args... args) {
     log(format(fmt, args...));
 }
 
+inline void log_error(const std::string& str) { std::cerr << str << std::endl; }
+
+template <typename... Args>
+inline void logf_error(const std::string& fmt, Args... args) {
+    log_error(format(fmt, args...));
+}
+
 }  // namespace Common
 }  // namespace SargassoEngine
 

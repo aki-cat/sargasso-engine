@@ -1,5 +1,6 @@
 #include "front_end/modules/graphics.h"
 
+#include "common/log.h"
 #include "engine.h"
 #include "front_end/utility/shader_loader.h"
 #include "geometry/mesh_generator.h"
@@ -11,9 +12,10 @@
 using namespace SargassoEngine::FrontEnd::Modules;
 using namespace SargassoEngine::FrontEnd::Utility;
 using namespace SargassoEngine::Geometry;
+using namespace SargassoEngine::Common;
 
 Graphics::Graphics() {
-    std::cout << "Initializing window..." << std::endl;
+    log("Initializing window...");
 
     glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -22,24 +24,24 @@ Graphics::Graphics() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 
     _window = glfwCreateWindow(960, 540, SargassoEngine::ENGINE_NAME, NULL, NULL);
-    std::cout << "Window created!" << std::endl;
+    log("Window created!");
 
     // Initialize window
-    std::cout << "Setting GL context.." << std::endl;
+    log("Setting GL context..");
     glfwMakeContextCurrent(_window);
     glfwFocusWindow(_window);
 
-    std::cout << "Setting swap interval..." << std::endl;
+    log("Setting swap interval...");
     glfwSwapInterval(1);
 
-    std::cout << "Initializing glew..." << std::endl;
+    log("Initializing glew...");
     glewInit();
 
-    std::cout << "Loading shaders..." << std::endl;
+    log("Loading shaders...");
     try {
         _program_id = ShaderLoader::load_default_shaders();
     } catch (const std::string& exception) {
-        std::cerr << "Failed to load shaders:\n\t" << exception << std::endl;
+        logf_error("Failed to load shaders:\n\t%", exception);
     }
 
     _camera = MeshGenerator::generate_sample_camera();

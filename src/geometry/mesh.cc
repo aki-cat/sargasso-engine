@@ -3,6 +3,7 @@
 
 #include "common/containers.h"
 #include "common/format.h"
+#include "common/log.h"
 #include "common/math.h"
 #include "common/pool.h"
 
@@ -15,7 +16,7 @@ using namespace SargassoEngine::Common::Math;
 Mesh::Mesh(const Vector3* vertices, const uint32_t vertex_count) {
     _vertices = DynamicArray<Vector3>();
 
-    std::cout << "size of vertex array: " << vertex_count << std::endl;
+    logf("size of vertex array: %", vertex_count);
     for (int i = 0; i < vertex_count; i++) {
         _vertices.push_back(vertices[i]);
     }

@@ -2,6 +2,7 @@
 #include "front_end/utility/shader_loader.h"
 
 #include "common/containers.h"
+#include "common/log.h"
 
 #include <GL/glew.h>
 #include <iostream>
@@ -9,8 +10,9 @@
 #include <string>
 #include <vector>
 
-using SargassoEngine::Common::DynamicArray;
-using SargassoEngine::FrontEnd::Utility::ShaderLoader;
+using namespace SargassoEngine::FrontEnd::Utility;
+using namespace SargassoEngine::Common;
+
 using ShaderType = ShaderLoader::ShaderType;
 
 constexpr const char* SHADER_VERTEX_FILE_PATH = "src/front_end/utility/shaders/basic_vertex.glsl";
@@ -18,21 +20,21 @@ constexpr const char* SHADER_FRAGMENT_FILE_PATH =
     "src/front_end/utility/shaders/basic_fragment.glsl";
 
 GLuint ShaderLoader::load_default_shaders() {
-    std::cout << "Creating shaders" << std::endl;
+    log("Creating shaders");
 
     // Create the shaders
     GLuint vertex_shader_id = load_shader(SHADER_VERTEX_FILE_PATH, ShaderType::Vertex);
-    std::cout << "Vertex shader id #" << vertex_shader_id << std::endl;
+    logf("Vertex shader id #%", vertex_shader_id);
     GLuint frag_shader_id = load_shader(SHADER_FRAGMENT_FILE_PATH, ShaderType::Fragment);
-    std::cout << "Fragment shader id #" << frag_shader_id << std::endl;
+    logf("Fragment shader id #%", frag_shader_id);
 
     // Link the program
-    std::cout << "Linking program" << std::endl;
+    log("Linking program");
     GLuint program_id = glCreateProgram();
     glAttachShader(program_id, vertex_shader_id);
     glAttachShader(program_id, frag_shader_id);
     glLinkProgram(program_id);
-    std::cout << "Program shader id #" << program_id << std::endl;
+    logf("Program shader id #%", program_id);
 
     // Check the program
     GLint success = GL_FALSE;
@@ -60,7 +62,7 @@ GLuint ShaderLoader::load_shader(const std::string& shader_path, ShaderType shad
         const std::string& shader = File::read_file(shader_path);
         return create_shader(shader.c_str(), shader_type);
     } catch (const std::string& exception) {
-        std::cerr << "Failed to load shader @ " << shader_path << "\n\t" << exception << std::endl;
+        logf_error("Failed to load shader '%'\n> Error: %", shader_path, exception);
         return 0;
     }
 }

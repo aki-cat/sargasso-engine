@@ -1,3 +1,4 @@
+#include "common/log.h"
 #include "common/math.h"
 #include "front_end/front_end_system.h"
 #include "front_end/modules/events.h"
@@ -9,7 +10,6 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
 
 using namespace SargassoEngine;
 using namespace SargassoEngine::FrontEnd;
@@ -26,7 +26,7 @@ GLuint generate_vertex_array();
 GLuint generate_buffer(const MeshRaw& mesh);
 
 int main(int argc, char const* argv[]) {
-    std::cout << "Hello world" << std::endl;
+    log("Hello world");
 
     const MeshRaw& sample_mesh = MeshGenerator::generate_square();
     sample_mesh.print();
@@ -40,13 +40,13 @@ int main(int argc, char const* argv[]) {
     generate_vertex_array();
     GLuint vertex_buffer = generate_buffer(sample_mesh);
 
-    std::cout << "Init successful!" << std::endl;
+    log("Init successful!");
 
     front_end.start();
     run(front_end, vertex_buffer, sample_mesh.point_count);
     front_end.stop();
 
-    std::cout << "Done!" << std::endl;
+    log("Done!");
 
     return 0;
 }
@@ -56,12 +56,12 @@ void run(const FrontEndSystem& front_end, const GLuint buffer_id, const uint32_t
     Events& events = front_end.get_module<Events>();
     Time& time = front_end.get_module<Time>();
 
-    std::cout << "Starting main loop..." << std::endl;
-    uint64_t frame_number = 0;
+    log("Starting main loop...");
+    uint64_t frame_count = 0;
 
     while (!graphics.should_window_close()) {
         time.start_frame();
-        frame_number++;
+        frame_count++;
 
         graphics.start_rendering_buffer();
 
@@ -74,8 +74,8 @@ void run(const FrontEndSystem& front_end, const GLuint buffer_id, const uint32_t
         time.end_frame();
     }
 
-    std::cout << "Main loop stopped!" << std::endl;
-    std::cout << "Ran " << frame_number << " frames!" << std::endl;
+    log("Main loop stopped!");
+    logf("Ran % frames!", frame_count);
 }
 
 void render_buffer(const GLuint vertex_buffer, const uint32_t vertex_buffer_size) {
@@ -99,7 +99,7 @@ void render_buffer(const GLuint vertex_buffer, const uint32_t vertex_buffer_size
 }
 
 GLuint generate_vertex_array() {
-    std::cout << "Creating vertex array object..." << std::endl;
+    log("Creating vertex array object...");
     GLuint vao_id;
     glGenVertexArrays(1, &vao_id);
     glBindVertexArray(vao_id);
@@ -107,7 +107,7 @@ GLuint generate_vertex_array() {
 }
 
 GLuint generate_buffer(const MeshRaw& mesh) {
-    std::cout << "Creating vertex buffer..." << std::endl;
+    log("Creating vertex buffer...");
     GLuint buffer_id;
 
     GLsizeiptr byte_count = static_cast<GLsizeiptr>(mesh.point_count * (uint32_t)sizeof(GLfloat));

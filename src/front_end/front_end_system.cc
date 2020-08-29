@@ -1,6 +1,7 @@
 
 #include "front_end/front_end_system.h"
 
+#include "common/log.h"
 #include "front_end/modules/events.h"
 #include "front_end/modules/graphics.h"
 #include "front_end/modules/time.h"
@@ -10,20 +11,20 @@
 #include <iostream>
 
 using SargassoEngine::FrontEnd::FrontEndSystem;
+using namespace SargassoEngine::Common;
 
 FrontEndSystem::FrontEndSystem() {
-    std::cout << glfwGetVersionString() << std::endl;
-    std::cout << "Initializing GLFW..." << std::endl;
+    log(glfwGetVersionString());
+    log("Initializing GLFW...");
 
     glewExperimental = GL_TRUE;
 
     if (!glfwInit()) {
-        std::cerr << "Init failed!" << std::endl;
         _initialized = false;
-        return;
+        throw std::runtime_error("Init failed!");
     }
 
-    std::cerr << "Init succesful!" << std::endl;
+    log("Init succesful!");
 
     _graphics = new Graphics();
     _events = new Events();
@@ -32,7 +33,7 @@ FrontEndSystem::FrontEndSystem() {
 }
 
 FrontEndSystem::~FrontEndSystem() {
-    std::cout << "Terminating GLFW..." << std::endl;
+    log("Terminating GLFW...");
 
     delete _events;
     delete _graphics;
@@ -44,13 +45,13 @@ FrontEndSystem::~FrontEndSystem() {
 }
 
 void FrontEndSystem::start() {
-    std::cout << "Registering window callbacks..." << std::endl;
+    log("Registering window callbacks...");
     _events->register_window(_graphics->get_window());
     _time->reset();
 }
 
 void FrontEndSystem::stop() {
-    std::cout << "Deregistering window callbacks..." << std::endl;
+    log("Deregistering window callbacks...");
     _events->deregister_window(_graphics->get_window());
 }
 

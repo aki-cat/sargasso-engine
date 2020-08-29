@@ -1,15 +1,16 @@
 
 #include "common/file.h"
 
-#include <iostream>
+#include "common/log.h"
+
 #include <sstream>
 
-using SargassoEngine::Common::File;
+using namespace SargassoEngine::Common;
 
-constexpr const char* FILE_READ_ERROR = "Could not open file: ";
+constexpr const char* FILE_READ_ERROR = "Could not open file: %";
 
 const std::string File::read_file(const std::string& file_path) {
-    std::cout << "Reading file: " << file_path << std::endl;
+    logf("Reading file: % ", file_path);
 
     std::string contents;
     std::ifstream contents_stream = std::ifstream(file_path, std::ios::in);
@@ -19,8 +20,7 @@ const std::string File::read_file(const std::string& file_path) {
         contents = sstr.str();
         contents_stream.close();
     } else {
-        std::cerr << FILE_READ_ERROR << file_path << std ::endl;
-        return 0;
+        throw std::runtime_error(format(FILE_READ_ERROR, file_path));
     }
     return contents;
 }
