@@ -5,7 +5,7 @@
 #include "common/log.h"
 
 #include <GL/glew.h>
-#include <iostream>
+#include <stdexcept>
 #include <stdio.h>
 #include <string>
 #include <vector>
@@ -45,7 +45,7 @@ GLuint ShaderLoader::load_default_shaders() {
         glGetProgramiv(program_id, GL_INFO_LOG_LENGTH, &log_length);
         DynamicArray<char> program_error_message((size_t)log_length);
         glGetProgramInfoLog(program_id, log_length, NULL, program_error_message.data());
-        throw std::string(program_error_message.data());
+        throw std::runtime_error(program_error_message.data());
     }
 
     glDetachShader(program_id, vertex_shader_id);

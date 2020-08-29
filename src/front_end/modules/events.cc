@@ -1,10 +1,12 @@
 
 #include "front_end/modules/events.h"
 
+#include "common/log.h"
+
 #include <GLFW/glfw3.h>
-#include <iostream>
 
 using SargassoEngine::FrontEnd::Modules::Events;
+using namespace SargassoEngine::Common;
 
 Events::Events() { glfwSetErrorCallback(Events::Callbacks::error_callback); }
 
@@ -18,7 +20,7 @@ void Events::register_window(GLFWwindow* window) {
 void Events::deregister_window(GLFWwindow* window) { glfwSetKeyCallback(window, NULL); }
 
 void Events::Callbacks::error_callback(int error, const char* description) {
-    std::cerr << "Error: " << description << std::endl;
+    logf_error("Error: %", description);
 }
 
 void Events::Callbacks::key_action_callback(GLFWwindow* window, int key, int scancode, int action,

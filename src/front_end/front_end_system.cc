@@ -8,7 +8,7 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
+#include <stdexcept>
 
 using SargassoEngine::FrontEnd::FrontEndSystem;
 using namespace SargassoEngine::Common;

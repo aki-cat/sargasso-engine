@@ -4,6 +4,7 @@
 #include "common/log.h"
 
 #include <sstream>
+#include <stdexcept>
 
 using namespace SargassoEngine::Common;
 

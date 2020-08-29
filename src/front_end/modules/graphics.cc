@@ -6,8 +6,6 @@
 #include "geometry/mesh_generator.h"
 
 #include <GL/glew.h>
-#include <exception>
-#include <iostream>
 
 using namespace SargassoEngine::FrontEnd::Modules;
 using namespace SargassoEngine::FrontEnd::Utility;

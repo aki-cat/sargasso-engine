@@ -3,8 +3,6 @@
 
 #include "common/containers.h"
 
-#include <iostream>
-
 namespace SargassoEngine {
 namespace Common {
 
