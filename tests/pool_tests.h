@@ -14,8 +14,9 @@ struct Dummy {
 };
 
 void pool_tests() {
+    _SARGASSO_TEST_CLASS("Pool<T>");
     // Test block
-    _SARGASSO_TEST("Pool<Dummy>", "create", "AddedConsecutiveElements", "ReturnDifferentIds");
+    _SARGASSO_TEST_START("Pool<T>", "create", "AddedConsecutiveElements", "ReturnDifferentIds");
     Pool<Dummy> dummy_pool{};
 
     Dummy v1_original = Dummy{"banana", 6};
@@ -33,7 +34,7 @@ void pool_tests() {
     _SARGASSO_TEST_PASSED();
 
     // Test block
-    _SARGASSO_TEST("Pool<Dummy>", "get", "AddedConsecutiveElements", "ReturnEquivalentElements");
+    _SARGASSO_TEST_START("Pool<T>", "get", "AddedConsecutiveElements", "ReturnEquivalentElements");
 
     const Dummy& v1 = dummy_pool.get(v1_id);
     const Dummy& v2 = dummy_pool.get(v2_id);
@@ -46,8 +47,8 @@ void pool_tests() {
     _SARGASSO_TEST_PASSED();
 
     // Test block
-    _SARGASSO_TEST("Pool<Dummy>", "get", "AddedConsecutiveElements",
-                   "ReturnDifferentReferenceOfEquivalentAddedElements");
+    _SARGASSO_TEST_START("Pool<T>", "get", "AddedConsecutiveElements",
+                         "ReturnDifferentReferenceOfEquivalentAddedElements");
 
     v1_original.age = 58;
     assert(&v1 != &v1_original);
@@ -56,7 +57,7 @@ void pool_tests() {
     _SARGASSO_TEST_PASSED();
 
     // Test block
-    _SARGASSO_TEST("Pool<Dummy>", "get", "ChangedMutableElementReference", "ChangeAllReferences");
+    _SARGASSO_TEST_START("Pool<T>", "get", "ChangedMutableElementReference", "ChangeAllReferences");
 
     Dummy& v2_mut = dummy_pool.get(v2_id);
     v2_mut.name = "Charles";
@@ -66,7 +67,8 @@ void pool_tests() {
     _SARGASSO_TEST_PASSED();
 
     // Test block
-    _SARGASSO_TEST("Pool<Dummy>", "destroy", "DestroyAddedElement", "ThrowsWhenTryingToAccessIt");
+    _SARGASSO_TEST_START("Pool<T>", "destroy", "DestroyedAddedElement",
+                         "ThrowsWhenTryingToAccessIt");
 
     dummy_pool.destroy(v1_id);
     assert_throws({ dummy_pool.get(v1_id); }, ...);

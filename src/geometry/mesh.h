@@ -2,14 +2,13 @@
 #define SARGASSO_ENGINE_MESH_H
 
 #include "common/containers.h"
+#include "geometry/constants.h"
 #include "geometry/mesh_raw.h"
+
+using namespace SargassoEngine::Common;
 
 namespace SargassoEngine {
 namespace Geometry {
-
-using namespace Common;
-
-static const uint32_t POINTS_PER_VERTEX = 3;
 
 class Mesh {
    public:

@@ -7,26 +7,33 @@ import os
 EnsureSConsVersion(3, 0, 0)
 EnsurePythonVersion(3, 5)
 
+
 SOURCE_PWD: Path = Path.cwd()
 SOURCE_DIRECTORY: Path = Path(SOURCE_PWD, "src")
-SOURCE_CXX_FILES: str = \
+SOURCE_CXX_FILES: list = \
     [str(file_name) for file_name in SOURCE_DIRECTORY.glob("**/*.cc")]
+SOURCE_CXX_FILES_MAIN = str(Path(SOURCE_DIRECTORY, "main.cc"))
+
 
 TEST_SOURCE_DIRECTORY: Path = Path(SOURCE_PWD, "tests")
-TEST_SOURCE_CXX_FILES: str = \
+TEST_SOURCE_CXX_FILES: list = \
     [str(file_name) for file_name in TEST_SOURCE_DIRECTORY.glob("**/*.cc")]
+TEST_SOURCE_CXX_FILES = TEST_SOURCE_CXX_FILES + SOURCE_CXX_FILES
+TEST_SOURCE_CXX_FILES.remove(SOURCE_CXX_FILES_MAIN)
+
 
 PROJECT_NAME: str = "SargassoEngine"
 BINARY_PATH: str = str(Path(SOURCE_PWD, "bin", PROJECT_NAME))
 TESTS_PATH: str = str(Path(SOURCE_PWD, "bin", "RunTests"))
 
-LIB_GLEW_BUILD_FLAG_CMD = "pkg-config glew --libs --static"
 
 CXXFLAGS = [
     "-O0", "-Wall", "-Wignored-qualifiers", "-Wtype-limits", "-Wcast-qual", "-Wcast-align", "-Wundef", "-Wc++14-compat", "-Wpedantic", "-Wbad-function-cast", "-Wconversion", "-Wparentheses", "-Wempty-body",
     "-std=c++14", "-DGL_SILENCE_DEPRECATION"]
 
+
 # GLFW Library
+LIB_GLEW_BUILD_FLAG_CMD = "pkg-config glew --libs --static"
 GLFWBuilder.build()
 
 # GLM Library

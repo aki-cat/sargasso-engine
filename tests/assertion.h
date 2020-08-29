@@ -8,10 +8,12 @@
 namespace SargassoEngine {
 namespace Tests {
 
-#define _SARGASSO_TEST(CLASS_NAME, METHOD_NAME, SITUATION, EXPECTED) \
-    logf("%::%() -> It should % when %", CLASS_NAME, METHOD_NAME, EXPECTED, SITUATION)
+#define _SARGASSO_TEST_CLASS(CLASS_NAME) logf("\nTesting class %...", CLASS_NAME)
 
-#define _SARGASSO_TEST_PASSED() log("...OK!")
+#define _SARGASSO_TEST_START(CLASS_NAME, METHOD_NAME, SITUATION, EXPECTED) \
+    logf("\t%::%() -> % WHEN %", CLASS_NAME, METHOD_NAME, EXPECTED, SITUATION)
+
+#define _SARGASSO_TEST_PASSED() log("\t...OK!\n")
 
 #define assert_throws(expr, exception_t) \
     {                                    \

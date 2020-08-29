@@ -2,7 +2,7 @@
 #include "geometry/mesh_raw.h"
 
 #include "common/log.h"
-#include "geometry/mesh.h"
+#include "geometry/constants.h"
 
 #include <sstream>
 
