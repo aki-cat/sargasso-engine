@@ -28,7 +28,7 @@ jobs:
 
       # Installs builder
       - name: Install builder
-        run: pip3 install
+        run: pip install scons
 
       # Clones libraries
       - name: Update submodules
