@@ -24,12 +24,12 @@ jobs:
 
       # Installs dependencies
       - name: Install dependencies
-        run: apt-get install cmake g++-7 sconstruct python3 pip3
+        run: sudo apt-get install cmake g++-7 sconstruct python3 pip3
 
       # Installs builder
       - name: Install builder
-        run: pip3 install scons
-          
+        run: pip3 install
+
       # Clones libraries
       - name: Update submodules
         run: git submodules update --init --recursive
