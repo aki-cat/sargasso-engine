@@ -28,9 +28,11 @@ jobs:
 
       # Installs builder
       - name: Install builder
-        run: |
-          python -m pip install --user scons
-          export PATH="${HOME}/.local/bin:${PATH}"
+        run: pip install --user scons
+
+      # Update path
+      - name: Update PATH
+        run: export PATH="${HOME}/.local/bin:${PATH}"
 
       # Clones libraries
       - name: Update submodules
