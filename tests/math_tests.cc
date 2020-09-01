@@ -26,8 +26,8 @@ void Tests::operatorMul_dotProduct_expectedResult() {
     Vec3 u(7.0f, -1.0f, -6.0f);
 
     assert(v * u + 19.0f < FLT_EPSILON);
-    assert(v * Vec3::zero() - 0.0f < FLT_EPSILON);
-    assert(u * Vec3::zero() - 0.0f < FLT_EPSILON);
+    assert(v * Vec3::zero - 0.0f < FLT_EPSILON);
+    assert(u * Vec3::zero - 0.0f < FLT_EPSILON);
     assert(u * Vec3(1.0f, 1.0f, 1.0f) - 10.0f < FLT_EPSILON);
 
     _SARGASSO_TEST_PASSED();
@@ -39,7 +39,7 @@ void Tests::operatorMul_scalarProduct_expectedResult() {
     Vec3 v(2.0f, 3.0f, 5.0f);
 
     assert(v * 5 == Vec3(10.0f, 15.0f, 25.0f));
-    assert(v * 0 == Vec3::zero());
+    assert(v * 0 == Vec3::zero);
     assert(v * -1 == Vec3(-2.0f, -3.0f, -5.0f));
 
     _SARGASSO_TEST_PASSED();
@@ -47,6 +47,11 @@ void Tests::operatorMul_scalarProduct_expectedResult() {
 
 void Tests::operatorMul_scalarProduct_differentInstance() {
     _SARGASSO_TEST_START("Vec3", "operator*", "WithNumber", "ReturnDifferentInstance");
+
+    Vec3 v(2.0f, 3.0f, 5.0f);
+    Vec3 u = 1 * v;
+
+    assert(&u != &v);
 
     _SARGASSO_TEST_PASSED();
 }

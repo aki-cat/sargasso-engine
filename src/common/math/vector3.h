@@ -23,33 +23,85 @@ class Vec3 {
     }
     Vec3() : Vec3(0.0f, 0.0f, 0.0f) {}
 
+    // data
     Points3 points;
     float &x, &y, &z;
 
-    // convenient orthogonal directions
-    static Vec3 zero() { return Vec3(); }
-    static Vec3 up() { return Vec3(+0.0f, +1.0f, +0.0f); }
-    static Vec3 down() { return Vec3(+0.0f, -1.0f, +0.0f); }
-    static Vec3 front() { return Vec3(+0.0f, +0.0f, -1.0f); }
-    static Vec3 back() { return Vec3(+0.0f, +0.0f, +1.0f); }
-    static Vec3 left() { return Vec3(-1.0f, +0.0f, +0.0f); }
-    static Vec3 right() { return Vec3(+1.0f, +0.0f, +0.0f); }
-
-    // operators
-    bool operator==(const Vec3& v) {
-        return abs(x - v.x) < FLT_EPSILON && abs(y - v.y) < FLT_EPSILON &&
-               abs(z - v.z) < FLT_EPSILON;
-    }
-
-    float operator*(const Vec3& v) { return (x * v.x) + (y * v.y) + (z * v.z); }
-
-    Vec3 operator*(const float& s) { return Vec3(x * s, y * s, z * s); }
-
-    operator std::string() const { return to_string(); }
     // methods
+    const std::string to_string() const;
 
-    const std::string to_string() const { return format("(%, %, %)", x, y, z); }
+    // convenient ;
+    static const Vec3& zero;
+    static const Vec3& up;
+    static const Vec3& down;
+    static const Vec3& front;
+    static const Vec3& back;
+    static const Vec3& left;
+    static const Vec3& right;
+
+    // convenient axes
+    static const Vec3& x_axis;
+    static const Vec3& y_axis;
+    static const Vec3& z_axis;
+
+    // conversions
+    operator std::string();
 };
+
+// Operators
+
+bool operator==(const Vec3& u, const Vec3& v);
+
+Vec3 operator*(const float& a, const Vec3& v);
+Vec3 operator*(const Vec3& v, const float& a);
+
+float operator*(const Vec3& u, const Vec3& v);
+Vec3 operator^(const Vec3& u, const Vec3& v);
+
+// Static members
+
+const Vec3& Vec3::zero = Vec3();
+const Vec3& Vec3::up = Vec3(+0.0f, +1.0f, +0.0f);
+const Vec3& Vec3::down = Vec3(+0.0f, -1.0f, +0.0f);
+const Vec3& Vec3::front = Vec3(+0.0f, +0.0f, -1.0f);
+const Vec3& Vec3::back = Vec3(+0.0f, +0.0f, +1.0f);
+const Vec3& Vec3::left = Vec3(-1.0f, +0.0f, +0.0f);
+const Vec3& Vec3::right = Vec3(+1.0f, +0.0f, +0.0f);
+const Vec3& Vec3::x_axis = Vec3(+1.0f, +0.0f, +0.0f);
+const Vec3& Vec3::y_axis = Vec3(+0.0f, +1.0f, +0.0f);
+const Vec3& Vec3::z_axis = Vec3(+0.0f, +0.0f, +1.0f);
+
+// Methods
+
+inline const std::string Vec3::to_string() const { return format("(%, %, %)", x, y, z); }
+
+// Conversion operators
+
+Vec3::operator std::string() { return to_string(); }
+
+// Binary operators
+
+bool operator==(const Vec3& u, const Vec3& v) {
+    return abs(u.x - v.x) < FLT_EPSILON && abs(u.y - v.y) < FLT_EPSILON &&
+           abs(u.z - v.z) < FLT_EPSILON;
+}
+
+float operator*(const Vec3& u, const Vec3& v) { return (u.x * v.x) + (u.y * v.y) + (u.z * v.z); }
+
+Vec3 operator*(const float& a, const Vec3& v) { return Vec3(v.x * a, v.y * a, v.z * a); }
+
+Vec3 operator*(const Vec3& v, const float& a) { return a * v; }
+
+/*
+Cross product
+
+|  i  j  k   |
+|  a1 a2 a3  |
+|  b1 b2 b3  |
+*/
+Vec3 operator^(const Vec3& u, const Vec3& v) {
+    return Vec3((u.y * v.z) - (u.z * v.y), (u.z * v.x) - (u.x * v.z), (u.x * v.y) - (u.y * v.x));
+}
 
 }  // namespace Math
 }  // namespace Common
