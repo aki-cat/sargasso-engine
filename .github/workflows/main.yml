@@ -32,7 +32,7 @@ jobs:
 
       # Clones libraries
       - name: Update submodules
-        run: git submodules update --init --recursive
+        run: git submodule update --init --recursive
 
       # Runs builder routine
       - name: Build
