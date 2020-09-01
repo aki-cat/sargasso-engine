@@ -24,7 +24,7 @@ jobs:
 
       # Installs dependencies
       - name: Install dependencies
-        run: sudo apt-get install cmake g++-7 python3 pip
+        run: sudo apt-get install cmake g++-7 python3
 
       # Installs builder
       - name: Install builder
