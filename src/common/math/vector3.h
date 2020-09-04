@@ -28,6 +28,9 @@ class Vec3 {
     // methods
     const std::string to_string() const;
 
+    float dot(const Vec3& v) const;
+    Vec3 cross(const Vec3& v) const;
+
     Vec3 normalized() const;
     Vec3& normalize();
 
@@ -37,8 +40,8 @@ class Vec3 {
     float magnitude() const;
     float magnitude_squared() const;
 
-    Vec3 translated(const Vec3& u) const;
-    Vec3& translate(const Vec3& u);
+    Vec3 translated(const Vec3& v) const;
+    Vec3& translate(const Vec3& v);
 
     Vec3& rotate(const Vec3& axis, const float angle);
     Vec3 rotated(const Vec3& axis, const float angle) const;
@@ -70,26 +73,26 @@ class Vec3 {
 
 // Imutable Operators
 
-bool operator==(const Vec3& u, const Vec3& v);
-bool operator!=(const Vec3& u, const Vec3& v);
+bool operator==(const Vec3& a, const Vec3& b);
+bool operator!=(const Vec3& a, const Vec3& b);
 
-Vec3 operator*(const float& a, const Vec3& v);
-Vec3 operator*(const Vec3& v, const float& a);
-Vec3 operator/(const Vec3& v, const float& a);
+Vec3 operator*(const float a, const Vec3& v);
+Vec3 operator*(const Vec3& v, const float a);
+Vec3 operator/(const Vec3& v, const float a);
 
-float operator*(const Vec3& u, const Vec3& v);
-Vec3 operator^(const Vec3& u, const Vec3& v);
-Vec3 operator+(const Vec3& u, const Vec3& v);
-Vec3 operator-(const Vec3& u, const Vec3& v);
+float operator*(const Vec3& a, const Vec3& b);
+Vec3 operator^(const Vec3& a, const Vec3& b);
+Vec3 operator+(const Vec3& a, const Vec3& b);
+Vec3 operator-(const Vec3& a, const Vec3& b);
 
 Vec3 operator-(const Vec3& v);
 
 // Mutable Operators
 
-Vec3& operator*=(Vec3& v, const float& a);
-Vec3& operator/=(Vec3& v, const float& a);
-Vec3& operator+=(Vec3& u, const Vec3& v);
-Vec3& operator-=(Vec3& u, const Vec3& v);
+Vec3& operator*=(Vec3& v, const float a);
+Vec3& operator/=(Vec3& v, const float a);
+Vec3& operator+=(Vec3& a, const Vec3& b);
+Vec3& operator-=(Vec3& a, const Vec3& b);
 
 // Static members
 
@@ -108,6 +111,22 @@ const Vec3& Vec3::z_axis = Vec3(+0.0f, +0.0f, +1.0f);
 
 inline const std::string Vec3::to_string() const { return format("(%, %, %)", x, y, z); }
 
+/*
+Dot product
+ux * vx + uy * vy + uz * vz
+*/
+inline float Vec3::dot(const Vec3& v) const { return (x * v.x) + (y * v.y) + (z * v.z); }
+
+/*
+Cross product
+|  i  j  k   |
+|  a1 a2 a3  |
+|  b1 b2 b3  |
+*/
+inline Vec3 Vec3::cross(const Vec3& v) const {
+    return Vec3((y * v.z) - (z * v.y), (z * v.x) - (x * v.z), (x * v.y) - (y * v.x));
+}
+
 inline Vec3 Vec3::normalized() const { return *this / magnitude(); }
 inline Vec3& Vec3::normalize() { return *this /= sqrt(*this * *this); }
 
@@ -117,8 +136,8 @@ inline Vec3& Vec3::clamp(const float s) { return normalize() *= s; }
 inline float Vec3::magnitude() const { return sqrt((*this) * (*this)); }
 inline float Vec3::magnitude_squared() const { return *this * *this; }
 
-inline Vec3 Vec3::translated(const Vec3& u) const { return *this + u; }
-inline Vec3& Vec3::translate(const Vec3& u) { return *this += u; }
+inline Vec3 Vec3::translated(const Vec3& v) const { return *this + v; }
+inline Vec3& Vec3::translate(const Vec3& v) { return *this += v; }
 
 inline Vec3 Vec3::rotated(const Vec3& axis, const float angle) const {
     // TBD
@@ -138,20 +157,20 @@ Vec3::operator std::string() { return to_string(); }
 
 // Imutable operators
 
-bool operator==(const Vec3& u, const Vec3& v) {
-    return fabs(u.x - v.x) < FLT_EPSILON && fabs(u.y - v.y) < FLT_EPSILON &&
-           fabs(u.z - v.z) < FLT_EPSILON;
+bool operator==(const Vec3& a, const Vec3& b) {
+    return fabs(a.x - b.x) < FLT_EPSILON && fabs(a.y - b.y) < FLT_EPSILON &&
+           fabs(a.z - b.z) < FLT_EPSILON;
 }
 
-bool operator!=(const Vec3& u, const Vec3& v) { return !(u == v); }
+bool operator!=(const Vec3& a, const Vec3& b) { return !(a == b); }
 
-Vec3 operator*(const float& a, const Vec3& v) { return Vec3(v.x * a, v.y * a, v.z * a); }
-Vec3 operator*(const Vec3& v, const float& a) { return a * v; }
-Vec3 operator/(const Vec3& v, const float& a) { return (1 / a) * v; }
+Vec3 operator*(const float a, const Vec3& v) { return Vec3(v.x * a, v.y * a, v.z * a); }
+Vec3 operator*(const Vec3& v, const float a) { return a * v; }
+Vec3 operator/(const Vec3& v, const float a) { return (1 / a) * v; }
 
-Vec3 operator+(const Vec3& u, const Vec3& v) { return Vec3(u.x + v.x, u.y + v.y, u.z + v.z); }
-Vec3 operator-(const Vec3& v) { return -1 * v; }
-Vec3 operator-(const Vec3& u, const Vec3& v) { return -1 * v + u; }
+Vec3 operator+(const Vec3& a, const Vec3& b) { return Vec3(a.x + b.x, a.y + b.y, a.z + b.z); }
+Vec3 operator-(const Vec3& b) { return -1 * b; }
+Vec3 operator-(const Vec3& a, const Vec3& b) { return a + -b; }
 
 float Vec3::operator[](const uint32_t n) {
     switch (n) {
@@ -169,21 +188,9 @@ float Vec3::operator[](const uint32_t n) {
     }
 }
 
-/*
-Dot product
-ux * vx + uy * vy + uz * vz
-*/
-float operator*(const Vec3& u, const Vec3& v) { return (u.x * v.x) + (u.y * v.y) + (u.z * v.z); }
+float operator*(const Vec3& a, const Vec3& b) { return a.dot(b); }
 
-/*
-Cross product
-|  i  j  k   |
-|  a1 a2 a3  |
-|  b1 b2 b3  |
-*/
-Vec3 operator^(const Vec3& u, const Vec3& v) {
-    return Vec3((u.y * v.z) - (u.z * v.y), (u.z * v.x) - (u.x * v.z), (u.x * v.y) - (u.y * v.x));
-}
+Vec3 operator^(const Vec3& a, const Vec3& b) { return a.cross(b); }
 
 // Mutable Operators
 
@@ -201,18 +208,18 @@ Vec3& operator/=(Vec3& v, const float& a) {
     return v;
 }
 
-Vec3& operator+=(Vec3& u, const Vec3& v) {
-    u.x += v.x;
-    u.y += v.y;
-    u.z += v.z;
-    return u;
+Vec3& operator+=(Vec3& a, const Vec3& b) {
+    a.x += b.x;
+    a.y += b.y;
+    a.z += b.z;
+    return a;
 }
 
-Vec3& operator-=(Vec3& u, const Vec3& v) {
-    u.x -= v.x;
-    u.y -= v.y;
-    u.z -= v.z;
-    return u;
+Vec3& operator-=(Vec3& a, const Vec3& b) {
+    a.x -= b.x;
+    a.y -= b.y;
+    a.z -= b.z;
+    return a;
 }
 
 }  // namespace Math
