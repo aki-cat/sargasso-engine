@@ -1,6 +1,8 @@
 #ifndef SARGASSO_ENGINE_COMMON_MATH_VECTOR3_H
 #define SARGASSO_ENGINE_COMMON_MATH_VECTOR3_H
 
+#include "common/math/points.h"
+
 #include <cfloat>
 #include <cmath>
 #include <string>
@@ -9,16 +11,13 @@ namespace SargassoEngine {
 namespace Common {
 namespace Math {
 
-struct Points3 {
-    float x, y, z;
-};
-
 class Vec3 {
    public:
-    Vec3(float _x, float _y, float _z) : x{_points.x}, y{_points.y}, z{_points.z}, _points{} {
-        _points.x = _x;
-        _points.y = _y;
-        _points.z = _z;
+    Vec3(float _x, float _y, float _z)
+        : x{_points.p[0]}, y{_points.p[1]}, z{_points.p[2]}, _points{} {
+        _points.p[0] = _x;
+        _points.p[1] = _y;
+        _points.p[2] = _z;
     }
     Vec3() : Vec3(0.0f, 0.0f, 0.0f) {}
 
@@ -49,7 +48,7 @@ class Vec3 {
     Vec3 scaled(const float s) const;
     Vec3& scale(const float s);
 
-    // convenient ;
+    // convenient
     static const Vec3& zero;
     static const Vec3& up;
     static const Vec3& down;
@@ -65,13 +64,12 @@ class Vec3 {
 
     // conversions
     operator std::string();
-    float operator[](const uint32_t n);
 
    private:
     Points3 _points;
 };
 
-// Imutable Operators
+// Imutable operators
 
 bool operator==(const Vec3& a, const Vec3& b);
 bool operator!=(const Vec3& a, const Vec3& b);
@@ -87,7 +85,7 @@ Vec3 operator-(const Vec3& a, const Vec3& b);
 
 Vec3 operator-(const Vec3& v);
 
-// Mutable Operators
+// Mutable operators
 
 Vec3& operator*=(Vec3& v, const float a);
 Vec3& operator/=(Vec3& v, const float a);
@@ -109,7 +107,7 @@ const Vec3& Vec3::z_axis = Vec3(+0.0f, +0.0f, +1.0f);
 
 // Methods
 
-inline const std::string Vec3::to_string() const { return format("(%, %, %)", x, y, z); }
+inline const std::string Vec3::to_string() const { return format("Vec3(%, %, %)", x, y, z); }
 
 /*
 Dot product
@@ -172,27 +170,11 @@ Vec3 operator+(const Vec3& a, const Vec3& b) { return Vec3(a.x + b.x, a.y + b.y,
 Vec3 operator-(const Vec3& b) { return -1 * b; }
 Vec3 operator-(const Vec3& a, const Vec3& b) { return a + -b; }
 
-float Vec3::operator[](const uint32_t n) {
-    switch (n) {
-        case 0:
-            return x;
-            break;
-        case 1:
-            return y;
-            break;
-        case 2:
-            return z;
-            break;
-        default:
-            throw std::out_of_range("Out of range of vector size (0 <= n < 3)");
-    }
-}
-
 float operator*(const Vec3& a, const Vec3& b) { return a.dot(b); }
 
 Vec3 operator^(const Vec3& a, const Vec3& b) { return a.cross(b); }
 
-// Mutable Operators
+// Mutable operators
 
 Vec3& operator*=(Vec3& v, const float& a) {
     v.x *= a;
