@@ -16,8 +16,8 @@ MeshRaw::MeshRaw(const Vector3* vertices, const uint32_t vertex_count)
 
     logf("Instantiating Mesh %.\n- Points: %\n- Vertices: %", this, point_count, vertex_count);
 
-    for (int vertex_index = 0; vertex_index < vertex_count; vertex_index++) {
-        for (int coord_index = 0; coord_index < POINTS_PER_VERTEX; coord_index++) {
+    for (uint32_t vertex_index = 0; vertex_index < vertex_count; vertex_index++) {
+        for (uint32_t coord_index = 0; coord_index < POINTS_PER_VERTEX; coord_index++) {
             points[point_index++] = vertices[vertex_index][coord_index];
         }
     }

@@ -3,6 +3,7 @@
 
 #include "assertion.h"
 #include "common/log.h"
+#include "common/math/quaternion.h"
 #include "common/math/vector3.h"
 
 #include <cfloat>
@@ -16,6 +17,7 @@ void Tests::math_tests() {
     Tests::operatorMul_dotProduct_expectedResult();
     Tests::operatorMul_scalarProduct_expectedResult();
     Tests::operatorMul_scalarProduct_differentInstance();
+    Tests::rotated_quarterCircle_expectedResult();
 }
 
 // vector multiplication
@@ -52,6 +54,21 @@ void Tests::operatorMul_scalarProduct_differentInstance() {
     Vec3 u = 1 * v;
 
     assert(&u != &v);
+
+    _SARGASSO_TEST_PASSED();
+}
+
+void Tests::rotated_quarterCircle_expectedResult() {
+    _SARGASSO_TEST_START("Vec3", "rotated", "QuarterCircleRotationWithQuaternion",
+                         "ReturnExpectedResult");
+
+    Vec3 v(1.0f, 1.0f, 1.0f);
+    Quat q = Quat::from_rotation(Vec3::y_axis, static_cast<float>(M_PI) / 2);
+
+    Vec3 result = v.rotated(q);
+
+    // logf("Rotating % by 90deg results in %", v, result);
+    assert(result == Vec3(1.0f, 1.0f, -1.0f));
 
     _SARGASSO_TEST_PASSED();
 }

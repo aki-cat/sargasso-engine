@@ -29,11 +29,11 @@ TESTS_PATH: str = str(Path(SOURCE_PWD, "bin", "RunTests"))
 
 
 CXXFLAGS = [
-    "-O0", "-Wall", "-Wignored-qualifiers", "-Wtype-limits", "-Wcast-qual", "-Wcast-align", "-Wundef", "-Wc++14-compat", "-Wpedantic", "-Wbad-function-cast", "-Wconversion", "-Wparentheses", "-Wempty-body", "-std=c++14", "-DGL_SILENCE_DEPRECATION"]
+    "-O0", "-Wall", "-Wignored-qualifiers", "-Wtype-limits", "-Wcast-qual", "-Wcast-align", "-Wundef", "-Wc++14-compat", "-Wpedantic", "-Wconversion", "-Wparentheses", "-Wempty-body", "-std=c++14", "-DGL_SILENCE_DEPRECATION"]
 
 
 # GLFW Library
-LIB_GLEW_BUILD_FLAG_CMD = "pkg-config glew --libs --static"
+LIB_GLEW_BUILD_FLAG_CMD = "pkg-config glew --libs --static --cflags"
 GLFWBuilder.build()
 
 # GLM Library
@@ -41,9 +41,11 @@ GLMBuilder.build()
 
 # Environment setup
 env = Environment(
+    CC="gcc-9",
+    CXX="g++-9",
     CCFLAGS=CXXFLAGS,
     CPPPATH=[str(SOURCE_DIRECTORY)],
-    parse_flags=["-I" + GLMBuilder.LIB_GLM_INCLUDE_PATH])
+    parse_flags=["-isystem" + GLMBuilder.LIB_GLM_INCLUDE_PATH])
 
 env.ParseConfig(GLFWBuilder.LIB_GLFW_BUILD_FLAG_CMD)
 env.ParseConfig(LIB_GLEW_BUILD_FLAG_CMD)

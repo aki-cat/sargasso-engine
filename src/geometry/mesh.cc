@@ -16,7 +16,7 @@ using namespace SargassoEngine::Common::Math;
 Mesh::Mesh(const Vector3* vertices, const uint32_t vertex_count) {
     _vertices = DynamicArray<Vector3>();
 
-    for (int i = 0; i < vertex_count; i++) {
+    for (uint32_t i = 0; i < vertex_count; i++) {
         _vertices.push_back(vertices[i]);
     }
 }

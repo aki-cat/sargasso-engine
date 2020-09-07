@@ -11,6 +11,9 @@ void operatorMul_dotProduct_expectedResult();
 void operatorMul_scalarProduct_expectedResult();
 void operatorMul_scalarProduct_differentInstance();
 
+// vector quaternion rotation
+void rotated_quarterCircle_expectedResult();
+
 }  // namespace Tests
 }  // namespace SargassoEngine
 
