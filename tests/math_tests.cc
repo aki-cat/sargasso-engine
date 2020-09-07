@@ -33,10 +33,10 @@ void Tests::operatorMul_dotProduct_expectedResult() {
     Vec3 v(2, 3, 5);
     Vec3 u(7, -1, -6);
 
-    assert(v * u + 19 < FLT_EPSILON);
-    assert(v * Vec3::zero - 0 < FLT_EPSILON);
-    assert(u * Vec3::zero - 0 < FLT_EPSILON);
-    assert(u * Vec3(1, 1, 1) - 10 < FLT_EPSILON);
+    assert(fabs(v * u + 19) < FLT_EPSILON);
+    assert(fabs(v * Vec3::zero) < FLT_EPSILON);
+    assert(fabs(u * Vec3::zero) < FLT_EPSILON);
+    assert(fabs(u * Vec3(1, 1, 1)) < FLT_EPSILON);
 
     _SARGASSO_TEST_PASSED();
 }
