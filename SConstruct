@@ -41,8 +41,8 @@ GLMBuilder.build()
 
 # Environment setup
 env = Environment(
-    CC="gcc-9",
-    CXX="g++-9",
+    # CC="gcc-9",
+    # CXX="g++-9",
     CCFLAGS=CXXFLAGS,
     CPPPATH=[str(SOURCE_DIRECTORY)],
     parse_flags=["-isystem" + GLMBuilder.LIB_GLM_INCLUDE_PATH])

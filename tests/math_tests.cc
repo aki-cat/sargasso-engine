@@ -4,6 +4,7 @@
 #include "assertion.h"
 #include "common/log.h"
 #include "common/math/quaternion.h"
+#include "common/math/transform.h"
 #include "common/math/vector3.h"
 
 #include <cfloat>
@@ -59,15 +60,14 @@ void Tests::operatorMul_scalarProduct_differentInstance() {
 }
 
 void Tests::rotated_quarterCircle_expectedResult() {
-    _SARGASSO_TEST_START("Vec3", "rotated", "QuarterCircleRotationWithQuaternion",
+    _SARGASSO_TEST_START("Transform", "rotated", "QuarterCircleRotationWithQuaternion",
                          "ReturnExpectedResult");
 
     Vec3 v(1.0f, 1.0f, 1.0f);
-    Quat q = Quat::from_rotation(Vec3::y_axis, static_cast<float>(M_PI) / 2);
+    Quat q = Transform::quaternion_from_rotation(Vec3::y_axis, static_cast<float>(M_PI) / 2);
 
-    Vec3 result = v.rotated(q);
+    Vec3 result = Transform::rotated(v, q);
 
-    // logf("Rotating % by 90deg results in %", v, result);
     assert(result == Vec3(1.0f, 1.0f, -1.0f));
 
     _SARGASSO_TEST_PASSED();
