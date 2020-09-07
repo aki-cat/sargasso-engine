@@ -14,6 +14,10 @@ void operatorMul_scalarProduct_differentInstance();
 // vector quaternion rotation
 void rotated_quarterCircle_expectedResult();
 
+// matrix transformation
+void operatorMul_twoMatrices_expectedResult();
+void operatorMul_matrixAndVec3_expectedResult();
+
 }  // namespace Tests
 }  // namespace SargassoEngine
 
