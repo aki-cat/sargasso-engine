@@ -1,6 +1,8 @@
 #ifndef SARGASSO_ENGINE_COMMON_MATH_POINTS_H
 #define SARGASSO_ENGINE_COMMON_MATH_POINTS_H
 
+#include <cassert>
+
 namespace SargassoEngine {
 namespace Common {
 namespace Math {
@@ -10,11 +12,11 @@ struct Points {
     float p[N]{};
     static const uint32_t len = N;
     float& operator[](const uint32_t i) {
-        static_assert(i >= 0 && i < len, "Point access is out of range.");
+        assert(i >= 0 && i < len);
         return p[i];
     }
     float operator[](const uint32_t i) const {
-        static_assert(i >= 0 && i < len, "Point access is out of range.");
+        assert(i >= 0 && i < len);
         return p[i];
     }
 };

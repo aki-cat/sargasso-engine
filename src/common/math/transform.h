@@ -1,6 +1,7 @@
 #ifndef SARGASSO_ENGINE_COMMON_MATH_TRANSFORM_H
 #define SARGASSO_ENGINE_COMMON_MATH_TRANSFORM_H
 
+#include "common/math/matrix4.h"
 #include "common/math/quaternion.h"
 #include "common/math/vector3.h"
 
