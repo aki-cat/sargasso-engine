@@ -2,6 +2,8 @@
 #define SARGASSO_ENGINE_COMMON_MATH_MATRIX4_H
 
 #include "common/math/points.h"
+#include "common/math/quaternion.h"
+#include "common/math/transform.h"
 #include "common/math/vector3.h"
 
 namespace SargassoEngine {
@@ -105,14 +107,41 @@ Mat4& Mat4::scale(const float a) {
 }
 
 Mat4 Mat4::rotated(const Vec3& axis, const float angle) const {
-    // TBD
-    Mat4 m{*this};
-    return m;
+    Quat rotation = Transform::quaternion_from_rotation(axis, angle);
+    Mat4 m;
+
+    m[0] = 1 - 2 * (rotation.y * rotation.y + rotation.z * rotation.z);
+    m[4] = 2 * (rotation.x * rotation.y - rotation.z * rotation.w);
+    m[8] = 2 * (rotation.x * rotation.z + rotation.y * rotation.w);
+
+    m[1] = 2 * (rotation.x * rotation.y + rotation.z * rotation.w);
+    m[5] = 1 - 2 * (rotation.x * rotation.x + rotation.z * rotation.z);
+    m[9] = 2 * (rotation.y * rotation.z - rotation.x * rotation.w);
+
+    m[2] = 2 * (rotation.x * rotation.z - rotation.y * rotation.w);
+    m[6] = 2 * (rotation.y * rotation.z + rotation.x * rotation.w);
+    m[10] = 1 - 2 * (rotation.x * rotation.x + rotation.y * rotation.y);
+
+    return (*this) * m;
 }
 
 Mat4& Mat4::rotate(const Vec3& axis, const float angle) {
-    // TBD
-    return *this;
+    Quat rotation = Transform::quaternion_from_rotation(axis, angle);
+    Mat4 m;
+
+    m[0] = 1 - 2 * (rotation.y * rotation.y + rotation.z * rotation.z);
+    m[4] = 2 * (rotation.x * rotation.y - rotation.z * rotation.w);
+    m[8] = 2 * (rotation.x * rotation.z + rotation.y * rotation.w);
+
+    m[1] = 2 * (rotation.x * rotation.y + rotation.z * rotation.w);
+    m[5] = 1 - 2 * (rotation.x * rotation.x + rotation.z * rotation.z);
+    m[9] = 2 * (rotation.y * rotation.z - rotation.x * rotation.w);
+
+    m[2] = 2 * (rotation.x * rotation.z - rotation.y * rotation.w);
+    m[6] = 2 * (rotation.y * rotation.z + rotation.x * rotation.w);
+    m[10] = 1 - 2 * (rotation.x * rotation.x + rotation.y * rotation.y);
+
+    return (*this) *= m;
 }
 
 std::string Mat4::to_string() const {
@@ -233,24 +262,24 @@ Mat4& operator-=(Mat4& a, const Mat4& b) {
 }
 
 Mat4& operator*=(Mat4& a, const Mat4& b) {
-    Mat4 m({a[0] * b[0] + a[1] * b[4] + a[2] * b[8] + a[3] * b[12],
-            a[0] * b[1] + a[1] * b[5] + a[2] * b[9] + a[3] * b[13],
-            a[0] * b[2] + a[1] * b[6] + a[2] * b[10] + a[3] * b[14],
-            a[0] * b[3] + a[1] * b[7] + a[2] * b[11] + a[3] * b[15],
-            a[4] * b[0] + a[5] * b[4] + a[6] * b[8] + a[7] * b[12],
-            a[4] * b[1] + a[5] * b[5] + a[6] * b[9] + a[7] * b[13],
-            a[4] * b[2] + a[5] * b[6] + a[6] * b[10] + a[7] * b[14],
-            a[4] * b[3] + a[5] * b[7] + a[6] * b[11] + a[7] * b[15],
-            a[8] * b[0] + a[9] * b[4] + a[10] * b[8] + a[11] * b[12],
-            a[8] * b[1] + a[9] * b[5] + a[10] * b[9] + a[11] * b[13],
-            a[8] * b[2] + a[9] * b[6] + a[10] * b[10] + a[11] * b[14],
-            a[8] * b[3] + a[9] * b[7] + a[10] * b[11] + a[11] * b[15],
-            a[12] * b[0] + a[13] * b[4] + a[14] * b[8] + a[15] * b[12],
-            a[12] * b[1] + a[13] * b[5] + a[14] * b[9] + a[15] * b[13],
-            a[12] * b[2] + a[13] * b[6] + a[14] * b[10] + a[15] * b[14],
-            a[12] * b[3] + a[13] * b[7] + a[14] * b[11] + a[15] * b[15]});
+    Points16 p({a[0] * b[0] + a[1] * b[4] + a[2] * b[8] + a[3] * b[12],
+                a[0] * b[1] + a[1] * b[5] + a[2] * b[9] + a[3] * b[13],
+                a[0] * b[2] + a[1] * b[6] + a[2] * b[10] + a[3] * b[14],
+                a[0] * b[3] + a[1] * b[7] + a[2] * b[11] + a[3] * b[15],
+                a[4] * b[0] + a[5] * b[4] + a[6] * b[8] + a[7] * b[12],
+                a[4] * b[1] + a[5] * b[5] + a[6] * b[9] + a[7] * b[13],
+                a[4] * b[2] + a[5] * b[6] + a[6] * b[10] + a[7] * b[14],
+                a[4] * b[3] + a[5] * b[7] + a[6] * b[11] + a[7] * b[15],
+                a[8] * b[0] + a[9] * b[4] + a[10] * b[8] + a[11] * b[12],
+                a[8] * b[1] + a[9] * b[5] + a[10] * b[9] + a[11] * b[13],
+                a[8] * b[2] + a[9] * b[6] + a[10] * b[10] + a[11] * b[14],
+                a[8] * b[3] + a[9] * b[7] + a[10] * b[11] + a[11] * b[15],
+                a[12] * b[0] + a[13] * b[4] + a[14] * b[8] + a[15] * b[12],
+                a[12] * b[1] + a[13] * b[5] + a[14] * b[9] + a[15] * b[13],
+                a[12] * b[2] + a[13] * b[6] + a[14] * b[10] + a[15] * b[14],
+                a[12] * b[3] + a[13] * b[7] + a[14] * b[11] + a[15] * b[15]});
     for (uint32_t i = 0; i < Points16::len; i++) {
-        a[i] = m[i];
+        a[i] = p[i];
     }
     return a;
 }
