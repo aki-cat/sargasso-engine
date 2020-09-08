@@ -30,6 +30,7 @@ class Mat4 {
     Mat4& rotate(const Vec3& axis, const float angle);
 
     std::string to_string() const;
+    Mat4& round();
 
     operator std::string();
     float operator[](const uint32_t n) const;
@@ -107,41 +108,50 @@ Mat4& Mat4::scale(const float a) {
 }
 
 Mat4 Mat4::rotated(const Vec3& axis, const float angle) const {
-    Quat rotation = Transform::quaternion_from_rotation(axis, angle);
-    Mat4 m;
+    Quat q = Transform::quaternion_from_rotation(axis, angle);
+    Mat4 m = Mat4::identity;
 
-    m[0] = 1 - 2 * (rotation.y * rotation.y + rotation.z * rotation.z);
-    m[4] = 2 * (rotation.x * rotation.y - rotation.z * rotation.w);
-    m[8] = 2 * (rotation.x * rotation.z + rotation.y * rotation.w);
+    m[0] = 1 - 2 * (q.y * q.y + q.z * q.z);
+    m[1] = 2 * (q.x * q.y - q.z * q.w);
+    m[2] = 2 * (q.x * q.z + q.y * q.w);
 
-    m[1] = 2 * (rotation.x * rotation.y + rotation.z * rotation.w);
-    m[5] = 1 - 2 * (rotation.x * rotation.x + rotation.z * rotation.z);
-    m[9] = 2 * (rotation.y * rotation.z - rotation.x * rotation.w);
+    m[4] = 2 * (q.x * q.y + q.z * q.w);
+    m[5] = 1 - 2 * (q.x * q.x + q.z * q.z);
+    m[6] = 2 * (q.y * q.z - q.x * q.w);
 
-    m[2] = 2 * (rotation.x * rotation.z - rotation.y * rotation.w);
-    m[6] = 2 * (rotation.y * rotation.z + rotation.x * rotation.w);
-    m[10] = 1 - 2 * (rotation.x * rotation.x + rotation.y * rotation.y);
+    m[8] = 2 * (q.x * q.z - q.y * q.w);
+    m[9] = 2 * (q.y * q.z + q.x * q.w);
+    m[10] = 1 - 2 * (q.x * q.x + q.y * q.y);
 
-    return (*this) * m;
+    return (*this) * m.round();
 }
 
 Mat4& Mat4::rotate(const Vec3& axis, const float angle) {
-    Quat rotation = Transform::quaternion_from_rotation(axis, angle);
-    Mat4 m;
+    Quat q = Transform::quaternion_from_rotation(axis, angle);
+    Mat4 m = Mat4::identity;
 
-    m[0] = 1 - 2 * (rotation.y * rotation.y + rotation.z * rotation.z);
-    m[4] = 2 * (rotation.x * rotation.y - rotation.z * rotation.w);
-    m[8] = 2 * (rotation.x * rotation.z + rotation.y * rotation.w);
+    m[0] = 1 - 2 * (q.y * q.y + q.z * q.z);
+    m[1] = 2 * (q.x * q.y - q.z * q.w);
+    m[2] = 2 * (q.x * q.z + q.y * q.w);
 
-    m[1] = 2 * (rotation.x * rotation.y + rotation.z * rotation.w);
-    m[5] = 1 - 2 * (rotation.x * rotation.x + rotation.z * rotation.z);
-    m[9] = 2 * (rotation.y * rotation.z - rotation.x * rotation.w);
+    m[4] = 2 * (q.x * q.y + q.z * q.w);
+    m[5] = 1 - 2 * (q.x * q.x + q.z * q.z);
+    m[6] = 2 * (q.y * q.z - q.x * q.w);
 
-    m[2] = 2 * (rotation.x * rotation.z - rotation.y * rotation.w);
-    m[6] = 2 * (rotation.y * rotation.z + rotation.x * rotation.w);
-    m[10] = 1 - 2 * (rotation.x * rotation.x + rotation.y * rotation.y);
+    m[8] = 2 * (q.x * q.z - q.y * q.w);
+    m[9] = 2 * (q.y * q.z + q.x * q.w);
+    m[10] = 1 - 2 * (q.x * q.x + q.y * q.y);
 
-    return (*this) *= m;
+    return (*this) *= m.round();
+}
+
+inline Mat4& Mat4::round() {
+    for (uint32_t i = 0; i < Points16::len; i++) {
+        if (fabs(_points[i]) <= FLT_EPSILON) {
+            _points[i] = 0;
+        }
+    }
+    return (*this);
 }
 
 std::string Mat4::to_string() const {

@@ -47,6 +47,15 @@ class Quat {
 
     Quat multiplied(const Quat& q) const;
 
+    Quat& normalize();
+    Quat normalized() const;
+
+    Quat& conjugate();
+    Quat conjugated() const;
+
+    float norm() const;
+    float norm_squared() const;
+
     // convenient
     static const Quat& identity;
     static const Quat& zero;
@@ -122,6 +131,33 @@ inline Quat& Quat::scale(const float a) { return (*this) *= a; }
 inline Quat Quat::scaled(const float a) const { return (*this) * a; }
 
 inline Quat Quat::multiplied(const Quat& q) const { return (*this) * q; }
+
+inline Quat& Quat::normalize() {
+    float factor = 1 / norm();
+    w *= factor;
+    x *= factor;
+    y *= factor;
+    z *= factor;
+    return (*this);
+}
+
+inline Quat Quat::normalized() const {
+    float factor = 1 / norm();
+    return Quat(w * factor, x * factor, y * factor, z * factor);
+}
+
+inline Quat& Quat::conjugate() {
+    x = -x;
+    y = -y;
+    z = -z;
+    return *this;
+}
+
+inline Quat Quat::conjugated() const { return Quat(w, -x, -y, -z); }
+
+inline float Quat::norm() const { return sqrt(w * w + x * x + y * y + z * z); }
+
+inline float Quat::norm_squared() const { return w * w + x * x + y * y + z * z; }
 
 // Conversion operators
 

@@ -19,11 +19,14 @@ void Tests::math_tests() {
     Tests::operatorMul_dotProduct_expectedResult();
     Tests::operatorMul_scalarProduct_expectedResult();
     Tests::operatorMul_scalarProduct_differentInstance();
+
     _SARGASSO_TEST_CLASS("Mat4");
     Tests::operatorMul_twoMatrices_expectedResult();
     Tests::operatorMul_matrixAndVec3_expectedResult();
+    Tests::rotateMatrix_quarterCircle_expectedResult();
+
     _SARGASSO_TEST_CLASS("Transform");
-    Tests::rotated_quarterCircle_expectedResult();
+    Tests::rotatedQuat_quarterCircle_expectedResult();
 }
 
 // vector multiplication
@@ -64,28 +67,14 @@ void Tests::operatorMul_scalarProduct_differentInstance() {
     _SARGASSO_TEST_PASSED();
 }
 
-void Tests::rotated_quarterCircle_expectedResult() {
-    _SARGASSO_TEST_START("Transform", "rotated", "QuarterCircleRotationWithQuaternion",
-                         "ReturnExpectedResult");
-
-    Vec3 v(1, 1, 1);
-    Quat q = Transform::quaternion_from_rotation(Vec3::y_axis, static_cast<float>(M_PI) / 2);
-
-    Vec3 result = Transform::rotated(v, q);
-
-    assert(result == Vec3(1, 1, -1));
-
-    _SARGASSO_TEST_PASSED();
-}
-
 void Tests::operatorMul_twoMatrices_expectedResult() {
     _SARGASSO_TEST_START("Mat4", "operator*", "WithMatrix", "ReturnExpectedResult");
 
     Mat4 m1({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16});
     Mat4 m2({2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32});
 
-    Mat4 result = m1 * m2;
-    Mat4 expected(
+    const Mat4 result = m1 * m2;
+    const Mat4 expected(
         {180, 200, 220, 240, 404, 456, 508, 560, 628, 712, 796, 880, 852, 968, 1084, 1200});
 
     assert(result == expected);
@@ -99,8 +88,39 @@ void Tests::operatorMul_matrixAndVec3_expectedResult() {
     Mat4 m({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16});
     Vec3 v(11, 22, 33);
 
-    Vec3 result = m * v;
-    Vec3 expected(158, 426, 694);
+    const Vec3 result = m * v;
+    const Vec3 expected(158, 426, 694);
+
+    assert(result == expected);
+
+    _SARGASSO_TEST_PASSED();
+}
+
+void Tests::rotateMatrix_quarterCircle_expectedResult() {
+    _SARGASSO_TEST_START("Mat4", "rotate", "QuarterCircleRotation", "ReturnExpectedResult");
+
+    Mat4 m = Mat4::identity;
+    m.rotate(Vec3::y_axis, static_cast<float>(M_PI) / 2);
+
+    Vec3 v(1, 1, 1);
+
+    const Vec3 result = m * v;
+    const Vec3 expected(1, 1, -1);
+
+    assert(result == expected);
+
+    _SARGASSO_TEST_PASSED();
+}
+
+void Tests::rotatedQuat_quarterCircle_expectedResult() {
+    _SARGASSO_TEST_START("Transform", "rotated", "QuarterCircleRotationWithQuaternion",
+                         "ReturnExpectedResult");
+
+    Vec3 v(1, 1, 1);
+    Quat q = Transform::quaternion_from_rotation(Vec3::y_axis, static_cast<float>(M_PI) / 2);
+
+    const Vec3 result = Transform::rotated(v, q);
+    const Vec3 expected(1, 1, -1);
 
     assert(result == expected);
 
