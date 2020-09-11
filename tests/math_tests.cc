@@ -122,7 +122,8 @@ void Tests::rotatedQuat_quarterCircle_expectedResult() {
     const Vec3 result = Transform::rotated(v, q);
     const Vec3 expected(1, 1, -1);
 
-    assert(result == expected);
+    // We check with this wide a range because of float point error
+    assert((result - expected).magnitude() <= FLT_EPSILON * 10);
 
     _SARGASSO_TEST_PASSED();
 }
