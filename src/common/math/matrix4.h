@@ -17,18 +17,19 @@ class Mat4 {
     Mat4();
     Mat4(Points16 points);
 
-    // useful matrices
+    // useful constant matrices
     static const Mat4& identity;
     static const Mat4& zero;
 
     // methods
     Mat4 translated(const Vec3& v) const;
     Mat4& translate(const Vec3& v);
-    Mat4 scaled(const float a) const;
     Mat4& scale(const float a);
+    Mat4 scaled(const float a) const;
     Mat4 rotated(const Vec3& axis, const float angle) const;
     Mat4& rotate(const Vec3& axis, const float angle);
 
+    // misc methods
     std::string to_string() const;
     Mat4& round();
 
