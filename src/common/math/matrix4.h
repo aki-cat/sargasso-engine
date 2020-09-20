@@ -1,3 +1,9 @@
+/*
+
+Parts of this code were on the Hypatia C math library, developed by Darryl T. Agostinelli.
+Licensed under MIT license.
+
+*/
 #ifndef SARGASSO_ENGINE_COMMON_MATH_MATRIX4_H
 #define SARGASSO_ENGINE_COMMON_MATH_MATRIX4_H
 
@@ -17,11 +23,13 @@ class Mat4 {
     Mat4();
     Mat4(Points16 points);
 
-    // useful constant matrices
-    static const Mat4& identity;
-    static const Mat4& zero;
+    // data
+    float &a11, &a12, &a13, &a14;
+    float &a21, &a22, &a23, &a24;
+    float &a31, &a32, &a33, &a34;
+    float &a41, &a42, &a43, &a44;
 
-    // methods
+    // transformation methods
     Mat4 translated(const Vec3& v) const;
     Mat4& translate(const Vec3& v);
     Mat4& scale(const float a);
@@ -32,6 +40,15 @@ class Mat4 {
     // misc methods
     std::string to_string() const;
     Mat4& round();
+
+    // useful constant matrices
+    static const Mat4& identity;
+    static const Mat4& zero;
+
+    // useful dynamic matrices
+    static Mat4 perspective_projection(float fov, float aspect, float z_near, float z_far);
+    static Mat4 look_at(const Vec3& from, const Vec3& target, const Vec3& up);
+    static Mat4 look_at(const Vec3& from, const Vec3& target);
 
     operator std::string();
     float operator[](const uint32_t n) const;
@@ -71,15 +88,90 @@ Mat4& operator*=(Mat4& m, const float a);
 
 // Constructors
 
-Mat4::Mat4() : _points{{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1}} {}
+Mat4::Mat4() : Mat4({1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1}) {}
 
-Mat4::Mat4(Points16 points) : _points{points} {}
+Mat4::Mat4(Points16 points)
+    : a11{_points.p[0]},
+      a12{_points.p[1]},
+      a13{_points.p[2]},
+      a14{_points.p[3]},
+      a21{_points.p[4]},
+      a22{_points.p[5]},
+      a23{_points.p[6]},
+      a24{_points.p[7]},
+      a31{_points.p[8]},
+      a32{_points.p[9]},
+      a33{_points.p[10]},
+      a34{_points.p[11]},
+      a41{_points.p[12]},
+      a42{_points.p[13]},
+      a43{_points.p[14]},
+      a44{_points.p[15]},
+      _points{points} {}
 
 // Useful static members
 
 const Mat4& Mat4::identity = Mat4({1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1});
 
 const Mat4& Mat4::zero = Mat4({0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+
+// Useful dynamic matrices
+
+Mat4 Mat4::perspective_projection(float fov, float aspect, float z_near, float z_far) {
+    float rect_height;
+    float rect_width;
+    float p;
+    float q;
+
+    rect_height = (1.0f / static_cast<float>(tan(fov))) / 2.0f;
+    rect_width = rect_height * aspect;
+
+    p = z_far / (z_near - z_far);
+    q = z_near * p;
+
+    Mat4 m = Mat4::zero;
+
+    m.a11 = rect_width;
+    m.a22 = rect_height;
+    m.a33 = p;
+
+    m.a32 = -1.0f;
+    m.a23 = q;
+
+    return m;
+}
+
+Mat4 Mat4::look_at(const Vec3& from, const Vec3& target, const Vec3& up) {
+    Vec3 zaxis = Vec3({target.x - from.x, target.y - from.y, target.z - from.z}).normalized();
+
+    // xaxis = zaxis x up
+    Vec3 xaxis = zaxis.cross(up).normalized();
+
+    // yaxis = xaxis x zaxis
+    Vec3 yaxis = xaxis.cross(zaxis);
+
+    Mat4 m = Mat4::identity;
+
+    m.a11 = xaxis.x;
+    m.a12 = xaxis.y;
+    m.a13 = xaxis.z;
+
+    m.a21 = yaxis.x;
+    m.a22 = yaxis.y;
+    m.a23 = yaxis.z;
+
+    m.a31 = -zaxis.x;
+    m.a32 = -zaxis.y;
+    m.a33 = -zaxis.z;
+
+    m.a14 = -xaxis.dot(from);
+    m.a24 = -yaxis.dot(from);
+    m.a34 = -zaxis.dot(from);
+
+    return m;
+}
+
+Mat4 Mat4::look_at(const Vec3& from, const Vec3& target) { return look_at(from, target, Vec3::up); }
 
 // Methods
 
