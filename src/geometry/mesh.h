@@ -13,17 +13,17 @@ namespace Geometry {
 class Mesh {
    public:
     // Constructors
-    explicit Mesh(const Vector3* vertices, const uint32_t vertex_count);
+    explicit Mesh(const Vec3* vertices, const uint32_t vertex_count);
     // Methods
     const MeshRaw raw() const;
-    Vector3 get_vertex(const uint32_t vertex_index) const;
+    Vec3 get_vertex(const uint32_t vertex_index) const;
     // Operations
-    Mesh translate(const Vector3& translation) const;
-    Mesh rotate(const Vector3& axis, float angle) const;
+    Mesh translate(const Vec3& translation) const;
+    Mesh rotate(const Vec3& axis, float angle) const;
     Mesh scale(float scale) const;
 
    private:
-    DynamicArray<Vector3> _vertices;
+    DynamicArray<Vec3> _vertices;
 };
 
 }  // namespace Geometry

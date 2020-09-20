@@ -1,7 +1,7 @@
 #ifndef SARGASSO_ENGINE_MESH_GENERATOR_H
 #define SARGASSO_ENGINE_MESH_GENERATOR_H
 
-#include "common/math.h"
+#include "common/math/matrix4.h"
 #include "geometry/mesh_raw.h"
 
 namespace SargassoEngine {
@@ -13,8 +13,8 @@ class MeshGenerator {
    public:
     MeshGenerator() = delete;
     ~MeshGenerator() = delete;
-    static const MeshRaw generate_square();
-    static const Matrix4 generate_sample_camera();
+    static MeshRaw generate_square();
+    static Mat4 generate_sample_camera(const float width, const float height);
 };
 
 }  // namespace Geometry

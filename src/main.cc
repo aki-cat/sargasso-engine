@@ -1,5 +1,4 @@
 #include "common/log.h"
-#include "common/math.h"
 #include "front_end/front_end_system.h"
 #include "front_end/modules/events.h"
 #include "front_end/modules/graphics.h"

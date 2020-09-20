@@ -42,7 +42,7 @@ Graphics::Graphics() {
         logf_error("Failed to load shaders:\n\t%", exception);
     }
 
-    _camera = MeshGenerator::generate_sample_camera();
+    _camera.copy(MeshGenerator::generate_sample_camera(_width, _height));
 }
 
 Graphics::~Graphics() {
@@ -66,5 +66,5 @@ void Graphics::stop_rendering_buffer() {
 
 void Graphics::_set_shader_camera() {
     GLint camera_matrix_id = glGetUniformLocation(_program_id, "projection_view");
-    glUniformMatrix4fv(camera_matrix_id, 1, GL_FALSE, &_camera[0][0]);
+    glUniformMatrix4fv(camera_matrix_id, 1, GL_FALSE, &_camera[0]);
 }
