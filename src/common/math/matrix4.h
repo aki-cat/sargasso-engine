@@ -40,6 +40,7 @@ class Mat4 {
     // misc methods
     std::string to_string() const;
     Mat4& round();
+    Mat4& copy(const Mat4& m);
 
     // useful constant matrices
     static const Mat4& identity;
@@ -244,6 +245,26 @@ inline Mat4& Mat4::round() {
             _points[i] = 0;
         }
     }
+    return (*this);
+}
+
+Mat4& Mat4::copy(const Mat4& m) {
+    a11 = m.a11;
+    a12 = m.a12;
+    a13 = m.a13;
+    a14 = m.a14;
+    a21 = m.a21;
+    a22 = m.a22;
+    a23 = m.a23;
+    a24 = m.a24;
+    a31 = m.a31;
+    a32 = m.a32;
+    a33 = m.a33;
+    a34 = m.a34;
+    a41 = m.a41;
+    a42 = m.a42;
+    a43 = m.a43;
+    a44 = m.a44;
     return (*this);
 }
 
