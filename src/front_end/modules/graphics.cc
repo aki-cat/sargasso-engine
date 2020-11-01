@@ -47,7 +47,7 @@ Graphics::Graphics() {
 
     logf("window size = (%, %)", _width, _height);
 
-    const float fov = static_cast<float>(M_PI_4);
+    const float fov = static_cast<float>(M_PI_2);
     const float aspect = static_cast<float>(_width) / static_cast<float>(_height);
 
     Mat4 projection = Mat4::perspective_projection(fov, aspect, 0.01f, 1000.0f);

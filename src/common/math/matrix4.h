@@ -119,8 +119,8 @@ inline Mat4 Mat4::perspective_projection(float fov, float aspect, float z_near, 
     m[5] = rect_height;
     m[10] = p;
 
-    m[9] = -1.0f;
-    m[6] = q;
+    m[11] = -1.0f;
+    m[14] = q;
 
     return m;
 }
