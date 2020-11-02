@@ -49,7 +49,7 @@ jobs:
         run: git submodule update --init --recursive
 
       # Build
-      - name: Setup python version & Build
+      - name: Build
         run: scons
 
       # Runs tests
