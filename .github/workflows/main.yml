@@ -28,7 +28,7 @@ jobs:
 
       # Installs builder
       - name: Install builder
-        run: pip install --user scons
+        run: python3 -m pip install --user scons
 
       # Update path
       - name: Update PATH
@@ -40,7 +40,7 @@ jobs:
 
       # Runs builder routine
       - name: Build
-        run: scons
+        run: python3 -m scons
 
       # Runs tests
       - name: Test
