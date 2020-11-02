@@ -38,7 +38,6 @@ jobs:
           pyenv global 3.8.5
           python -m pip install --upgrade pip setuptools scons
           export PATH=$(pyenv root)/shims:$PATH
-          which scons
 
       # Clones libraries
       - name: Update submodules
