@@ -32,7 +32,8 @@ jobs:
           unset PYENV_ROOT
           curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
           export PATH="$HOME/.pyenv/bin:$PATH"
-          exec $SHELL
+          eval "$(pyenv init -)"
+          eval "$(pyenv virtualenv-init -)"
           pyenv install 3.8.5
           pyenv global 3.8.5
 
