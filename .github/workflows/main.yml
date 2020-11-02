@@ -30,12 +30,7 @@ jobs:
       - name: Install dependencies
         run: sudo apt-get install -y cmake g++-9 libxrandr-dev libxinerama-dev
 
-      # Clones libraries
-      - name: Update submodules
-        run: git submodule update --init --recursive
-
-      # Force python version
-      - name: Setup python version & Build
+      - name: Install pyenv
         run: |
           unset PYENV_ROOT
           curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
@@ -43,13 +38,17 @@ jobs:
           echo "export PATH=$HOME/.pyenv/bin:\$PATH" >> $HOME/.bashrc
           echo "eval \"\$(pyenv init -)\"" >> $HOME/.bashrc
           echo "eval \"\$(pyenv virtualenv-init -)\"" >> $HOME/.bashrc
+
+      - name: Install scons
+        run: |
           pyenv install 3.8.5
           pyenv global 3.8.5
-          echo python 3.8.5 installed!
-          python -m pip install --upgrade pip setuptools scons
-          echo scons installed!
+          python -m pip install scons
 
-      # Force python version
+      - name: Update submodules
+        run: git submodule update --init --recursive
+
+      # Build
       - name: Setup python version & Build
         run: scons
 
