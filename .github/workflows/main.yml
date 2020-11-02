@@ -28,7 +28,7 @@ jobs:
 
       # Installs dependencies
       - name: Install dependencies
-        run: sudo apt-get install -y cmake g++-9 libxrandr-dev libxinerama-dev libxcursor
+        run: sudo apt-get install -y cmake g++-9 xorg-dev
 
       - name: Install pyenv
         run: |
