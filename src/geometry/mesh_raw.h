@@ -3,6 +3,8 @@
 
 #include "common/math/vector3.h"
 
+#include <cstdint>
+
 using namespace SargassoEngine::Common::Math;
 
 namespace SargassoEngine {
