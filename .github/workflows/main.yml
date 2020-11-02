@@ -24,15 +24,7 @@ jobs:
 
       # Installs dependencies
       - name: Install dependencies
-        run: sudo apt-get install cmake g++-9 python3
-
-      # Installs builder
-      - name: Install builder
-        run: python3 -m pip install --user scons
-
-      # Update path
-      - name: Update PATH
-        run: export PATH="${HOME}/.local/bin:${PATH}"
+        run: sudo apt-get install cmake g++-9 python3 scons
 
       # Clones libraries
       - name: Update submodules
@@ -40,7 +32,7 @@ jobs:
 
       # Runs builder routine
       - name: Build
-        run: python3 -m scons
+        run: scons
 
       # Runs tests
       - name: Test
