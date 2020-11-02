@@ -24,7 +24,7 @@ jobs:
 
       # Installs dependencies
       - name: Install dependencies
-        run: sudo apt-get install cmake g++-9
+        run: sudo apt-get install cmake g++-9 libxrandr-dev
 
       # Clones libraries
       - name: Update submodules
@@ -41,9 +41,7 @@ jobs:
           pyenv install 3.8.5
           pyenv global 3.8.5
           python -m pip install --upgrade pip setuptools scons
-          python -m pip list
-          eval "$(pyenv init -)"
-          pyenv shims
+          eval "$(pyenv init -)" # updates packages list
           scons
 
       # Runs tests
