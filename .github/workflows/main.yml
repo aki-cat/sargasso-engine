@@ -37,7 +37,7 @@ jobs:
           pyenv install 3.8.5
           pyenv global 3.8.5
           python -m pip install scons
-          eval "$(pyenv init -)"g
+          export PATH=$(pyenv root)/shims:$PATH
           which scons
 
       # Clones libraries
