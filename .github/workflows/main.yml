@@ -35,10 +35,9 @@ jobs:
         run: |
           unset PYENV_ROOT
           curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
-          echo "export PATH=$HOME/.pyenv/bin:\$PATH" >> $HOME/.bashrc
-          echo "eval \"\$(pyenv init -)\"" >> $HOME/.bashrc
-          echo "eval \"\$(pyenv virtualenv-init -)\"" >> $HOME/.bashrc
-          exec $SHELL
+          export PATH=$HOME/.pyenv/bin:$PATH
+          eval "$(pyenv init -)"
+          eval "$(pyenv virtualenv-init -)"
           pyenv install 3.8.5
           pyenv global 3.8.5
           python -m pip install --upgrade pip setuptools scons
