@@ -2,6 +2,10 @@
 
 name: CI
 
+defaults:
+  run:
+    shell: bash -ieo pipefail {0}
+
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
@@ -24,7 +28,7 @@ jobs:
 
       # Installs dependencies
       - name: Install dependencies
-        run: sudo apt-get install cmake g++-9 libxrandr-dev
+        run: sudo apt-get install -y cmake g++-9 libxrandr-dev libxinerama-dev
 
       # Clones libraries
       - name: Update submodules
@@ -35,14 +39,19 @@ jobs:
         run: |
           unset PYENV_ROOT
           curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
-          export PATH=$HOME/.pyenv/bin:$PATH
-          eval "$(pyenv init -)"
-          eval "$(pyenv virtualenv-init -)"
+          echo pyenv installed!
+          echo "export PATH=$HOME/.pyenv/bin:\$PATH" >> $HOME/.bashrc
+          echo "eval \"\$(pyenv init -)\"" >> $HOME/.bashrc
+          echo "eval \"\$(pyenv virtualenv-init -)\"" >> $HOME/.bashrc
           pyenv install 3.8.5
           pyenv global 3.8.5
+          echo python 3.8.5 installed!
           python -m pip install --upgrade pip setuptools scons
-          eval "$(pyenv init -)" # updates packages list
-          scons
+          echo scons installed!
+
+      # Force python version
+      - name: Setup python version & Build
+        run: scons
 
       # Runs tests
       - name: Test
