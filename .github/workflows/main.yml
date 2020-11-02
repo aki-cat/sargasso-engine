@@ -28,7 +28,7 @@ jobs:
 
       # Force python3 as default
       - name: Install dependencies
-        run: env python3
+        run: env python3 && alias python=python3
 
       # Clones libraries
       - name: Update submodules
