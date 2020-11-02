@@ -28,7 +28,7 @@ jobs:
 
       # Installs dependencies
       - name: Install dependencies
-        run: sudo apt-get install -y cmake g++-9 xorg-dev
+        run: sudo apt-get install -y cmake g++-9 xorg-dev libglew-dev
 
       - name: Install pyenv
         run: |
