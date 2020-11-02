@@ -24,7 +24,7 @@ jobs:
 
       # Installs dependencies
       - name: Install dependencies
-        run: sudo apt-get install cmake g++-9 scons
+        run: sudo apt-get install cmake g++-9
 
       # Force python version
       - name: Setup python version
@@ -32,10 +32,11 @@ jobs:
           unset PYENV_ROOT
           curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
           export PATH="$HOME/.pyenv/bin:$PATH"
-          eval "$(pyenv init -)"
-          eval "$(pyenv virtualenv-init -)"
+          pyenv init -
+          pyenv virtualenv-init -
           pyenv install 3.8.5
           pyenv global 3.8.5
+          python -m pip install scons
 
       # Clones libraries
       - name: Update submodules
