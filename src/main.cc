@@ -9,6 +9,7 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <cstdint>
 
 using namespace SargassoEngine;
 using namespace SargassoEngine::FrontEnd;

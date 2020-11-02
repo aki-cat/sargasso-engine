@@ -2,6 +2,7 @@
 #define SARGASSO_ENGINE_COMMON_MATH_POINTS_H
 
 #include <cassert>
+#include <cstdint>
 
 namespace SargassoEngine {
 namespace Common {
