@@ -31,13 +31,13 @@ jobs:
         run: git submodule update --init --recursive
 
       # Force python version
-      - name: Setup python version and build
+      - name: Setup python version
         run: |
           unset PYENV_ROOT
           curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
-          echo "export PATH=$HOME/.pyenv/bin:$PATH; \
-                eval $(pyenv init -); \
-                eval "$(pyenv virtualenv-init -);" >> $HOME/.bashrc
+          echo "export PATH=$HOME/.pyenv/bin:\$PATH" >> $HOME/.bashrc
+          echo "eval \"\$(pyenv init -)\"" >> $HOME/.bashrc
+          echo "eval \"\$(pyenv virtualenv-init -)\"" >> $HOME/.bashrc
           exec $SHELL
           pyenv install 3.8.5
           pyenv global 3.8.5
