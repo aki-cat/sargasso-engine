@@ -36,6 +36,7 @@ jobs:
           eval "$(pyenv virtualenv-init -)"
           pyenv install 3.8.5
           pyenv global 3.8.5
+          python -m pip --upgrade pip setuptools
           python -m pip install scons
           export PATH=$(pyenv root)/shims:$PATH
           which scons
