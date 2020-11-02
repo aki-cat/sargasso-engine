@@ -41,6 +41,9 @@ jobs:
           pyenv install 3.8.5
           pyenv global 3.8.5
           python -m pip install --upgrade pip setuptools scons
+          python -m pip list
+          eval "$(pyenv init -)"
+          pyenv shims
           scons
 
       # Runs tests
