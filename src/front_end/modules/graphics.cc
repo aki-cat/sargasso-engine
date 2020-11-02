@@ -71,12 +71,11 @@ void Graphics::_set_shader_camera() {
     const float fov = static_cast<float>(M_PI_2);
     const float aspect = static_cast<float>(_width) / static_cast<float>(_height);
 
+    // TODO: Make this line work
     // Mat4 projection = Mat4::perspective_projection(fov, aspect, 0.01f, 1000.0f);
-    Mat4 projection = Mat4::identity();
-    Mat4 view = Mat4::look_at(Vec3(2, 3, -1), Vec3::zero());
 
-    logf("projection\n%", projection.to_string());
-    logf("view\n%", view.to_string());
+    Mat4 projection = Mat4::identity();
+    Mat4 view = Mat4::look_at(Vec3(0, 0, -10), Vec3::zero());
 
     GLint projection_matrix_id = glGetUniformLocation(_program_id, "projection");
     GLint view_matrix_id = glGetUniformLocation(_program_id, "view");
