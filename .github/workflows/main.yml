@@ -31,7 +31,7 @@ jobs:
         run: git submodule update --init --recursive
 
       # Force python version
-      - name: Setup python version
+      - name: Setup python version & Build
         run: |
           unset PYENV_ROOT
           curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
@@ -42,11 +42,6 @@ jobs:
           pyenv install 3.8.5
           pyenv global 3.8.5
           python -m pip install --upgrade pip setuptools scons
-
-      # Runs builder routine
-      - name: Build
-        run: |
-          pyenv init -
           scons
 
       # Runs tests
