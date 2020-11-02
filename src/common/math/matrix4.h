@@ -104,18 +104,19 @@ inline Mat4 Mat4::zero() {
 inline Mat4 Mat4::perspective_projection(float fov, float aspect, float z_near, float z_far) {
     float rect_height;
     float rect_width;
-    float f_minus_n = z_far - z_near;
+    float z_dist = z_near - z_far;
+    float z_far_per_dist = z_far / z_dist;
 
-    rect_height = 1.0f / static_cast<float>(tan(fov / 2.0));
+    rect_height = 1.0f / static_cast<float>(tan(fov * 0.5));
     rect_width = rect_height * aspect;
 
     Mat4 m = Mat4::zero();
 
     m[0] = rect_width;
     m[5] = rect_height;
-    m[10] = -z_far / f_minus_n;
+    m[10] = z_far_per_dist;
     m[11] = -1.0f;
-    m[14] = -z_far * z_near / f_minus_n;
+    m[14] = 2.0f * z_near * z_far_per_dist;
 
     return m;
 }

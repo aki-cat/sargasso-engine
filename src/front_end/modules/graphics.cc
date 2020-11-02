@@ -46,14 +46,6 @@ Graphics::Graphics() {
     }
 
     logf("window size = (%, %)", _width, _height);
-
-    const float fov = static_cast<float>(M_PI_2);
-    const float aspect = static_cast<float>(_width) / static_cast<float>(_height);
-
-    Mat4 projection = Mat4::perspective_projection(fov, aspect, 0.01f, 1000.0f);
-    Mat4 view = Mat4::look_at(Vec3(4.0f, 3.0f, 3.0f), Vec3::zero());
-    Mat4 result = projection * view;
-    _camera.copy(result);
 }
 
 Graphics::~Graphics() {
@@ -76,6 +68,18 @@ void Graphics::stop_rendering_buffer() {
 }
 
 void Graphics::_set_shader_camera() {
-    GLint camera_matrix_id = glGetUniformLocation(_program_id, "projection_view");
-    glUniformMatrix4fv(camera_matrix_id, 1, GL_FALSE, &_camera[0]);
+    const float fov = static_cast<float>(M_PI_2);
+    const float aspect = static_cast<float>(_width) / static_cast<float>(_height);
+
+    // Mat4 projection = Mat4::perspective_projection(fov, aspect, 0.01f, 1000.0f);
+    Mat4 projection = Mat4::identity();
+    Mat4 view = Mat4::look_at(Vec3(2, 3, -1), Vec3::zero());
+
+    logf("projection\n%", projection.to_string());
+    logf("view\n%", view.to_string());
+
+    GLint projection_matrix_id = glGetUniformLocation(_program_id, "projection");
+    GLint view_matrix_id = glGetUniformLocation(_program_id, "view");
+    glUniformMatrix4fv(projection_matrix_id, 1, GL_FALSE, &projection[0]);
+    glUniformMatrix4fv(view_matrix_id, 1, GL_FALSE, &view[0]);
 }

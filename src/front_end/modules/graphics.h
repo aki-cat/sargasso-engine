@@ -29,7 +29,6 @@ class Graphics {
     int _width;
     int _height;
     GLuint _program_id;
-    Mat4 _camera;
     void _set_shader_camera();
 };
 
