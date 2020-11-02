@@ -30,7 +30,7 @@ int main(int argc, char const* argv[]) {
     const Vec3 points[] = {Vec3(-0.5f, -0.5f, -0.5f), Vec3(+0.5f, -0.5f, -0.5f),
                            Vec3(+0.5f, +0.5f, -0.5f), Vec3(+0.5f, +0.5f, -0.5f),
                            Vec3(-0.5f, +0.5f, -0.5f), Vec3(-0.5f, -0.5f, -0.5f)};
-    const MeshRaw& sample_mesh = MeshRaw(points, 6);
+    const MeshRaw sample_mesh = MeshRaw(points, 6);
     sample_mesh.print();
 
     FrontEndSystem front_end = FrontEndSystem();
