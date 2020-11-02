@@ -26,27 +26,28 @@ jobs:
       - name: Install dependencies
         run: sudo apt-get install cmake g++-9
 
-      # Force python version
-      - name: Setup python version
-        run: |
-          unset PYENV_ROOT
-          curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
-          export PATH="$HOME/.pyenv/bin:$PATH"
-          eval "$(pyenv init -)"
-          eval "$(pyenv virtualenv-init -)"
-          pyenv install 3.8.5
-          pyenv global 3.8.5
-          python -m pip install --upgrade pip setuptools scons
-          export PATH=$(pyenv root)/shims:$PATH
-          pyenv shims
-
       # Clones libraries
       - name: Update submodules
         run: git submodule update --init --recursive
 
+      # Force python version
+      - name: Setup python version and build
+        run: |
+          unset PYENV_ROOT
+          curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
+          echo "export PATH=$HOME/.pyenv/bin:$PATH; \
+                eval $(pyenv init -); \
+                eval "$(pyenv virtualenv-init -);" >> $HOME/.bashrc
+          exec $SHELL
+          pyenv install 3.8.5
+          pyenv global 3.8.5
+          python -m pip install --upgrade pip setuptools scons
+
       # Runs builder routine
       - name: Build
-        run: exec $("pyenv root")/shims/scons
+        run: |
+          pyenv init -
+          scons
 
       # Runs tests
       - name: Test
