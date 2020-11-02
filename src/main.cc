@@ -1,11 +1,10 @@
 #include "common/log.h"
-#include "common/math.h"
 #include "front_end/front_end_system.h"
 #include "front_end/modules/events.h"
 #include "front_end/modules/graphics.h"
 #include "front_end/modules/time.h"
 #include "front_end/utility/shader_loader.h"
-#include "geometry/mesh.h"
+#include "geometry/constants.h"
 #include "geometry/mesh_generator.h"
 
 #include <GL/glew.h>
@@ -28,7 +27,10 @@ GLuint generate_buffer(const MeshRaw& mesh);
 int main(int argc, char const* argv[]) {
     log("Hello world");
 
-    const MeshRaw& sample_mesh = MeshGenerator::generate_square();
+    const Vec3 points[] = {Vec3(-0.5f, -0.5f, -0.5f), Vec3(+0.5f, -0.5f, -0.5f),
+                           Vec3(+0.5f, +0.5f, -0.5f), Vec3(+0.5f, +0.5f, -0.5f),
+                           Vec3(-0.5f, +0.5f, -0.5f), Vec3(-0.5f, -0.5f, -0.5f)};
+    const MeshRaw sample_mesh = MeshRaw(points, 6);
     sample_mesh.print();
 
     FrontEndSystem front_end = FrontEndSystem();

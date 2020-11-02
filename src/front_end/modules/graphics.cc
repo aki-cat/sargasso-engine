@@ -21,7 +21,10 @@ Graphics::Graphics() {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 
-    _window = glfwCreateWindow(960, 540, SargassoEngine::ENGINE_NAME, NULL, NULL);
+    _width = 960;
+    _height = 540;
+
+    _window = glfwCreateWindow(_width, _height, SargassoEngine::ENGINE_NAME, NULL, NULL);
     log("Window created!");
 
     // Initialize window
@@ -42,7 +45,7 @@ Graphics::Graphics() {
         logf_error("Failed to load shaders:\n\t%", exception);
     }
 
-    _camera = MeshGenerator::generate_sample_camera();
+    logf("window size = (%, %)", _width, _height);
 }
 
 Graphics::~Graphics() {
@@ -65,6 +68,17 @@ void Graphics::stop_rendering_buffer() {
 }
 
 void Graphics::_set_shader_camera() {
-    GLint camera_matrix_id = glGetUniformLocation(_program_id, "projection_view");
-    glUniformMatrix4fv(camera_matrix_id, 1, GL_FALSE, &_camera[0][0]);
+    const float fov = static_cast<float>(M_PI_2);
+    const float aspect = static_cast<float>(_width) / static_cast<float>(_height);
+
+    // TODO: Make this line work
+    // Mat4 projection = Mat4::perspective_projection(fov, aspect, 0.01f, 1000.0f);
+
+    Mat4 projection = Mat4::identity();
+    Mat4 view = Mat4::look_at(Vec3(0, 0, -10), Vec3::zero());
+
+    GLint projection_matrix_id = glGetUniformLocation(_program_id, "projection");
+    GLint view_matrix_id = glGetUniformLocation(_program_id, "view");
+    glUniformMatrix4fv(projection_matrix_id, 1, GL_FALSE, &projection[0]);
+    glUniformMatrix4fv(view_matrix_id, 1, GL_FALSE, &view[0]);
 }

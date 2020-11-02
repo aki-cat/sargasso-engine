@@ -96,7 +96,7 @@ inline typename Pool<T>::ID Pool<T>::_next_free_id() {
             if (!is_used) {
                 return id;
             }
-        } catch (std::out_of_range) {
+        } catch (const std::out_of_range&) {
             return id;
         }
     }

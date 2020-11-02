@@ -1,7 +1,7 @@
 #ifndef SARGASSO_ENGINE_FRONT_END_GRAPHICS_H
 #define SARGASSO_ENGINE_FRONT_END_GRAPHICS_H
 
-#include "common/math.h"
+#include "common/math/matrix4.h"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -29,7 +29,6 @@ class Graphics {
     int _width;
     int _height;
     GLuint _program_id;
-    Matrix4 _camera;
     void _set_shader_camera();
 };
 
