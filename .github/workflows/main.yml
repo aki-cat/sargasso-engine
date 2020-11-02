@@ -26,6 +26,10 @@ jobs:
       - name: Install dependencies
         run: sudo apt-get install cmake g++-9 python3 scons
 
+      # Force python3 as default
+      - name: Install dependencies
+        run: env python3
+
       # Clones libraries
       - name: Update submodules
         run: git submodule update --init --recursive
