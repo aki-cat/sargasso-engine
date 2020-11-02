@@ -32,12 +32,12 @@ jobs:
           unset PYENV_ROOT
           curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
           export PATH="$HOME/.pyenv/bin:$PATH"
-          pyenv init -
-          pyenv virtualenv-init -
+          eval "$(pyenv init -)"
+          eval "$(pyenv virtualenv-init -)"
           pyenv install 3.8.5
           pyenv global 3.8.5
           python -m pip install scons
-          pyenv init -
+          eval "$(pyenv init -)"
 
       # Clones libraries
       - name: Update submodules
