@@ -1,11 +1,10 @@
 #ifndef SARGASSO_ENGINE_MESH_RAW_H
 #define SARGASSO_ENGINE_MESH_RAW_H
 
-#include "common/math/vector3.h"
-
 #include <cstdint>
+#include <sml/vector3.h>
 
-using namespace SargassoEngine::Common::Math;
+using namespace SML;
 
 namespace SargassoEngine {
 namespace Geometry {

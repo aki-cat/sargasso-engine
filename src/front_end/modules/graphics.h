@@ -1,15 +1,15 @@
 #ifndef SARGASSO_ENGINE_FRONT_END_GRAPHICS_H
 #define SARGASSO_ENGINE_FRONT_END_GRAPHICS_H
 
-#include "common/math/matrix4.h"
-
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <sml/matrix4.h>
+
 namespace SargassoEngine {
 namespace FrontEnd {
 namespace Modules {
 
-using namespace Common::Math;
+using namespace SML;
 
 class Graphics {
    public:

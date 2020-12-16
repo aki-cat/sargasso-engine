@@ -1,13 +1,14 @@
 #ifndef SARGASSO_ENGINE_MESH_GENERATOR_H
 #define SARGASSO_ENGINE_MESH_GENERATOR_H
 
-#include "common/math/matrix4.h"
 #include "geometry/mesh_raw.h"
+
+#include <sml/matrix4.h>
 
 namespace SargassoEngine {
 namespace Geometry {
 
-using namespace Common::Math;
+using namespace SML;
 
 class MeshGenerator {
    public:

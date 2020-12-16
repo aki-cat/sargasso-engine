@@ -1,12 +1,13 @@
 
 #include "geometry/mesh_generator.h"
 
-#include "common/math/matrix4.h"
-#include "common/math/vector3.h"
 #include "geometry/mesh_raw.h"
 
+#include <sml/matrix4.h>
+#include <sml/vector3.h>
+
 using namespace SargassoEngine::Geometry;
-using namespace SargassoEngine::Common::Math;
+using namespace SML;
 
 MeshRaw MeshGenerator::generate_square() {
     const Vec3 square_vertices[6] = {Vec3(-0.5f, -0.5f, +0.0f), Vec3(+0.5f, -0.5f, +0.0f),

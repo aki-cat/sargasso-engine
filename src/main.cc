@@ -17,7 +17,7 @@ using namespace SargassoEngine::FrontEnd::Modules;
 using namespace SargassoEngine::FrontEnd::Utility;
 using namespace SargassoEngine::Geometry;
 using namespace SargassoEngine::Common;
-using namespace SargassoEngine::Common::Math;
+using namespace SML;
 
 void run(const FrontEndSystem& front_end, const GLuint buffer_id, const uint32_t buffer_size);
 void render_buffer(const GLuint vertex_buffer, const uint32_t vertex_buffer_size);
@@ -26,7 +26,7 @@ GLuint generate_vertex_array();
 GLuint generate_buffer(const MeshRaw& mesh);
 
 int main(int argc, char const* argv[]) {
-    log("Hello world");
+    logf("SargassoEngine Version %\n", SARGASSO_ENGINE_VERSION);
 
     const Vec3 points[] = {Vec3(-0.5f, -0.5f, -0.5f), Vec3(+0.5f, -0.5f, -0.5f),
                            Vec3(+0.5f, +0.5f, -0.5f), Vec3(+0.5f, +0.5f, -0.5f),
