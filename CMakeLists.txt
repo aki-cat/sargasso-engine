@@ -19,6 +19,14 @@ file(GLOB_RECURSE ALL_SOURCE_FILES "${PROJECT_SOURCE_DIR}/src/*.cc")
 message(STATUS "Including files: ${ALL_SOURCE_FILES}")
 add_executable(SargassoEngine ${ALL_SOURCE_FILES})
 
+set_target_properties(SargassoEngine
+    PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+)
+
+
 find_package(GLEW REQUIRED)
 find_package(OpenGL REQUIRED)
 find_library(SML third_party/sml)
