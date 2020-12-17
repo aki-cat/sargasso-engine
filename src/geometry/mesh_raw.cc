@@ -12,15 +12,11 @@ using namespace SargassoEngine::Geometry;
 MeshRaw::MeshRaw(const Vec3* vertices, const uint32_t vertex_count)
     : points(new float[(vertex_count * POINTS_PER_VERTEX)]),
       point_count(vertex_count * POINTS_PER_VERTEX) {
-    uint32_t point_index = 0;
-
     logf("Instantiating Mesh %.\n- Points: %\n- Vertices: %", this, point_count, vertex_count);
 
     for (uint32_t vertex_index = 0; vertex_index < vertex_count; vertex_index++) {
         const Vec3& vertex = vertices[vertex_index];
-        points[point_index++] = vertex.x;
-        points[point_index++] = vertex.y;
-        points[point_index++] = vertex.z;
+        std::memcpy(&points[vertex_index * 3], &vertex, sizeof(float) * 3);
     }
 }
 

@@ -26,7 +26,6 @@ set_target_properties(SargassoEngine
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
 )
 
-
 find_package(GLEW REQUIRED)
 find_package(OpenGL REQUIRED)
 find_library(SML third_party/sml)
