@@ -23,16 +23,17 @@ void run(const FrontEndSystem& front_end, const GLuint buffer_id, const uint32_t
 void render_buffer(const GLuint vertex_buffer, const uint32_t vertex_buffer_size);
 
 GLuint generate_vertex_array();
-GLuint generate_buffer(const MeshRaw& mesh);
+GLuint generate_buffer(const float* points, uint32_t point_count);
 
 int main(int argc, char const* argv[]) {
     logf("SargassoEngine Version %\n", SARGASSO_ENGINE_VERSION);
 
-    const Vec3 points[] = {Vec3(-0.5f, -0.5f, -0.5f), Vec3(+0.5f, -0.5f, -0.5f),
-                           Vec3(+0.5f, +0.5f, -0.5f), Vec3(+0.5f, +0.5f, -0.5f),
-                           Vec3(-0.5f, +0.5f, -0.5f), Vec3(-0.5f, -0.5f, -0.5f)};
-    const MeshRaw sample_mesh = MeshRaw(points, 6);
-    sample_mesh.print();
+    const Vec3 points[] = {Vec3(-0.5f, -0.5f, +0.0f), Vec3(+0.5f, -0.5f, +0.0f),
+                           Vec3(+0.5f, +0.5f, +0.0f), Vec3(+0.5f, +0.5f, +0.0f),
+                           Vec3(-0.5f, +0.5f, +0.0f), Vec3(-0.5f, -0.5f, +0.0f)};
+    const uint32_t vertex_count = 6;
+    const uint32_t point_count = 6 * POINTS_PER_VERTEX;
+    const uint32_t byte_count = point_count * sizeof(float);
 
     FrontEndSystem front_end = FrontEndSystem();
     if (!front_end.is_initialized()) {
@@ -41,12 +42,12 @@ int main(int argc, char const* argv[]) {
 
     // GLuint vao_id =
     generate_vertex_array();
-    GLuint vertex_buffer = generate_buffer(sample_mesh);
+    GLuint vertex_buffer = generate_buffer(reinterpret_cast<const float*>(points), point_count);
 
     log("Init successful!");
 
     front_end.start();
-    run(front_end, vertex_buffer, sample_mesh.point_count);
+    run(front_end, vertex_buffer, byte_count);
     front_end.stop();
 
     log("Done!");
@@ -94,9 +95,9 @@ void render_buffer(const GLuint vertex_buffer, const uint32_t vertex_buffer_size
         (void*)0            // array buffer offset
     );
 
-    // Draw the triangle !
+    // Draw the buffer !
 
-    // Starting from vertex 0; 3 vertices total -> 1 triangle
+    // Starting from vertex 0; 3 vertices total -> 1 buffer
     glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(vertex_buffer_size));
     glDisableVertexAttribArray(0);
 }
@@ -109,15 +110,11 @@ GLuint generate_vertex_array() {
     return vao_id;
 }
 
-GLuint generate_buffer(const MeshRaw& mesh) {
-    log("Creating vertex buffer...");
+GLuint generate_buffer(const float* points, uint32_t point_count) {
     GLuint buffer_id;
-
-    GLsizeiptr byte_count = static_cast<GLsizeiptr>(mesh.point_count * (uint32_t)sizeof(GLfloat));
-
+    logf("Creating vertex buffer of % bytes", sizeof(float) * point_count);
     glGenBuffers(1, &buffer_id);
     glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
-    glBufferData(GL_ARRAY_BUFFER, byte_count, mesh.points, GL_STATIC_DRAW);
-
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * point_count, points, GL_STATIC_DRAW);
     return buffer_id;
 }
