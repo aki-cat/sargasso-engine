@@ -5,6 +5,7 @@ cmake_policy(SET CMP0076 NEW)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_FLAGS "-pedantic -Wall -Werror")
 
 # GLFW flags
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)

@@ -32,7 +32,7 @@ int main(int argc, char const* argv[]) {
                            Vec3(+0.5f, +0.5f, +0.0f), Vec3(+0.5f, +0.5f, +0.0f),
                            Vec3(-0.5f, +0.5f, +0.0f), Vec3(-0.5f, -0.5f, +0.0f)};
     const uint32_t vertex_count = 6;
-    const uint32_t point_count = 6 * POINTS_PER_VERTEX;
+    const uint32_t point_count = vertex_count * POINTS_PER_VERTEX;
     const uint32_t byte_count = point_count * sizeof(float);
 
     FrontEndSystem front_end = FrontEndSystem();
