@@ -4,6 +4,8 @@
 using namespace SargassoEngine::FrontEnd::Utility;
 using namespace SML;
 
+Camera::Camera() : _transform(Mat4::identity()), _projection(Mat4::identity()) {}
+
 Camera::Camera(float width, float height, float z_near, float z_far, float fov)
     : _transform(Mat4::identity()), _projection() {
     _projection = Mat4::conical_projection(fov, width / height, z_near, z_far);

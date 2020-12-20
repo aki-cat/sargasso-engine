@@ -1,17 +1,21 @@
 
 #include "sargasso/front_end/utility/buffer.h"
 
+#include "sargasso/common/log.h"
 #include "sargasso/geometry/constants.h"
 
 using namespace SargassoEngine::FrontEnd::Utility;
 using namespace SargassoEngine::Geometry;
 
-Buffer::Buffer(const std::vector<Vec3>& points) {
-    const auto data = points.data();
+Buffer::Buffer(const std::vector<Vec3>& points) : _point_count(points.size() * POINTS_PER_VERTEX) {
+    const Vec3* points_array = points.data();
+    const float* data = reinterpret_cast<const float*>(points_array);
+
     glGenBuffers(1, &_buffer_id);
     glBindBuffer(GL_ARRAY_BUFFER, _buffer_id);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * points.size() * 3,
-                 reinterpret_cast<const float*>(&data), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * points.size() * 3, data, GL_STATIC_DRAW);
+
+    Common::logf("Generating buffer #% (% points)", _buffer_id, _point_count);
 }
 
 Buffer::~Buffer() { glDeleteBuffers(1, &_buffer_id); }
@@ -34,6 +38,7 @@ void Buffer::render() const {
     );
 
     // Draw the buffer !
+    Common::logf("Rendering buffer #% (% points)", _buffer_id, _point_count);
 
     // Starting from vertex 0; 3 vertices total -> 1 buffer
     glDrawArrays(GL_TRIANGLES, 0, get_buffer_size());

@@ -10,18 +10,20 @@ using namespace SargassoEngine::FrontEnd::Modules;
 using namespace SargassoEngine::FrontEnd::Utility;
 using namespace SargassoEngine::Common;
 
-Graphics::Graphics() {
+Graphics::Graphics() : _camera() {
     log("Initializing window...");
 
     glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     _width = 960;
     _height = 540;
     _camera.make_orthogonal(_width, _height, 0.01f, 1000);
+    _camera.look_at(Vec3(0, 0, -10), Vec3(0, 0, 0));
+    logf("Camera @ poisition: %", _camera.get_position().to_string());
 
     _window = glfwCreateWindow(_width, _height, SargassoEngine::ENGINE_NAME, NULL, NULL);
     log("Window created!");

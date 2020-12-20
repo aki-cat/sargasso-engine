@@ -12,7 +12,7 @@ using namespace SML;
 
 class Camera {
    public:
-    Camera() = default;
+    Camera();
     Camera(float width, float height, float z_near, float z_far, float fov);
     Camera(float width, float height, float z_near, float z_far);
 
