@@ -12,6 +12,7 @@ set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
+add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/glad")
 add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/glfw")
 add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/sml")
 
@@ -38,6 +39,7 @@ target_compile_definitions(SargassoEngine PUBLIC
 target_link_libraries(SargassoEngine SML)
 
 # Rendering libraries
+target_link_libraries(SargassoEngine glad)
 target_link_libraries(SargassoEngine glfw)
 target_link_libraries(SargassoEngine GLEW::GLEW)
 target_link_libraries(SargassoEngine OpenGL::GL)
