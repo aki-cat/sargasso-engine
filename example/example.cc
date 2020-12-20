@@ -1,16 +1,16 @@
 
 #include <sargasso/engine.h>
 
-// Define your class inheriting from Game
+using namespace SargassoEngine;
 
-class Example : public SargassoEngine::Game {
+// Define your class inheriting from Game
+class Example : public Game {
    public:
-    Example() : SargassoEngine::Game() {}
+    Example() : Game() {}
 };
 
 // Then define a main and run Game::run() passing a simple instance of your class, like so:
-
 int main() {
     Example example;
-    return SargassoEngine::Game::run(example);
+    return Game::run(example);
 }

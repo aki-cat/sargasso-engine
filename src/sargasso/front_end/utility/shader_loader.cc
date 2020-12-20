@@ -15,9 +15,10 @@ using namespace SargassoEngine::Common;
 
 using ShaderType = ShaderLoader::ShaderType;
 
-constexpr const char* SHADER_VERTEX_FILE_PATH = "src/front_end/utility/shaders/basic_vertex.glsl";
+constexpr const char* SHADER_VERTEX_FILE_PATH =
+    "src/sargasso/front_end/utility/shaders/basic_vertex.glsl";
 constexpr const char* SHADER_FRAGMENT_FILE_PATH =
-    "src/front_end/utility/shaders/basic_fragment.glsl";
+    "src/sargasso/front_end/utility/shaders/basic_fragment.glsl";
 
 GLuint ShaderLoader::load_default_shaders() {
     log("Creating shaders");
