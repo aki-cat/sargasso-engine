@@ -1,8 +1,6 @@
 #ifndef SARGASSO_ENGINE_FRONT_END_EVENTS_H
 #define SARGASSO_ENGINE_FRONT_END_EVENTS_H
 
-#include "sargasso/engine.h"
-
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -12,7 +10,7 @@ namespace Modules {
 
 class Events {
    public:
-    explicit Events(Game& game);
+    explicit Events();
     Events(const Events&) = delete;
     Events(const Events&&) = delete;
     ~Events();
@@ -25,9 +23,6 @@ class Events {
         static void key_action_callback(GLFWwindow* window, int key, int scancode, int action,
                                         int mods);
     };
-
-   private:
-    Game& _game;
 };
 
 inline void Events::poll_events() { glfwPollEvents(); }

@@ -1,18 +1,11 @@
 #ifndef SARGASSO_ENGINE_H
 #define SARGASSO_ENGINE_H
 
-#define AS_STRING(v) #v
-#define MACRO_AS_STRING(v) AS_STRING(v)
+#include "sargasso/front_end/front_end_system.h"
 
 namespace SargassoEngine {
 
-constexpr const char* ENGINE_NAME = "Sargasso Engine";
-
-#ifdef SARGASSO_ENGINE_VERSION
-constexpr const char* ENGINE_VERSION = MACRO_AS_STRING(SARGASSO_ENGINE_VERSION);
-#else
-constexpr const char* ENGINE_VERSION = "Unknown";
-#endif
+using namespace FrontEnd;
 
 class Game {
    public:
@@ -25,15 +18,14 @@ class Game {
     void exit();
 
    protected:
-    Game(){};
+    explicit Game();
+    FrontEndSystem& get_front_end_system();
 
    private:
     bool _should_quit = false;
+    FrontEndSystem* _front_end;
 };
 
 }  // namespace SargassoEngine
-
-#undef AS_STRING
-#undef MACRO_AS_STRING
 
 #endif

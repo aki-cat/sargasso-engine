@@ -1,7 +1,7 @@
 #include "sargasso/front_end/modules/graphics.h"
 
 #include "sargasso/common/log.h"
-#include "sargasso/engine.h"
+#include "sargasso/config.h"
 #include "sargasso/front_end/utility/shader_loader.h"
 
 #include <GL/glew.h>
