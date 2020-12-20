@@ -3,7 +3,6 @@
 #include "common/log.h"
 #include "engine.h"
 #include "front_end/utility/shader_loader.h"
-#include "geometry/mesh_generator.h"
 
 #include <GL/glew.h>
 
@@ -23,6 +22,7 @@ Graphics::Graphics() {
 
     _width = 960;
     _height = 540;
+    _camera.make_orthogonal(_width, _height, 0.01f, 1000f);
 
     _window = glfwCreateWindow(_width, _height, SargassoEngine::ENGINE_NAME, NULL, NULL);
     log("Window created!");
@@ -46,6 +46,9 @@ Graphics::Graphics() {
     }
 
     logf("window size = (%, %)", _width, _height);
+
+    glGenVertexArrays(1, &_vao_id);
+    glBindVertexArray(_vao_id);
 }
 
 Graphics::~Graphics() {
@@ -54,30 +57,39 @@ Graphics::~Graphics() {
     }
 }
 
-void Graphics::start_rendering_buffer() {
+GLFWwindow* Graphics::get_window() const { return _window; }
+
+int Graphics::get_width() const { return _width; }
+
+int Graphics::get_height() const { return _height; }
+
+bool Graphics::should_window_close() const { return glfwWindowShouldClose(_window); }
+
+void Graphics::render_buffers() {
     // Called before rendering a frame
     glfwGetFramebufferSize(_window, &_width, &_height);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    _set_shader_camera();
-    glUseProgram(_program_id);
-}
 
-void Graphics::stop_rendering_buffer() {
-    // Called after rendering a frame
+    _set_shader_camera();
+
+    for (const Buffer& buffer : _buffers) {
+        buffer.render();
+    }
+
     glfwSwapBuffers(_window);
 }
 
+void Graphics::register_buffer(const std::vector<Vec3>& points) {
+    _buffers.push_back(Buffer(points));
+}
+
+void Graphics::set_camera(const Camera& camera) { _camera = camera; }
+
+Camera Graphics::get_camera() const { return _camera; }
+
 void Graphics::_set_shader_camera() {
-    // TODO: Make projection work
-    // const float fov = static_cast<float>(M_PI_2);
-    // const float aspect = static_cast<float>(_width) / static_cast<float>(_height);
-    // Mat4 projection = Mat4::perspective_projection(fov, aspect, 0.01f, 1000);
-    Mat4 projection = Mat4::identity();
-
-    Mat4 view = Mat4::look_at(Vec3(0, 0, -3), Vec3::zero());
-
-    GLint projection_matrix_id = glGetUniformLocation(_program_id, "projection");
-    GLint view_matrix_id = glGetUniformLocation(_program_id, "view");
-    glUniformMatrix4fv(projection_matrix_id, 1, GL_FALSE, reinterpret_cast<float*>(&projection));
-    glUniformMatrix4fv(view_matrix_id, 1, GL_FALSE, reinterpret_cast<float*>(&view));
+    GLint transform_matrix_id = glGetUniformLocation(_program_id, "camera_transform");
+    glUniformMatrix4fv(transform_matrix_id, 1, GL_FALSE,
+                       reinterpret_cast<float*>(&_camera.get_transform()));
+    glUseProgram(_program_id);
 }

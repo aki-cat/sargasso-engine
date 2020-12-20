@@ -32,7 +32,7 @@ find_package(OpenGL REQUIRED)
 find_library(SML third_party/sml)
 
 target_compile_definitions(SargassoEngine PUBLIC
-        "SARGASSO_ENGINE_VERSION=${SargassoEngine_VERSION_MAJOR}.${SargassoEngine_VERSION_MINOR}")
+        "SARGASSO_ENGINE_VERSION=${CMAKE_PROJECT_VERSION}")
 
 # Utility libraries
 target_link_libraries(SargassoEngine SML)

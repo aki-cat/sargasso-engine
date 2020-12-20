@@ -1,4 +1,5 @@
-#include "common/log.h"
+/* #include "common/log.h"
+#include "engine.h"
 #include "front_end/front_end_system.h"
 #include "front_end/modules/events.h"
 #include "front_end/modules/graphics.h"
@@ -26,7 +27,7 @@ GLuint generate_vertex_array();
 GLuint generate_buffer(const float* points, uint32_t point_count);
 
 int main(int argc, char const* argv[]) {
-    logf("SargassoEngine Version %\n", SARGASSO_ENGINE_VERSION);
+    logf("% v%\n", SargassoEngine::ENGINE_NAME, SargassoEngine::ENGINE_VERSION);
 
     const Vec3 points[] = {Vec3(-0.5f, -0.5f, +0.0f), Vec3(+0.5f, -0.5f, +0.0f),
                            Vec3(+0.5f, +0.5f, +0.0f), Vec3(+0.5f, +0.5f, +0.0f),
@@ -118,3 +119,4 @@ GLuint generate_buffer(const float* points, uint32_t point_count) {
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * point_count, points, GL_STATIC_DRAW);
     return buffer_id;
 }
+ */

@@ -4,7 +4,7 @@
 namespace SargassoEngine {
 namespace Geometry {
 
-static const uint32_t POINTS_PER_VERTEX = 3;
+static const size_t POINTS_PER_VERTEX = 3;
 
 }  // namespace Geometry
 }  // namespace SargassoEngine
