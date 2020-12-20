@@ -6,7 +6,8 @@
 #include "sargasso/front_end/modules/graphics.h"
 #include "sargasso/front_end/modules/time.h"
 
-#include <GL/glew.h>
+#include <glad/glad.h>
+
 #include <GLFW/glfw3.h>
 #include <stdexcept>
 
@@ -16,8 +17,6 @@ using namespace SargassoEngine::Common;
 FrontEndSystem::FrontEndSystem() {
     log(glfwGetVersionString());
     log("Initializing GLFW...");
-
-    glewExperimental = GL_TRUE;
 
     if (!glfwInit()) {
         _initialized = false;

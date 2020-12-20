@@ -1,7 +1,8 @@
 #ifndef SARGASSO_ENGINE_CAMERA_H
 #define SARGASSO_ENGINE_CAMERA_H
 
-#include <GL/glew.h>
+#include <glad/glad.h>
+
 #include <sml/matrix4.h>
 
 namespace SargassoEngine {

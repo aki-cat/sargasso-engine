@@ -6,13 +6,16 @@ DerivePointerAlignment: false
 PointerAlignment: Left
 ColumnLimit: 100
 SortIncludes: true
+SortUsingDeclarations: true
+SpaceAfterCStyleCast: true
+SpaceBeforeAssignmentOperators: true
 IncludeBlocks: Regroup
 IncludeCategories:
-  - Regex: '^"(llvm|llvm-c|clang|clang-c)/'
+  - Regex: '^"(llvm|llvm-c|clang|clang-c|glad)/'
     Priority: 2
-  - Regex: '^(<|"(gtest|gmock|isl|json)/)'
-    Priority: 3
-  - Regex: "<[[:alnum:].]+>"
+  - Regex: "^<(^glad)"
     Priority: 4
-  - Regex: ".*"
+  - Regex: "^<glad/"
+    Priority: 3
+  - Regex: '".*"'
     Priority: 1

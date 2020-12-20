@@ -5,7 +5,8 @@
 #include "sargasso/front_end/modules/graphics.h"
 #include "sargasso/front_end/modules/time.h"
 
-#include <GL/glew.h>
+#include <glad/glad.h>
+
 #include <GLFW/glfw3.h>
 
 namespace SargassoEngine {

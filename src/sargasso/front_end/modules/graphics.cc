@@ -4,7 +4,7 @@
 #include "sargasso/config.h"
 #include "sargasso/front_end/utility/shader_loader.h"
 
-#include <GL/glew.h>
+#include <glad/glad.h>
 
 using namespace SargassoEngine::FrontEnd::Modules;
 using namespace SargassoEngine::FrontEnd::Utility;
@@ -36,8 +36,13 @@ Graphics::Graphics() : _camera() {
     log("Setting swap interval...");
     glfwSwapInterval(1);
 
-    log("Initializing glew...");
-    glewInit();
+    log("Initializing glad...");
+    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
+        log_error("Failed to initialize GLAD");
+        throw;
+    }
+
+    glViewport(0, 0, _width, _height);
 
     log("Loading shaders...");
     try {

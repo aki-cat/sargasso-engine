@@ -113,7 +113,7 @@ void Pool<T>::_grow() {
 
     // alloc space for new data
     _capacity *= 2;
-    _data = new T[(size_t)_capacity];
+    _data = new T[(size_t) _capacity];
     for (uint32_t index = 0; index < old_capacity; index++) {
         _data[index] = old_data[index];
     }

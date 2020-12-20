@@ -34,7 +34,7 @@ void Buffer::render() const {
         GL_FLOAT,           // type
         GL_FALSE,           // normalized?
         0,                  // stride
-        (void*)0            // array buffer offset
+        (void*) 0           // array buffer offset
     );
 
     // Draw the buffer !

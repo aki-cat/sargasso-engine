@@ -1,7 +1,8 @@
 #ifndef SARGASSO_ENGINE_BUFFER_H
 #define SARGASSO_ENGINE_BUFFER_H
 
-#include <GL/glew.h>
+#include <glad/glad.h>
+
 #include <sml/vector3.h>
 #include <vector>
 

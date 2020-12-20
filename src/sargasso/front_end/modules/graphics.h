@@ -4,7 +4,8 @@
 #include "sargasso/front_end/utility/buffer.h"
 #include "sargasso/front_end/utility/camera.h"
 
-#include <GL/glew.h>
+#include <glad/glad.h>
+
 #include <GLFW/glfw3.h>
 #include <sml/matrix4.h>
 #include <sml/vector3.h>
