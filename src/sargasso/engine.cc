@@ -1,8 +1,8 @@
 
-#include "engine.h"
+#include "sargasso/engine.h"
 
-#include "common/log.h"
-#include "front_end/front_end_system.h"
+#include "sargasso/common/log.h"
+#include "sargasso/front_end/front_end_system.h"
 
 using namespace SargassoEngine;
 using namespace SargassoEngine::Common;

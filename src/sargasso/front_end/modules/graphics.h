@@ -1,11 +1,13 @@
 #ifndef SARGASSO_ENGINE_FRONT_END_GRAPHICS_H
 #define SARGASSO_ENGINE_FRONT_END_GRAPHICS_H
 
-#include "front_end/utility/buffer.h"
+#include "sargasso/front_end/utility/buffer.h"
+#include "sargasso/front_end/utility/camera.h"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <sml/matrix4.h>
+#include <sml/vector3.h>
 #include <vector>
 
 namespace SargassoEngine {
@@ -13,6 +15,7 @@ namespace FrontEnd {
 namespace Modules {
 
 using namespace SML;
+using namespace Utility;
 
 class Graphics {
    public:
@@ -24,6 +27,7 @@ class Graphics {
     int get_width() const;
     int get_height() const;
     bool should_window_close() const;
+    void register_buffer(const std::vector<Vec3>& points);
     void render_buffers();
 
     void set_camera(const Camera& camera);

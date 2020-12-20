@@ -1,8 +1,8 @@
 
-#include "front_end/utility/shader_loader.h"
+#include "sargasso/front_end/utility/shader_loader.h"
 
-#include "common/containers.h"
-#include "common/log.h"
+#include "sargasso/common/containers.h"
+#include "sargasso/common/log.h"
 
 #include <GL/glew.h>
 #include <stdexcept>

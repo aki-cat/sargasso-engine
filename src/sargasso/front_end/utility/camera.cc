@@ -1,5 +1,5 @@
 
-#include "front_end/utility/camera.h"
+#include "sargasso/front_end/utility/camera.h"
 
 using namespace SargassoEngine::FrontEnd::Utility;
 using namespace SML;
@@ -30,17 +30,19 @@ Camera& Camera::set_position(const Vec3& position) {
     return *this;
 }
 
-Vec3 Camera::get_position(const Vec3& position) const {
+Vec3 Camera::get_position() const {
     // Translate a zero Vec3 using the view matrix
     return _transform * Vec3::zero();
 }
 
 Camera& Camera::make_conical(float width, float height, float z_near, float z_far, float fov) {
-    _projection = Mat4::conical_projection(fov, aspect, z_near, z_far);
+    _projection = Mat4::conical_projection(fov, width / height, z_near, z_far);
+    return *this;
 }
 
 Camera& Camera::make_orthogonal(float width, float height, float z_near, float z_far) {
     _projection - Mat4::orthogonal_projection(width, height, z_near, z_far);
+    return *this;
 }
 
 Mat4 Camera::get_transform() const {

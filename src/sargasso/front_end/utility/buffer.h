@@ -2,11 +2,14 @@
 #define SARGASSO_ENGINE_BUFFER_H
 
 #include <GL/glew.h>
+#include <sml/vector3.h>
 #include <vector>
 
 namespace SargassoEngine {
 namespace FrontEnd {
 namespace Utility {
+
+using namespace SML;
 
 class Buffer {
    public:

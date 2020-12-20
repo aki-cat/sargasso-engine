@@ -1,10 +1,10 @@
 
-#include "front_end/front_end_system.h"
+#include "sargasso/front_end/front_end_system.h"
 
-#include "common/log.h"
-#include "front_end/modules/events.h"
-#include "front_end/modules/graphics.h"
-#include "front_end/modules/time.h"
+#include "sargasso/common/log.h"
+#include "sargasso/front_end/modules/events.h"
+#include "sargasso/front_end/modules/graphics.h"
+#include "sargasso/front_end/modules/time.h"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>

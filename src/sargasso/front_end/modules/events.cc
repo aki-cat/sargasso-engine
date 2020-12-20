@@ -1,7 +1,7 @@
 
-#include "front_end/modules/events.h"
+#include "sargasso/front_end/modules/events.h"
 
-#include "common/log.h"
+#include "sargasso/common/log.h"
 
 #include <GLFW/glfw3.h>
 

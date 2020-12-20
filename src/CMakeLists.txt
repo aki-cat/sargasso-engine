@@ -15,7 +15,7 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/glfw")
 add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/sml")
 
-file(GLOB_RECURSE ALL_SOURCE_FILES "${PROJECT_SOURCE_DIR}/*.cc")
+file(GLOB_RECURSE ALL_SOURCE_FILES "${PROJECT_SOURCE_DIR}/sargasso/*.cc")
 
 message(STATUS "Including files: ${ALL_SOURCE_FILES}")
 add_library(SargassoEngine ${ALL_SOURCE_FILES})

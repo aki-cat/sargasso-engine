@@ -1,14 +1,13 @@
-#include "front_end/modules/graphics.h"
+#include "sargasso/front_end/modules/graphics.h"
 
-#include "common/log.h"
-#include "engine.h"
-#include "front_end/utility/shader_loader.h"
+#include "sargasso/common/log.h"
+#include "sargasso/engine.h"
+#include "sargasso/front_end/utility/shader_loader.h"
 
 #include <GL/glew.h>
 
 using namespace SargassoEngine::FrontEnd::Modules;
 using namespace SargassoEngine::FrontEnd::Utility;
-using namespace SargassoEngine::Geometry;
 using namespace SargassoEngine::Common;
 
 Graphics::Graphics() {
@@ -22,7 +21,7 @@ Graphics::Graphics() {
 
     _width = 960;
     _height = 540;
-    _camera.make_orthogonal(_width, _height, 0.01f, 1000f);
+    _camera.make_orthogonal(_width, _height, 0.01f, 1000);
 
     _window = glfwCreateWindow(_width, _height, SargassoEngine::ENGINE_NAME, NULL, NULL);
     log("Window created!");
@@ -89,7 +88,7 @@ Camera Graphics::get_camera() const { return _camera; }
 
 void Graphics::_set_shader_camera() {
     GLint transform_matrix_id = glGetUniformLocation(_program_id, "camera_transform");
-    glUniformMatrix4fv(transform_matrix_id, 1, GL_FALSE,
-                       reinterpret_cast<float*>(&_camera.get_transform()));
+    Mat4 transform = _camera.get_transform();
+    glUniformMatrix4fv(transform_matrix_id, 1, GL_FALSE, reinterpret_cast<float*>(&transform));
     glUseProgram(_program_id);
 }

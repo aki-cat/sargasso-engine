@@ -2,6 +2,7 @@
 #define SARGASSO_ENGINE_CAMERA_H
 
 #include <GL/glew.h>
+#include <sml/matrix4.h>
 
 namespace SargassoEngine {
 namespace FrontEnd {
@@ -19,7 +20,7 @@ class Camera {
     Camera& look_at(const Vec3& from, const Vec3& target);
 
     Camera& set_position(const Vec3& position);
-    Vec3 get_position(const Vec3& position) const;
+    Vec3 get_position() const;
 
     Camera& make_conical(float width, float height, float z_near, float z_far, float fov);
     Camera& make_orthogonal(float width, float height, float z_near, float z_far);
@@ -28,7 +29,7 @@ class Camera {
 
    private:
     Mat4 _transform;
-    Mat4 _lens;
+    Mat4 _projection;
 };
 
 }  // namespace Utility

@@ -1,7 +1,7 @@
 #ifndef SARGASSO_ENGINE_POOL_H
 #define SARGASSO_ENGINE_POOL_H
 
-#include "common/containers.h"
+#include "sargasso/common/containers.h"
 
 #include <cstdint>
 

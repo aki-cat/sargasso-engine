@@ -1,9 +1,9 @@
 #ifndef SARGASSO_ENGINE_FRONT_END_H
 #define SARGASSO_ENGINE_FRONT_END_H
 
-#include "front_end/modules/events.h"
-#include "front_end/modules/graphics.h"
-#include "front_end/modules/time.h"
+#include "sargasso/front_end/modules/events.h"
+#include "sargasso/front_end/modules/graphics.h"
+#include "sargasso/front_end/modules/time.h"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>

@@ -1,13 +1,17 @@
 
-#include "front_end/utility/buffer.h"
+#include "sargasso/front_end/utility/buffer.h"
+
+#include "sargasso/geometry/constants.h"
 
 using namespace SargassoEngine::FrontEnd::Utility;
+using namespace SargassoEngine::Geometry;
 
 Buffer::Buffer(const std::vector<Vec3>& points) {
+    const auto data = points.data();
     glGenBuffers(1, &_buffer_id);
     glBindBuffer(GL_ARRAY_BUFFER, _buffer_id);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * points.size() * 3,
-                 reinterpret_cast<float*>(&points[0]), GL_STATIC_DRAW);
+                 reinterpret_cast<const float*>(&data), GL_STATIC_DRAW);
 }
 
 Buffer::~Buffer() { glDeleteBuffers(1, &_buffer_id); }

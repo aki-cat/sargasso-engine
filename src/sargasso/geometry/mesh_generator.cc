@@ -1,7 +1,7 @@
 
-#include "geometry/mesh_generator.h"
+#include "sargasso/geometry/mesh_generator.h"
 
-#include "geometry/mesh_raw.h"
+#include "sargasso/geometry/mesh_raw.h"
 
 #include <sml/matrix4.h>
 #include <sml/vector3.h>

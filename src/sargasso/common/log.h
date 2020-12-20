@@ -1,7 +1,7 @@
 #ifndef SARGASSO_ENGINE_LOG_H
 #define SARGASSO_ENGINE_LOG_H
 
-#include "common/format.h"
+#include "sargasso/common/format.h"
 
 #include <iostream>
 

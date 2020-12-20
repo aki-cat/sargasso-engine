@@ -1,7 +1,7 @@
 #ifndef SARGASSO_ENGINE_MESH_GENERATOR_H
 #define SARGASSO_ENGINE_MESH_GENERATOR_H
 
-#include "geometry/mesh_raw.h"
+#include "sargasso/geometry/mesh_raw.h"
 
 #include <sml/matrix4.h>
 

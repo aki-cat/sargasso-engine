@@ -1,8 +1,8 @@
 
-#include "geometry/mesh_raw.h"
+#include "sargasso/geometry/mesh_raw.h"
 
-#include "common/log.h"
-#include "geometry/constants.h"
+#include "sargasso/common/log.h"
+#include "sargasso/geometry/constants.h"
 
 #include <sstream>
 
