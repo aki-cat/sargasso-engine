@@ -15,10 +15,10 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/glfw")
 add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/sml")
 
-file(GLOB_RECURSE ALL_SOURCE_FILES "${PROJECT_SOURCE_DIR}/src/*.cc")
+file(GLOB_RECURSE ALL_SOURCE_FILES "${PROJECT_SOURCE_DIR}/*.cc")
 
 message(STATUS "Including files: ${ALL_SOURCE_FILES}")
-add_executable(SargassoEngine ${ALL_SOURCE_FILES})
+add_library(SargassoEngine ${ALL_SOURCE_FILES})
 
 set_target_properties(SargassoEngine
     PROPERTIES
@@ -44,4 +44,4 @@ target_link_libraries(SargassoEngine OpenGL::GL)
 
 target_include_directories(SargassoEngine PUBLIC
                            "${PROJECT_BINARY_DIR}"
-                           "${PROJECT_SOURCE_DIR}/src")
+                           "${PROJECT_SOURCE_DIR}")
