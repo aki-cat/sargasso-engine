@@ -13,7 +13,7 @@
 using SargassoEngine::FrontEnd::FrontEndSystem;
 using namespace SargassoEngine::Common;
 
-FrontEndSystem::FrontEndSystem() {
+FrontEndSystem::FrontEndSystem(Game& game) : _game(game) {
     log(glfwGetVersionString());
     log("Initializing GLFW...");
 
@@ -27,7 +27,7 @@ FrontEndSystem::FrontEndSystem() {
     log("Init succesful!");
 
     _graphics = new Graphics();
-    _events = new Events();
+    _events = new Events(_game);
     _time = new Time();
     _initialized = true;
 }

@@ -17,7 +17,7 @@ using SargassoEngine::FrontEnd::Modules::Time;
 
 class FrontEndSystem {
    public:
-    explicit FrontEndSystem();
+    explicit FrontEndSystem(Game& game);
     ~FrontEndSystem();
     bool is_initialized();
     void start();
@@ -31,6 +31,7 @@ class FrontEndSystem {
     Graphics* _graphics;
     Events* _events;
     Time* _time;
+    Game& _game;
 };
 
 template <>

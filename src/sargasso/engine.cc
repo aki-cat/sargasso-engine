@@ -22,7 +22,7 @@ void Game::exit() { _should_quit = true; }
 int Game::run(Game& game) {
     logf("% v%\n", SargassoEngine::ENGINE_NAME, SargassoEngine::ENGINE_VERSION);
 
-    FrontEndSystem front_end = FrontEndSystem();
+    FrontEndSystem front_end = FrontEndSystem(game);
     if (!front_end.is_initialized()) {
         return -1;
     }
