@@ -14,15 +14,16 @@ using namespace SML;
 
 class Buffer {
    public:
-    Buffer(const std::vector<Vec3>& points);
+    Buffer(const char* raw_data, const size_t raw_data_size);
+    Buffer(const Vec3* vertices, const size_t vertex_count);
     ~Buffer();
     void render() const;
     GLuint get_id() const;
-    size_t get_buffer_size() const;
+    size_t get_size() const;
 
    private:
     GLuint _buffer_id;
-    size_t _point_count;
+    size_t _buffer_size;
 };
 
 }  // namespace Utility

@@ -22,21 +22,15 @@ constexpr const char* SHADER_FRAGMENT_FILE_PATH =
     "src/sargasso/front_end/utility/shaders/basic_fragment.glsl";
 
 GLuint ShaderLoader::load_default_shaders() {
-    log("Creating shaders");
-
     // Create the shaders
     GLuint vertex_shader_id = load_shader(SHADER_VERTEX_FILE_PATH, ShaderType::Vertex);
-    logf("Vertex shader id #%", vertex_shader_id);
     GLuint frag_shader_id = load_shader(SHADER_FRAGMENT_FILE_PATH, ShaderType::Fragment);
-    logf("Fragment shader id #%", frag_shader_id);
 
     // Link the program
-    log("Linking program");
     GLuint program_id = glCreateProgram();
     glAttachShader(program_id, vertex_shader_id);
     glAttachShader(program_id, frag_shader_id);
     glLinkProgram(program_id);
-    logf("Program shader id #%", program_id);
 
     // Check the program
     GLint success = GL_FALSE;

@@ -11,8 +11,6 @@ using namespace SargassoEngine::Common;
 constexpr const char* FILE_READ_ERROR = "Could not open file: %";
 
 const std::string File::read_file(const std::string& file_path) {
-    logf("Reading file: % ", file_path);
-
     std::string contents;
     std::ifstream contents_stream = std::ifstream(file_path, std::ios::in);
     if (contents_stream.is_open()) {

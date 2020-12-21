@@ -28,7 +28,7 @@ class Graphics {
     int get_width() const;
     int get_height() const;
     bool should_window_close() const;
-    void register_buffer(const std::vector<Vec3>& points);
+    void register_buffer(const Vec3* vertices, const size_t vertex_count);
     void render_buffers();
 
     void set_camera(const Camera& camera);

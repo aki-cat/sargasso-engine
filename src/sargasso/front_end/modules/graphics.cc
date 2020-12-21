@@ -11,8 +11,6 @@ using namespace SargassoEngine::FrontEnd::Utility;
 using namespace SargassoEngine::Common;
 
 Graphics::Graphics() : _camera() {
-    log("Initializing window...");
-
     glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -26,17 +24,13 @@ Graphics::Graphics() : _camera() {
     logf("Camera @ poisition: %", _camera.get_position().to_string());
 
     _window = glfwCreateWindow(_width, _height, SargassoEngine::ENGINE_NAME, NULL, NULL);
-    log("Window created!");
 
     // Initialize window
-    log("Setting GL context..");
     glfwMakeContextCurrent(_window);
     glfwFocusWindow(_window);
 
-    log("Setting swap interval...");
     glfwSwapInterval(1);
 
-    log("Initializing glad...");
     if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
         log_error("Failed to initialize GLAD");
         throw;
@@ -44,14 +38,11 @@ Graphics::Graphics() : _camera() {
 
     glViewport(0, 0, _width, _height);
 
-    log("Loading shaders...");
     try {
         _program_id = ShaderLoader::load_default_shaders();
     } catch (const std::string& exception) {
         logf_error("Failed to load shaders:\n\t%", exception);
     }
-
-    logf("window size = (%, %)", _width, _height);
 
     glGenVertexArrays(1, &_vao_id);
     glBindVertexArray(_vao_id);
@@ -74,6 +65,7 @@ bool Graphics::should_window_close() const { return glfwWindowShouldClose(_windo
 void Graphics::render_buffers() {
     // Called before rendering a frame
     glfwGetFramebufferSize(_window, &_width, &_height);
+    glClearColor(0.1f, 0.1f, 0.1f, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     _set_shader_camera();
@@ -85,8 +77,8 @@ void Graphics::render_buffers() {
     glfwSwapBuffers(_window);
 }
 
-void Graphics::register_buffer(const std::vector<Vec3>& points) {
-    _buffers.push_back(Buffer(points));
+void Graphics::register_buffer(const Vec3* vertices, const size_t vertex_count) {
+    _buffers.push_back(Buffer(vertices, vertex_count));
 }
 
 void Graphics::set_camera(const Camera& camera) { _camera = camera; }
@@ -95,7 +87,7 @@ Camera Graphics::get_camera() const { return _camera; }
 
 void Graphics::_set_shader_camera() {
     GLint transform_matrix_id = glGetUniformLocation(_program_id, "camera_transform");
-    Mat4 transform = _camera.get_transform();
+    Mat4 transform = Mat4::identity();  //_camera.get_transform();
     glUniformMatrix4fv(transform_matrix_id, 1, GL_FALSE, reinterpret_cast<float*>(&transform));
     glUseProgram(_program_id);
 }

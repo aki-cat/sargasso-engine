@@ -15,16 +15,13 @@ using namespace SML;
 Example::Example() : Game() {}
 
 void Example::load() {
-    Common::log("Welcome!");
-
     // Add 100x100 square
-    std::vector<Vec3> square = {Vec3(-50, -50, 0), Vec3(+50, -50, 0), Vec3(+50, +50, 0),
-                                Vec3(+50, +50, 0), Vec3(-50, +50, 0), Vec3(-50, -50, 0)};
+    const Vec3 square[] = {Vec3(-1, -1, 0), Vec3(+1, -1, 0), Vec3(+1, +1, 0),
+                           Vec3(+1, +1, 0), Vec3(-1, +1, 0), Vec3(-1, -1, 0)};
 
     FrontEndSystem& front_end = get_front_end_system();
     Graphics& graphics = front_end.get_module<Graphics>();
-
-    graphics.register_buffer(square);
+    graphics.register_buffer(square, 6);
 }
 
 void Example::update(double delta) {}

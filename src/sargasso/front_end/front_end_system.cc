@@ -16,14 +16,11 @@ using namespace SargassoEngine::Common;
 
 FrontEndSystem::FrontEndSystem() {
     log(glfwGetVersionString());
-    log("Initializing GLFW...");
 
     if (!glfwInit()) {
         _initialized = false;
         throw std::runtime_error("Init failed!");
     }
-
-    log("Init succesful!");
 
     _graphics = new Graphics();
     _events = new Events();
@@ -32,8 +29,6 @@ FrontEndSystem::FrontEndSystem() {
 }
 
 FrontEndSystem::~FrontEndSystem() {
-    log("Terminating GLFW...");
-
     delete _events;
     delete _graphics;
     delete _time;
@@ -44,13 +39,13 @@ FrontEndSystem::~FrontEndSystem() {
 }
 
 void FrontEndSystem::start() {
-    log("Registering window callbacks...");
+    // log("Registering window callbacks...");
     _events->register_window(_graphics->get_window());
     _time->reset();
 }
 
 void FrontEndSystem::stop() {
-    log("Deregistering window callbacks...");
+    // log("Deregistering window callbacks...");
     _events->deregister_window(_graphics->get_window());
 }
 
