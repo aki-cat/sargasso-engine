@@ -11,6 +11,8 @@
 #include <glad/glad.h>
 
 #include <GLFW/glfw3.h>
+#include <unordered_map>
+#include <utility>
 
 using namespace SargassoEngine::FrontEnd::Modules;
 using namespace SargassoEngine::FrontEnd::Utility;
@@ -20,6 +22,7 @@ Graphics::Graphics() : _camera() {
     glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 
     _width = 960;
     _height = 540;
@@ -51,6 +54,16 @@ Graphics::Graphics() : _camera() {
 }
 
 Graphics::~Graphics() {
+    for (std::pair<std::string, ShaderProgram*> key_pair : _shaders) {
+        delete key_pair.second;
+    }
+    _shaders.clear();
+
+    for (Buffer* buffer : _buffers) {
+        delete buffer;
+    }
+    _buffers.clear();
+
     if (_window) {
         glfwDestroyWindow(_window);
     }
@@ -74,29 +87,34 @@ void Graphics::render_buffers() {
 
     _set_shader_camera();
 
-    for (const Buffer& buffer : _buffers) {
-        buffer.render(get_shader(_current_shader));
+    for (const Buffer* buffer : _buffers) {
+        buffer->render(get_shader(_current_shader));
     }
 
     glfwSwapBuffers(_window);
 }
 
 void Graphics::register_buffer(const Vertex* vertices, const size_t vertex_count) {
-    _buffers.push_back(Buffer(vertices, vertex_count));
+    _buffers.push_back(new Buffer(vertices, vertex_count));
 }
 
 ShaderProgram& Graphics::get_shader(const std::string& shader_name) {
-    return _shaders.at(shader_name);
+    return *_shaders.at(shader_name);
 }
 
 void Graphics::use_shader(const std::string& shader_name) {
     // No error treatment
     _current_shader = std::string(shader_name);
-    _shaders.at(shader_name).use();
+    get_shader(shader_name).use();
 }
 
 void Graphics::create_shader(const std::string& shader_name) {
-    _shaders[shader_name] = ShaderProgram();
+    if (_shaders.find(shader_name) != _shaders.end()) {
+        logf_error("Shader of name '%' already exists, cannot create another with same name.",
+                   shader_name);
+        return;
+    }
+    _shaders[shader_name] = new ShaderProgram();
 }
 
 void Graphics::set_camera(const Camera& camera) { _camera = camera; }

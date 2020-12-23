@@ -47,8 +47,8 @@ class Graphics {
     int _width;
     int _height;
     Camera _camera;
-    std::unordered_map<std::string, ShaderProgram> _shaders;
-    std::vector<Buffer> _buffers;
+    std::unordered_map<std::string, ShaderProgram*> _shaders;
+    std::vector<Buffer*> _buffers;
     std::string _current_shader;
     void _set_shader_camera();
 };
