@@ -5,6 +5,8 @@
 #include "sargasso/config.h"
 #include "sargasso/front_end/front_end_system.h"
 
+#include <glad/glad.h>
+
 using namespace SargassoEngine;
 using namespace SargassoEngine::Common;
 using namespace SargassoEngine::FrontEnd;
@@ -35,6 +37,10 @@ int Game::run(Game& game) {
     }
 
     front_end.start();
+
+#ifndef RELEASE
+    glEnable(GL_DEBUG_OUTPUT);
+#endif
 
     Graphics& graphics = front_end.get_module<Graphics>();
     Events& events = front_end.get_module<Events>();

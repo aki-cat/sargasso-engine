@@ -2,7 +2,9 @@
 #include "sargasso/front_end/utility/shader_loader.h"
 
 #include "sargasso/common/containers.h"
+#include "sargasso/common/file.h"
 #include "sargasso/common/log.h"
+#include "sargasso/front_end/utility/shader_type.h"
 
 #include <glad/glad.h>
 
@@ -14,8 +16,6 @@
 using namespace SargassoEngine::FrontEnd::Utility;
 using namespace SargassoEngine::Common;
 
-using ShaderType = ShaderLoader::ShaderType;
-
 constexpr const char* SHADER_VERTEX_FILE_PATH =
     "src/sargasso/front_end/utility/shaders/basic_vertex.glsl";
 constexpr const char* SHADER_FRAGMENT_FILE_PATH =
@@ -23,8 +23,9 @@ constexpr const char* SHADER_FRAGMENT_FILE_PATH =
 
 GLuint ShaderLoader::load_default_shaders() {
     // Create the shaders
-    GLuint vertex_shader_id = load_shader(SHADER_VERTEX_FILE_PATH, ShaderType::Vertex);
-    GLuint frag_shader_id = load_shader(SHADER_FRAGMENT_FILE_PATH, ShaderType::Fragment);
+    GLuint vertex_shader_id = load_shader(SHADER_VERTEX_FILE_PATH, ShaderType::SHADER_TYPE_VERTEX);
+    GLuint frag_shader_id =
+        load_shader(SHADER_FRAGMENT_FILE_PATH, ShaderType::SHADER_TYPE_FRAGMENT);
 
     // Link the program
     GLuint program_id = glCreateProgram();
@@ -71,15 +72,11 @@ GLuint ShaderLoader::create_shader(const char* shader_code, ShaderType shader_ty
 
     GLint success = GL_FALSE;
     glGetShaderiv(shader_id, GL_COMPILE_STATUS, &success);
-
     if (!success) {
-        int log_length;
-        glGetShaderiv(shader_id, GL_INFO_LOG_LENGTH, &log_length);
-
-        DynamicArray<char> vertex_shader_error_message((size_t) log_length);
-        glGetShaderInfoLog(shader_id, log_length, NULL, vertex_shader_error_message.data());
-
-        throw std::string(vertex_shader_error_message.data());
+        const size_t MAX_LOG_LENGTH = 256;
+        char error_message[MAX_LOG_LENGTH];
+        glGetShaderInfoLog(shader_id, MAX_LOG_LENGTH, NULL, error_message);
+        throw std::runtime_error(error_message);
     }
 
     return shader_id;

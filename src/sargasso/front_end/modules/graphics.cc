@@ -2,9 +2,15 @@
 
 #include "sargasso/common/log.h"
 #include "sargasso/config.h"
+#include "sargasso/front_end/utility/buffer.h"
 #include "sargasso/front_end/utility/shader_loader.h"
+#include "sargasso/front_end/utility/shader_program.h"
+#include "sargasso/front_end/utility/uniform_type.h"
+#include "sargasso/geometry/vertex.h"
 
 #include <glad/glad.h>
+
+#include <GLFW/glfw3.h>
 
 using namespace SargassoEngine::FrontEnd::Modules;
 using namespace SargassoEngine::FrontEnd::Utility;
@@ -12,10 +18,8 @@ using namespace SargassoEngine::Common;
 
 Graphics::Graphics() : _camera() {
     glfwWindowHint(GLFW_SAMPLES, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
     _width = 960;
     _height = 540;
@@ -24,10 +28,12 @@ Graphics::Graphics() : _camera() {
     logf("Camera @ poisition: %", _camera.get_position().to_string());
 
     _window = glfwCreateWindow(_width, _height, SargassoEngine::ENGINE_NAME, NULL, NULL);
+    if (_window == NULL) {
+        log_error("Window was not created");
+    }
 
     // Initialize window
     glfwMakeContextCurrent(_window);
-    glfwFocusWindow(_window);
 
     glfwSwapInterval(1);
 
@@ -36,16 +42,12 @@ Graphics::Graphics() : _camera() {
         throw;
     }
 
-    glViewport(0, 0, _width, _height);
+    glfwFocusWindow(_window);
 
-    try {
-        _program_id = ShaderLoader::load_default_shaders();
-    } catch (const std::string& exception) {
-        logf_error("Failed to load shaders:\n\t%", exception);
-    }
+    constexpr const char* default_shader_name = "default_shader";
 
-    glGenVertexArrays(1, &_vao_id);
-    glBindVertexArray(_vao_id);
+    create_shader(default_shader_name);
+    use_shader(default_shader_name);
 }
 
 Graphics::~Graphics() {
@@ -65,20 +67,36 @@ bool Graphics::should_window_close() const { return glfwWindowShouldClose(_windo
 void Graphics::render_buffers() {
     // Called before rendering a frame
     glfwGetFramebufferSize(_window, &_width, &_height);
+
+    glViewport(0, 0, _width, _height);
     glClearColor(0.1f, 0.1f, 0.1f, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     _set_shader_camera();
 
     for (const Buffer& buffer : _buffers) {
-        buffer.render();
+        buffer.render(get_shader(_current_shader));
     }
 
     glfwSwapBuffers(_window);
 }
 
-void Graphics::register_buffer(const Vec3* vertices, const size_t vertex_count) {
+void Graphics::register_buffer(const Vertex* vertices, const size_t vertex_count) {
     _buffers.push_back(Buffer(vertices, vertex_count));
+}
+
+ShaderProgram& Graphics::get_shader(const std::string& shader_name) {
+    return _shaders.at(shader_name);
+}
+
+void Graphics::use_shader(const std::string& shader_name) {
+    // No error treatment
+    _current_shader = std::string(shader_name);
+    _shaders.at(shader_name).use();
+}
+
+void Graphics::create_shader(const std::string& shader_name) {
+    _shaders[shader_name] = ShaderProgram();
 }
 
 void Graphics::set_camera(const Camera& camera) { _camera = camera; }
@@ -86,8 +104,7 @@ void Graphics::set_camera(const Camera& camera) { _camera = camera; }
 Camera Graphics::get_camera() const { return _camera; }
 
 void Graphics::_set_shader_camera() {
-    GLint transform_matrix_id = glGetUniformLocation(_program_id, "camera_transform");
-    Mat4 transform = Mat4::identity();  //_camera.get_transform();
-    glUniformMatrix4fv(transform_matrix_id, 1, GL_FALSE, reinterpret_cast<float*>(&transform));
-    glUseProgram(_program_id);
+    Mat4 transform = _camera.get_transform();
+    ShaderProgram& shader_program = get_shader(_current_shader);
+    shader_program.set_uniform(UniformType::UNIFORM_MATRIX4, "mvp", &transform, 1);
 }

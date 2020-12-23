@@ -1,5 +1,7 @@
+#ifndef SARGASSO_ENGINE_SHADER_LOADER_H
+#define SARGASSO_ENGINE_SHADER_LOADER_H
 
-#include "sargasso/common/file.h"
+#include "sargasso/front_end/utility/shader_type.h"
 
 #include <glad/glad.h>
 
@@ -9,11 +11,8 @@ namespace SargassoEngine {
 namespace FrontEnd {
 namespace Utility {
 
-using SargassoEngine::Common::File;
-
 class ShaderLoader {
    public:
-    enum ShaderType { Fragment = GL_FRAGMENT_SHADER, Vertex = GL_VERTEX_SHADER };
     static GLuint load_default_shaders();
     static GLuint load_shader(const std::string& shader_path, ShaderType shader_type);
     static GLuint create_shader(const char* shader_code, ShaderType shader_type);
@@ -22,3 +21,5 @@ class ShaderLoader {
 }  // namespace Utility
 }  // namespace FrontEnd
 }  // namespace SargassoEngine
+
+#endif

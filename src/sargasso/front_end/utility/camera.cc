@@ -13,7 +13,8 @@ Camera::Camera(float width, float height, float z_near, float z_far, float fov)
 
 Camera::Camera(float width, float height, float z_near, float z_far)
     : _transform(Mat4::identity()), _projection() {
-    _projection - Mat4::orthogonal_projection(width, height, z_near, z_far);
+    _projection =
+        Mat4::orthogonal_projection(-width / 2, height / 2, width / 2, -height / 2, z_near, z_far);
 }
 
 Camera& Camera::look_at(const Vec3& target) {
@@ -43,7 +44,8 @@ Camera& Camera::make_conical(float width, float height, float z_near, float z_fa
 }
 
 Camera& Camera::make_orthogonal(float width, float height, float z_near, float z_far) {
-    _projection - Mat4::orthogonal_projection(width, height, z_near, z_far);
+    _projection =
+        Mat4::orthogonal_projection(-width / 2, -height / 2, width / 2, height / 2, z_near, z_far);
     return *this;
 }
 
