@@ -1,10 +1,11 @@
-# Metafiles
+# OSX
 .DS_Store
 
 # SCons
 .sconsign.dblite
 
 # Build
+/minimal/build/
 /build/
 /lib/
 /bin/
