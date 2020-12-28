@@ -301,7 +301,7 @@ int main(void) {
         // Generate transformation matrices
 
         Mat4 mvp = generate_mvp_matrix();
-        glUniformMatrix4fv(mvp_location, 1, GL_TRUE, reinterpret_cast<const float*>(&mvp));
+        glUniformMatrix4fv(mvp_location, 1, GL_FALSE, reinterpret_cast<const float*>(&mvp));
         glUseProgram(shader_program);
 
         // Send data to shaders
