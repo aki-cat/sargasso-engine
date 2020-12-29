@@ -14,7 +14,7 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/glfw")
 add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/sml")
 find_package(OpenGL REQUIRED)
 
-target_link_libraries(Minimal SML)
+target_link_libraries(Minimal sml)
 target_link_libraries(Minimal glad)
 target_link_libraries(Minimal glfw)
 target_link_libraries(Minimal OpenGL::GL)

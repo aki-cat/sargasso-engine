@@ -7,8 +7,8 @@ namespace SargassoEngine {
 namespace Geometry {
 
 struct Vertex {
-    SML::Vec3 position;
-    SML::Vec3 rgb_color;
+    sml::Vec3 position;
+    sml::Vec3 rgb_color;
     float alpha;
 };
 

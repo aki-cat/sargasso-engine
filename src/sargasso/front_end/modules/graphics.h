@@ -18,7 +18,7 @@ namespace SargassoEngine {
 namespace FrontEnd {
 namespace Modules {
 
-using namespace SML;
+using namespace sml;
 using namespace Utility;
 
 class Graphics {

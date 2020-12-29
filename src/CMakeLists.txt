@@ -3,7 +3,7 @@ project(SargassoEngine VERSION 0.1.0)
 
 cmake_policy(SET CMP0076 NEW)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "-pedantic -Wall -Werror")
 
@@ -29,13 +29,13 @@ set_target_properties(SargassoEngine
 )
 
 find_package(OpenGL REQUIRED)
-find_library(SML third_party/sml)
+find_library(sml third_party/sml)
 
 target_compile_definitions(SargassoEngine PUBLIC
         "SARGASSO_ENGINE_VERSION=${CMAKE_PROJECT_VERSION}")
 
 # Utility libraries
-target_link_libraries(SargassoEngine SML)
+target_link_libraries(SargassoEngine sml)
 
 # Rendering libraries
 target_link_libraries(SargassoEngine glad)

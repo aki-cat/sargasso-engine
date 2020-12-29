@@ -8,7 +8,7 @@
 namespace SargassoEngine {
 namespace Geometry {
 
-using namespace SML;
+using namespace sml;
 
 class MeshGenerator {
    public:

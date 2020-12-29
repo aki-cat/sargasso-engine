@@ -7,7 +7,7 @@
 #include <sml/vector3.h>
 
 using namespace SargassoEngine::Geometry;
-using namespace SML;
+using namespace sml;
 
 MeshRaw MeshGenerator::generate_square() {
     const Vec3 square_vertices[6] = {Vec3(-0.5f, -0.5f, +0.0f), Vec3(+0.5f, -0.5f, +0.0f),

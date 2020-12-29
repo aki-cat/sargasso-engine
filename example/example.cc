@@ -12,7 +12,7 @@ using namespace SargassoEngine;
 using namespace SargassoEngine::Geometry;
 using namespace SargassoEngine::FrontEnd;
 using namespace SargassoEngine::FrontEnd::Modules;
-using namespace SML;
+using namespace sml;
 
 Example::Example() : Game() {}
 

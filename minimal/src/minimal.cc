@@ -11,9 +11,9 @@
 #include <sml/matrix4.h>
 #include <sml/vector3.h>
 
-using SML::Color;
-using SML::Mat4;
-using SML::Vec3;
+using sml::Color;
+using sml::Mat4;
+using sml::Vec3;
 
 static const char* vertex_shader_text =
 #ifdef __APPLE__

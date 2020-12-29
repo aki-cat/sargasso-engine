@@ -2,7 +2,7 @@
 #include "sargasso/front_end/utility/camera.h"
 
 using namespace SargassoEngine::FrontEnd::Utility;
-using namespace SML;
+using namespace sml;
 
 Camera::Camera() : _transform(Mat4::identity()), _projection(Mat4::identity()) {}
 

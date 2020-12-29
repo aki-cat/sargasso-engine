@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <sml/vector3.h>
 
-using namespace SML;
+using namespace sml;
 
 namespace SargassoEngine {
 namespace Geometry {

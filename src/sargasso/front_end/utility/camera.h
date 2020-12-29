@@ -9,7 +9,7 @@ namespace SargassoEngine {
 namespace FrontEnd {
 namespace Utility {
 
-using namespace SML;
+using namespace sml;
 
 class Camera {
    public:
