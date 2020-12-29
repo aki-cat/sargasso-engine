@@ -4,7 +4,7 @@ cmake_policy(SET CMP0076 NEW)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_CXX_FLAGS "-pedantic -Wall -Werror")
+set(CMAKE_CXX_FLAGS "-Wpedantic -Wall -Werror -O0")
 
 file(GLOB_RECURSE EXAMPLE_ALL_SOURCE_FILES "${PROJECT_SOURCE_DIR}/src/*.cc")
 add_executable(Minimal ${EXAMPLE_ALL_SOURCE_FILES})
