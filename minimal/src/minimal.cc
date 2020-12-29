@@ -7,9 +7,11 @@
 #include <iostream>
 
 // math library
+#include <sml/color.h>
 #include <sml/matrix4.h>
 #include <sml/vector3.h>
 
+using SML::Color;
 using SML::Mat4;
 using SML::Vec3;
 
@@ -52,43 +54,39 @@ static bool use_conical = true;
 
 struct Vertex {
     Vec3 position;
-    Vec3 color;
-    float alpha;
+    Color color;
 };
 
 static Vertex triangle_vertices[] = {
-    {Vec3(-1.f, -1.f, 0.f), Vec3(1.f, 1.f, 1.f), 1.f},
-    {Vec3(+1.f, -1.f, 0.f), Vec3(1.f, 1.f, 1.f), 1.f},
-    {Vec3(-1.f, +1.f, 0.f), Vec3(1.f, 1.f, 1.f), 1.f},
+    {Vec3(-1.f, -1.f, 0.f), Color::white()},
+    {Vec3(+1.f, -1.f, 0.f), Color::white()},
+    {Vec3(-1.f, +1.f, 0.f), Color::white()},
     //
-    {Vec3(-1.f, +1.f, 0.f), Vec3(1.f, 1.f, 1.f), 1.f},
-    {Vec3(+1.f, +1.f, 0.f), Vec3(1.f, 1.f, 1.f), 1.f},
-    {Vec3(+1.f, -1.f, 0.f), Vec3(1.f, 1.f, 1.f), 1.f},
+    {Vec3(-1.f, +1.f, 0.f), Color::white()},
+    {Vec3(+1.f, +1.f, 0.f), Color::white()},
+    {Vec3(+1.f, -1.f, 0.f), Color::white()},
 };
 
-static Vertex vertices[] = {{Vec3(-.5f, -.5f, -.5f), Vec3(1.f, 1.f, 1.f), 1.f},
-                            {Vec3(.5f, -.5f, -.5f), Vec3(1.f, 1.f, 1.f), 1.f},
-                            {Vec3(.5f, .5f, -.5f), Vec3(1.f, 1.f, 1.f), 1.f},
-                            {Vec3(-.5f, .5f, -.5f), Vec3(1.f, 1.f, 1.f), 1.f},
+static Vertex cube_vertices[] = {
+    {Vec3(-.5f, -.5f, -.5f), Color::white()}, {Vec3(.5f, -.5f, -.5f), Color::white()},
+    {Vec3(.5f, .5f, -.5f), Color::white()},   {Vec3(-.5f, .5f, -.5f), Color::white()},
 
-                            {Vec3(-.5f, -.5f, .5f), Vec3(1.f, 1.f, 1.f), 1.f},
-                            {Vec3(.5f, -.5f, .5f), Vec3(1.f, 1.f, 1.f), 1.f},
-                            {Vec3(.5f, .5f, .5f), Vec3(1.f, 1.f, 1.f), 1.f},
-                            {Vec3(-.5f, .5f, .5f), Vec3(1.f, 1.f, 1.f), 1.f}};
+    {Vec3(-.5f, -.5f, .5f), Color::white()},  {Vec3(.5f, -.5f, .5f), Color::white()},
+    {Vec3(.5f, .5f, .5f), Color::white()},    {Vec3(-.5f, .5f, .5f), Color::white()}};
 
-static const uint cube_vertices[] = {
+static const uint cube_vertex_indices[] = {
     // front
-    1, 2, 3, 3, 4, 1,
-    // back
-    5, 6, 7, 7, 8, 5,
-    // right
-    2, 6, 7, 7, 3, 2,
-    // left
-    5, 1, 4, 4, 8, 5,
+    0, 1, 2, 2, 3, 0,
     // top
-    5, 6, 2, 2, 1, 5,
+    4, 5, 1, 1, 0, 4,
+    // right
+    1, 5, 6, 6, 2, 1,
+    // back
+    5, 4, 7, 7, 6, 5,
     // bottom
-    4, 3, 7, 7, 8, 4};
+    3, 2, 6, 6, 7, 3,
+    // left
+    4, 0, 3, 3, 7, 4};
 
 static void error_callback(int error, const char* description) {
     std::cerr << "Error: " << description << std::endl;
@@ -195,7 +193,7 @@ static GLuint generate_vertex_array_buffer() {
     GLuint vertex_buffer;
     glGenBuffers(1, &vertex_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(triangle_vertices), triangle_vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(cube_vertices), cube_vertices, GL_STATIC_DRAW);
     return vertex_buffer;
 }
 
@@ -203,7 +201,8 @@ static GLuint generate_cube_element_array_buffer() {
     GLuint ibo_buffer;
     glGenBuffers(1, &ibo_buffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_buffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cube_vertices), cube_vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cube_vertex_indices), cube_vertex_indices,
+                 GL_STATIC_DRAW);
     return ibo_buffer;
 }
 
@@ -265,8 +264,8 @@ int main(void) {
 
     // Generate buffers
     GLuint vertex_buffer = generate_vertex_array_buffer();
-    // GLuint ibo_buffer = generate_cube_element_array_buffer();
-    generate_cube_element_array_buffer();
+    GLuint ibo_buffer = generate_cube_element_array_buffer();
+    // generate_cube_element_array_buffer();
 
     // Compile and setup shaders
     GLuint vertex_shader = compile_vertex_shader();
@@ -305,13 +304,11 @@ int main(void) {
         glUseProgram(shader_program);
 
         // Send data to shaders
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        // glDrawArrays(GL_TRIANGLES, 0, 6);
 
         // Render element array buffer
-
-        // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_buffer);
-        // glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_SHORT, POINTER_CAST(0));
-
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_buffer);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, POINTER_CAST(0));
         glfwSwapBuffers(window);
     }
 
