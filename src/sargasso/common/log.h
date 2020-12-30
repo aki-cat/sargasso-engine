@@ -1,6 +1,7 @@
 #ifndef SARGASSO_COMMON_LOG_H_
 #define SARGASSO_COMMON_LOG_H_
 
+#include <cerrno>
 #include <cstdio>
 #include <cstring>
 #include <string>
@@ -18,7 +19,7 @@ class Log {
 
 #ifndef LOG_VERBOSITY_LEVEL
 #define LOG_VERBOSITY_LEVEL LogLevel::INFO
-#endif
+#endif  // LOG_VERBOSITY_LEVEL
     static const LogLevel VERBOSITY = static_cast<LogLevel>(LOG_VERBOSITY_LEVEL);
 #undef LOG_VERBOSITY_LEVEL
 
@@ -45,8 +46,8 @@ class Log {
 
     // Generic log method (covers all cases)
     template <typename... T>
-    void printf(LogLevel level, const char* fmt, T... data) const;
-    void print(LogLevel level, const char* str) const;
+    constexpr void printf(LogLevel level, const char* fmt, T... data) const;
+    constexpr void print(LogLevel level, const char* str) const;
 
     // Global helper for laziness
     static const Log global;
@@ -81,24 +82,6 @@ inline Log::Log() : _name("<unnamed>") {}
 inline Log::Log(const std::string& name) : _name(name) {}
 
 #pragma endregion CONSTRUCTORS
-
-#pragma region STATIC_MEMBERS
-
-// Global helper for laziness
-const Log Log::global = Log();
-
-char Log::fmt_buffer[buffer_size] = {};
-
-std::FILE* Log::out = stdout;
-std::FILE* Log::err = stderr;
-
-const std::unordered_map<Log::LogLevel, const char*> Log::text_color = {
-    {Log::LogLevel::ERROR, "\033[91m"},
-    {Log::LogLevel::WARNING, "\033[93m"},
-    {Log::LogLevel::INFO, "\033[96m"},
-    {Log::LogLevel::DEBUG, "\033[0m"}};
-
-#pragma endregion STATIC_MEMBERS
 
 #pragma region LOG_METHODS
 
@@ -136,7 +119,7 @@ inline void Log::debug(const char* str) const {
 }
 
 template <typename... T>
-inline void Log::printf(Log::LogLevel level, const char* fmt, T... data) const {
+constexpr void Log::printf(Log::LogLevel level, const char* fmt, T... data) const {
     if (level > Log::VERBOSITY) {
         return;
     }
@@ -144,7 +127,7 @@ inline void Log::printf(Log::LogLevel level, const char* fmt, T... data) const {
     print(level, fmt_buffer);
 }
 
-inline void Log::print(Log::LogLevel level, const char* str) const {
+constexpr void Log::print(Log::LogLevel level, const char* str) const {
     if (level > Log::VERBOSITY) {
         return;
     }
@@ -200,4 +183,4 @@ inline void Log::unset_err_stream() {
 }  // namespace common
 }  // namespace sargasso
 
-#endif
+#endif  // SARGASSO_COMMON_LOG_H_

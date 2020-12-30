@@ -6,11 +6,13 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "-Wpedantic -Wall -Werror -O0 -g")
 
-file(GLOB_RECURSE EXAMPLE_ALL_SOURCE_FILES "${PROJECT_SOURCE_DIR}/src/*.cc")
+file(GLOB_RECURSE EXAMPLE_ALL_SOURCE_FILES "${PROJECT_SOURCE_DIR}/src/*.cc"
+                                           "${PROJECT_SOURCE_DIR}/sargasso/common/io.cc"
+                                           "${PROJECT_SOURCE_DIR}/sargasso/common/log.cc")
 add_executable(Minimal ${EXAMPLE_ALL_SOURCE_FILES})
 
 if (LOG_LEVEL)
-    target_compile_definitions(Minimal PRIVATE "-DLOG_VERBOSITY_LEVEL=${LOG_LEVEL}")
+    target_compile_definitions(Minimal PUBLIC "-DLOG_VERBOSITY_LEVEL=${LOG_LEVEL}")
 endif(LOG_LEVEL)
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/glad")

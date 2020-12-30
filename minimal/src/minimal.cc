@@ -7,6 +7,7 @@
 #include <iostream>
 
 // math library
+#include <sargasso/common/io.h>
 #include <sargasso/common/log.h>
 #include <sml/color.h>
 #include <sml/matrix4.h>
@@ -16,9 +17,10 @@ using sml::Color;
 using sml::Mat4;
 using sml::Vec3;
 
+using sargasso::common::IO;
 using sargasso::common::Log;
 
-static const char* vertex_shader_text =
+static const std::string vertex_shader_text =
 #ifdef __APPLE__
     "#version 120\n"
 #else
@@ -34,7 +36,7 @@ static const char* vertex_shader_text =
     "    color = vCol;\n"
     "}\n";
 
-static const char* fragment_shader_text =
+static const std::string fragment_shader_text =
 #ifdef __APPLE__
     "#version 120\n"
 #else
@@ -211,14 +213,16 @@ static GLuint generate_cube_element_array_buffer() {
 
 static GLuint compile_vertex_shader() {
     GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertex_shader, 1, &vertex_shader_text, NULL);
+    const char* shader_code = vertex_shader_text.c_str();
+    glShaderSource(vertex_shader, 1, &shader_code, NULL);
     glCompileShader(vertex_shader);
     return vertex_shader;
 }
 
 static GLuint compile_fragment_shader() {
     GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment_shader, 1, &fragment_shader_text, NULL);
+    const char* shader_code = fragment_shader_text.c_str();
+    glShaderSource(fragment_shader, 1, &shader_code, NULL);
     glCompileShader(fragment_shader);
     return fragment_shader;
 }
@@ -256,11 +260,6 @@ static Mat4 generate_mvp_matrix() {
 }
 
 int main(void) {
-    Log::global.error("Test ERROR!");
-    Log::global.warning("Test WARNING!");
-    Log::global.info("Test INFO!");
-    Log::global.debug("Test DEBUG!");
-
     GLFWwindow* window = create_window();
     setup_context(window);
     setup_context_flags();
