@@ -7,3 +7,6 @@
 [submodule "src/third_party/glad"]
 	path = src/third_party/glad
 	url = gh:Dav1dde/glad.git
+[submodule "src/third_party/btl"]
+	path = src/third_party/btl
+	url = git@github.com:aki-cat/btl.git

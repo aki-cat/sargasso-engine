@@ -25,33 +25,22 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
       # Installs dependencies
       - name: Install dependencies
-        run: sudo apt-get install -y cmake g++-9 xorg-dev libglew-dev
+        run: sudo apt-get install -y cmake g++-9 xorg-dev
 
-      - name: Install pyenv
-        run: |
-          unset PYENV_ROOT
-          curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
-          echo pyenv installed!
-          echo "export PATH=$HOME/.pyenv/bin:\$PATH" >> $HOME/.bashrc
-          echo "eval \"\$(pyenv init -)\"" >> $HOME/.bashrc
-          echo "eval \"\$(pyenv virtualenv-init -)\"" >> $HOME/.bashrc
-
-      - name: Install scons
-        run: |
-          pyenv install 3.8.5
-          pyenv global 3.8.5
-          python -m pip install scons
-
-      - name: Update submodules
-        run: git submodule update --init --recursive
-
-      # Build
+      # Configure build
       - name: Build
-        run: scons
+        run: cmake -B build .
 
+      # Build targets
+      - name: Build samples
+        run: make -C build
       # Runs tests
-      - name: Test
-        run: ./bin/RunTests
+      # - name: Test
+      #   run: |
+      #     cmake -B build -DSARGASSO_RUN_TESTS=ON
+      #     cmake --build build

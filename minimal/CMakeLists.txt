@@ -4,10 +4,14 @@ cmake_policy(SET CMP0076 NEW)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_CXX_FLAGS "-Wpedantic -Wall -Werror -O0")
+set(CMAKE_CXX_FLAGS "-Wpedantic -Wall -Werror -O0 -g")
 
 file(GLOB_RECURSE EXAMPLE_ALL_SOURCE_FILES "${PROJECT_SOURCE_DIR}/src/*.cc")
 add_executable(Minimal ${EXAMPLE_ALL_SOURCE_FILES})
+
+if (LOG_LEVEL)
+    target_compile_definitions(Minimal PRIVATE "-DLOG_VERBOSITY_LEVEL=${LOG_LEVEL}")
+endif(LOG_LEVEL)
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/glad")
 add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/glfw")
@@ -28,4 +32,4 @@ set_target_properties(Minimal
 
 target_include_directories(Minimal PUBLIC "${PROJECT_BINARY_DIR}"
                                           "${PROJECT_SOURCE_DIR}"
-                                          "${PROJECT_SOURCE_DIR}/third_party/glfw/deps")
+                                          "${PROJECT_SOURCE_DIR}/sargasso")

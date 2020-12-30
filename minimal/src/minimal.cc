@@ -7,6 +7,7 @@
 #include <iostream>
 
 // math library
+#include <sargasso/common/log.h>
 #include <sml/color.h>
 #include <sml/matrix4.h>
 #include <sml/vector3.h>
@@ -14,6 +15,8 @@
 using sml::Color;
 using sml::Mat4;
 using sml::Vec3;
+
+using sargasso::common::Log;
 
 static const char* vertex_shader_text =
 #ifdef __APPLE__
@@ -160,7 +163,7 @@ static void setup_context(GLFWwindow* window) {
     }
     glfwSwapInterval(1);
 
-    std::cout << glGetString(GL_VERSION) << std::endl;
+    Log("GLFW INIT").info("Graphics API: %s", glGetString(GL_VERSION));
 }
 
 static void setup_context_flags() {
@@ -253,6 +256,11 @@ static Mat4 generate_mvp_matrix() {
 }
 
 int main(void) {
+    Log::global.error("Test ERROR!");
+    Log::global.warning("Test WARNING!");
+    Log::global.info("Test INFO!");
+    Log::global.debug("Test DEBUG!");
+
     GLFWwindow* window = create_window();
     setup_context(window);
     setup_context_flags();

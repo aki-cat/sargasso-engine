@@ -2,6 +2,10 @@ BasedOnStyle: Google
 IndentWidth: 4
 ---
 Language: Cpp
+AlignAfterOpenBracket: Align
+AlignConsecutiveMacros: true
+AllowShortBlocksOnASingleLine: Never
+AllowShortFunctionsOnASingleLine: Empty
 DerivePointerAlignment: false
 PointerAlignment: Left
 ColumnLimit: 100

@@ -3,9 +3,7 @@
 
 #include "sargasso/front_end/front_end_system.h"
 
-namespace SargassoEngine {
-
-using namespace FrontEnd;
+namespace sargasso {
 
 class Game {
    public:
@@ -26,6 +24,6 @@ class Game {
     FrontEndSystem* _front_end;
 };
 
-}  // namespace SargassoEngine
+}  // namespace sargasso
 
 #endif
