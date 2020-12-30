@@ -5,11 +5,7 @@
 
 using sargasso::common::Log;
 
-// Global helper for laziness
-const Log Log::global = Log();
-
 char Log::fmt_buffer[Log::buffer_size] = {};
-
 std::FILE* Log::out = stdout;
 std::FILE* Log::err = stderr;
 

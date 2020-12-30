@@ -19,7 +19,7 @@ class Log {
 
 #ifndef LOG_VERBOSITY_LEVEL
 #define LOG_VERBOSITY_LEVEL LogLevel::INFO
-#endif  // LOG_VERBOSITY_LEVEL
+#endif
     static const LogLevel VERBOSITY = static_cast<LogLevel>(LOG_VERBOSITY_LEVEL);
 #undef LOG_VERBOSITY_LEVEL
 
@@ -50,7 +50,6 @@ class Log {
     constexpr void print(LogLevel level, const char* str) const;
 
     // Global helper for laziness
-    static const Log global;
     static const size_t buffer_size = 1024;
 
     // Output setters
@@ -146,8 +145,8 @@ inline void Log::set_log_stream(const std::string& file_path) {
     std::FILE* file = std::fopen(file_path.c_str(), "w");
 
     if (file == nullptr) {
-        Log::global.error("Failed to open file '%s' for writing: %s", file_path.c_str(),
-                          std::strerror(errno));
+        Log("Log").error("Failed to open file '%s' for writing: %s", file_path.c_str(),
+                         std::strerror(errno));
         return;
     }
 
@@ -164,8 +163,8 @@ inline void Log::set_err_stream(const std::string& file_path) {
     std::FILE* file = std::fopen(file_path.c_str(), "w");
 
     if (file == nullptr) {
-        Log::global.error("Failed to open file '%s' for writing: %s", file_path.c_str(),
-                          std::strerror(errno));
+        Log("Log").error("Failed to open file '%s' for writing: %s", file_path.c_str(),
+                         std::strerror(errno));
         return;
     }
 
