@@ -3,7 +3,7 @@
 
 #include <sargasso/engine.h>
 
-using namespace SargassoEngine;
+using namespace sargasso;
 
 // Define your class inheriting from Game
 class Example : public Game {

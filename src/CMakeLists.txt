@@ -22,7 +22,10 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/glfw")
 add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/btl")
 add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/sml")
 
-file(GLOB_RECURSE ALL_SOURCE_FILES "${PROJECT_SOURCE_DIR}/sargasso/*.cc")
+file(GLOB_RECURSE
+    ALL_SOURCE_FILES
+        "${PROJECT_SOURCE_DIR}/sargasso/*.cc"
+        "${PROJECT_SOURCE_DIR}/sargasso/*.cxx")
 
 message(STATUS "Including files: ${ALL_SOURCE_FILES}")
 
