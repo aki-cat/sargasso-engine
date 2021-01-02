@@ -1,13 +1,13 @@
-#ifndef SARGASSO_WINDOW_GLFW_GLFW_WINDOW_H_
-#define SARGASSO_WINDOW_GLFW_GLFW_WINDOW_H_
+#ifndef SARGASSO_WINDOW_GLFW_GLFW_CONTEXT_WRAPPER_H_
+#define SARGASSO_WINDOW_GLFW_GLFW_CONTEXT_WRAPPER_H_
 
 #define GLFW_INCLUDE_NONE
 
+#include "sargasso/graphics/igraphics.h"
 #include "sargasso/window/icontext_wrapper.h"
 
-#include <glad/glad.h>
-
 #include <GLFW/glfw3.h>
+#include <sml/color.h>
 
 namespace sargasso {
 namespace window {
@@ -17,7 +17,7 @@ class GLFWContextWrapper : virtual public IContextWrapper {
    public:
     GLFWContextWrapper(const GLFWContextWrapper&) = delete;
     GLFWContextWrapper(const GLFWContextWrapper&&) = delete;
-    explicit GLFWContextWrapper(WindowConfig config);
+    GLFWContextWrapper(WindowConfig config, IGraphics& graphics);
     ~GLFWContextWrapper() override;
 
     void run() override;

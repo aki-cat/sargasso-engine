@@ -2,37 +2,40 @@
 #include "sargasso/window/glfw/glfw_context_wrapper.h"
 
 #include "sargasso/common/log.h"
+#include "sargasso/graphics/igraphics.h"
 #include "sargasso/window/icontext_wrapper.h"
-
-#include <glad/glad.h>
 
 #include <GLFW/glfw3.h>
 #include <cstdlib>
+#include <sml/color.h>
 
 using sargasso::common::Log;
+using sargasso::graphics::IGraphics;
 using sargasso::window::WindowConfig;
 using sargasso::window::glfw::GLFWContextWrapper;
+using sml::Color;
 
 static Log logger = Log("GLFWContextWrapper");
 
 static void init_glfw();
 static GLFWwindow* init_window(WindowConfig config);
-static void init_gl_context(GLFWwindow* window);
+static void init_graphics(GLFWwindow* window, IGraphics& graphics);
 static void error_callback(int error_code, const char* error_description);
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
-GLFWContextWrapper::GLFWContextWrapper(WindowConfig config) {
+GLFWContextWrapper::GLFWContextWrapper(WindowConfig config, IGraphics& graphics)
+    : IContextWrapper(config, graphics) {
     init_glfw();
 
-    _window = init_window(config);
+    _window = init_window(_config);
 
-    init_gl_context(_window);
+    init_graphics(_window, _graphics);
 
     glfwSetWindowUserPointer(_window, this);
     glfwSetErrorCallback(error_callback);
     glfwSetKeyCallback(_window, key_callback);
 
-    logger.info("Graphics API: %s | %s", glGetString(GL_VERSION), glfwGetVersionString());
+    logger.info("Graphics API: %s | %s", graphics.get_version().c_str(), glfwGetVersionString());
 }
 
 GLFWContextWrapper::~GLFWContextWrapper() {
@@ -50,9 +53,10 @@ void GLFWContextWrapper::run() {
 
         // Clear screen
         glfwGetFramebufferSize(_window, &width, &height);
-        glViewport(0, 0, width, height);
-        glClearColor(0.f, 0.f, 0.f, 0.f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        _graphics.set_viewport(0, 0, width, height);
+        _graphics.set_clear_color(Color::invisible());
+        _graphics.clear();
 
         // Swap frame buffer
         glfwSwapBuffers(_window);
@@ -113,24 +117,16 @@ static GLFWwindow* init_window(WindowConfig config) {
     return window;
 }
 
-static void init_gl_context(GLFWwindow* window) {
-    logger.debug("Initializing OpenGL context...");
-
+static void init_graphics(GLFWwindow* window, IGraphics& graphics) {
     glfwMakeContextCurrent(window);
-    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
-        logger.error("OpenGL context initializing failed! Terminating application...");
+
+    if (!graphics.initialize((void*) glfwGetProcAddress)) {
+        logger.error("Graphics initialization failed! Terminating application...");
         glfwTerminate();
         std::exit(EXIT_FAILURE);
     }
 
-    logger.debug("Configuring context flags...");
-    glfwSwapInterval(1);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_BLEND);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_VERTEX_ARRAY);
-
-    logger.debug("OpenGL context initialized!");
+    logger.debug("Graphics initialized!");
 }
 
 static void error_callback(int error_code, const char* error_description) {
