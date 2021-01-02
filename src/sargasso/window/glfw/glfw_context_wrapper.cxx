@@ -2,6 +2,7 @@
 #include "sargasso/window/glfw/glfw_context_wrapper.h"
 
 #include "sargasso/common/log.h"
+#include "sargasso/window/icontext_wrapper.h"
 
 #include <glad/glad.h>
 
@@ -9,12 +10,13 @@
 #include <cstdlib>
 
 using sargasso::common::Log;
+using sargasso::window::WindowConfig;
 using sargasso::window::glfw::GLFWContextWrapper;
 
 static Log logger = Log("GLFWContextWrapper");
 
 static void init_glfw();
-static GLFWWindow* init_window();
+static GLFWwindow* init_window(WindowConfig config);
 static void init_gl_context(GLFWwindow* window);
 static void error_callback(int error_code, const char* error_description);
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -22,13 +24,13 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 GLFWContextWrapper::GLFWContextWrapper(WindowConfig config) {
     init_glfw();
 
-    _window = init_window();
+    _window = init_window(config);
 
     init_gl_context(_window);
 
-    glfwSetWindowPosCallback(this);
+    glfwSetWindowUserPointer(_window, this);
     glfwSetErrorCallback(error_callback);
-    glfwSetKeyCallback(_window, NULL);
+    glfwSetKeyCallback(_window, key_callback);
 
     logger.info("Graphics API: %s | %s", glGetString(GL_VERSION), glfwGetVersionString());
 }
@@ -40,11 +42,25 @@ GLFWContextWrapper::~GLFWContextWrapper() {
     glfwTerminate();
 }
 
-bool GLFWContextWrapper::should_close() const {
-    return glfwWindowShouldClose(_window);
+void GLFWContextWrapper::run() {
+    int width, height;
+    while (!glfwWindowShouldClose(_window)) {
+        // Get inputs
+        glfwPollEvents();
+
+        // Clear screen
+        glfwGetFramebufferSize(_window, &width, &height);
+        glViewport(0, 0, width, height);
+        glClearColor(0.f, 0.f, 0.f, 0.f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // Swap frame buffer
+        glfwSwapBuffers(_window);
+    }
+    logger.info("Loop ended");
 }
 
-void GLFWContextWrapper::key_callback(int key, int action) const {
+void GLFWContextWrapper::key_action_handler(int key, int action) const {
     std::string action_name = "happened???";
 
     if (action == GLFW_PRESS) {
@@ -53,7 +69,11 @@ void GLFWContextWrapper::key_callback(int key, int action) const {
         action_name = "released";
     }
 
-    logger.debug("Key %d %s", key, action_name);
+    if (key == GLFW_KEY_F8 && action == GLFW_PRESS) {
+        glfwSetWindowShouldClose(_window, GLFW_TRUE);
+    }
+
+    logger.debug("Key %s %s", glfwGetKeyName(key, glfwGetKeyScancode(key)), action_name.c_str());
 }
 
 // Helper private functions
@@ -67,7 +87,7 @@ static void init_glfw() {
     logger.debug("GLFW initialized!");
 }
 
-static GLFWWindow* init_window() {
+static GLFWwindow* init_window(WindowConfig config) {
     logger.debug("Setting up GLFW window config...");
 
     // Setup window config hints
@@ -82,7 +102,7 @@ static GLFWWindow* init_window() {
 
     // Create window
     logger.debug("Creating GLFW window...");
-    GLFW* window = glfwCreateWindow(config.width, config.height, config.title, NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(config.width, config.height, config.title, NULL, NULL);
     if (!window) {
         logger.error("Window creation failed! Terminating application...");
         glfwTerminate();
@@ -90,7 +110,7 @@ static GLFWWindow* init_window() {
     }
 
     logger.debug("Window creation was successful!");
-    return window
+    return window;
 }
 
 static void init_gl_context(GLFWwindow* window) {
@@ -118,6 +138,7 @@ static void error_callback(int error_code, const char* error_description) {
 }
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    GLFWContextWrapper contextWrapper = glfwGetWindowUserPointer(window);
-    contextWrapper.key_callback(key, action);
+    GLFWContextWrapper& contextWrapper =
+        *static_cast<GLFWContextWrapper*>(glfwGetWindowUserPointer(window));
+    contextWrapper.key_action_handler(key, action);
 }

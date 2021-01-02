@@ -1,6 +1,8 @@
 #ifndef SARGASSO_WINDOW_WINDOW_INTERFACE_H_
 #define SARGASSO_WINDOW_WINDOW_INTERFACE_H_
 
+#include <cstdint>
+
 namespace sargasso {
 namespace window {
 
@@ -13,8 +15,8 @@ struct WindowConfig {
 
 class IContextWrapper {
    public:
-    virtual IContextWrapper(WindowConfig config) = 0;
-    virtual bool should_close() const;
+    virtual ~IContextWrapper() {}
+    virtual void run() = 0;
 };
 
 }  // namespace window

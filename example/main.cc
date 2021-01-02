@@ -1,7 +1,15 @@
-#include "example.h"
 
-// Then define a main and run Game::run() passing a simple instance of your class, like so:
+#include <sargasso/common/log.h>
+#include <sargasso/engine.h>
+
+using sargasso::common::Log;
+
 int main() {
-    Example example;
-    return Game::run(example);
+    Log logger = Log("MAIN");
+    logger.info("Starting sample...");
+
+    sargasso::Engine engine = sargasso::Engine();
+    engine.run();
+
+    logger.info("Closing sample...");
 }

@@ -94,7 +94,7 @@ static const uint cube_vertex_indices[] = {
     4, 0, 3, 3, 7, 4};
 
 static void error_callback(int error, const char* description) {
-    std::cerr << "Error: " << description << std::endl;
+    Log("GLFW").error("Error #%d: %s", error, description);
 }
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {

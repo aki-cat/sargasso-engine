@@ -42,8 +42,20 @@ set_target_properties(SargassoEngine
 find_package(OpenGL REQUIRED)
 find_library(sml third_party/sml)
 
-target_compile_definitions(SargassoEngine PRIVATE
-        "SARGASSO_ENGINE_VERSION=${CMAKE_PROJECT_VERSION}")
+target_compile_definitions(SargassoEngine
+    PRIVATE
+    "SARGASSO_ENGINE_VERSION=${CMAKE_PROJECT_VERSION}"
+)
+
+if(!SARGASSO_VERBOSE_LOGS)
+    set(SARGASSO_VERBOSE_LOGS 2)
+endif(!SARGASSO_VERBOSE_LOGS)
+
+target_compile_definitions(SargassoEngine
+    PUBLIC
+    "LOG_VERBOSITY_LEVEL=${SARGASSO_VERBOSE_LOGS}"
+)
+message(STATUS "Verbosity set to level ${SARGASSO_VERBOSE_LOGS}")
 
 # Utility libraries
 target_link_libraries(SargassoEngine sml)
@@ -86,3 +98,5 @@ if (SARGASSO_RUN_TESTS)
         COMMAND "${CMAKE_BINARY_DIR}/SargassoTests"
     )
 endif(SARGASSO_RUN_TESTS)
+
+message(STATUS "Flags: ${CMAKE_CXX_FLAGS}")

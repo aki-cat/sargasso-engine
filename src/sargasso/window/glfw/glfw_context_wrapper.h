@@ -13,16 +13,18 @@ namespace sargasso {
 namespace window {
 namespace glfw {
 
-class GLFWContextWrapper : public IContextWrapper {
+class GLFWContextWrapper : virtual public IContextWrapper {
    public:
-    GLFWContextWrapper(WindowConfig config) override;
-    ~GLFWContextWrapper();
+    GLFWContextWrapper(const GLFWContextWrapper&) = delete;
+    GLFWContextWrapper(const GLFWContextWrapper&&) = delete;
+    explicit GLFWContextWrapper(WindowConfig config);
+    ~GLFWContextWrapper() override;
 
-    bool should_close() const override;
+    void run() override;
+    void key_action_handler(int key, int action) const;
 
    private:
-    GLFWWindow* _window;
-    void key_callback(int key, int action) const;
+    GLFWwindow* _window;
 };
 
 }  // namespace glfw
