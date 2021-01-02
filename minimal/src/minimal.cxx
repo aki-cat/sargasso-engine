@@ -147,8 +147,7 @@ GLFWwindow* create_window() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 #endif
 
-    GLFWwindow* window =
-        glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Simple example", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Minimal", NULL, NULL);
 
     if (!window) {
         glfwTerminate();
@@ -165,7 +164,7 @@ static void setup_context(GLFWwindow* window) {
     }
     glfwSwapInterval(1);
 
-    Log("GLFW INIT").info("Graphics API: %s", glGetString(GL_VERSION));
+    Log("Minimal").info("Graphics API: %s | %s", glGetString(GL_VERSION), glfwGetVersionString());
 }
 
 static void setup_context_flags() {
