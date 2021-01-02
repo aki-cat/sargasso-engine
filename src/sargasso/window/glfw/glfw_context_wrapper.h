@@ -5,6 +5,7 @@
 
 #include "sargasso/graphics/igraphics.h"
 #include "sargasso/window/icontext_wrapper.h"
+#include "sargasso/window/window_config.h"
 
 #include <GLFW/glfw3.h>
 #include <sml/color.h>

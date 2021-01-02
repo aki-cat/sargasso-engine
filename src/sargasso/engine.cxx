@@ -4,6 +4,7 @@
 #include "sargasso/config.h"
 #include "sargasso/graphics/opengl/opengl_graphics.h"
 #include "sargasso/window/glfw/glfw_context_wrapper.h"
+#include "sargasso/window/window_config.h"
 
 using sargasso::Engine;
 using sargasso::graphics::opengl::OpenGLGraphics;
