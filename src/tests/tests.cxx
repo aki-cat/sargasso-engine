@@ -5,7 +5,7 @@
 
 // Include tests now
 
-#include "spec/sample.spec.cxx"
+#include "spec/reference.spec.cxx"
 
 #include <btl.h>
 
@@ -15,8 +15,7 @@ using sargasso::common::Log;
 int main() {
     Log("TEST RUNNER").info("Starting up...\n");
 
-    // TBD: Remove Dummy class and substitute tests for real ones
-    TestRunner<Dummy>::run();
+    TestRunner<Reference<Example>>::run();
 
     if (btl::has_errors()) {
         Log("TEST RUNNER").error("Errors occurred!");
