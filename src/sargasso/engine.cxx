@@ -6,8 +6,6 @@
 #include "sargasso/window/icontext_wrapper.h"
 
 using sargasso::Engine;
-// using sargasso::window::IContextWrapper;
-using sargasso::window::IContextWrapper;
 using sargasso::window::WindowConfig;
 using sargasso::window::glfw::GLFWContextWrapper;
 
