@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <cmath>
 #include <iostream>
+#include <cstdint>
 
 // math library
 #include <sargasso/common/io.h>
@@ -79,7 +80,7 @@ static Vertex cube_vertices[] = {
     {Vec3(-.5f, -.5f, .5f), Color::white()},  {Vec3(.5f, -.5f, .5f), Color::white()},
     {Vec3(.5f, .5f, .5f), Color::white()},    {Vec3(-.5f, .5f, .5f), Color::white()}};
 
-static const uint cube_vertex_indices[] = {
+static const uint64_t cube_vertex_indices[] = {
     // front
     0, 1, 2, 2, 3, 0,
     // top
@@ -126,7 +127,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     }
 }
 
-constexpr const uint WINDOW_WIDTH = 960, WINDOW_HEIGHT = 540;
+constexpr const uint64_t WINDOW_WIDTH = 960, WINDOW_HEIGHT = 540;
 // constexpr const float WINDOW_ASPECT = 1.f * WINDOW_WIDTH / WINDOW_HEIGHT;
 // constexpr const float CAMERA_HEIGHT = 2.f;
 // constexpr const float CAMERA_WIDTH = CAMERA_HEIGHT * WINDOW_ASPECT;

@@ -15,7 +15,7 @@ class IGraphics {
     IGraphics(const IGraphics&&) = delete;
     virtual ~IGraphics() {}
     virtual bool initialize(void* proc_address) = 0;
-    virtual void set_viewport(int x, int y, uint width, uint height) = 0;
+    virtual void set_viewport(int x, int y, uint32_t width, uint32_t height) = 0;
     virtual void set_clear_color(Color color) = 0;
     virtual void clear() = 0;
     virtual std::string get_version() const = 0;

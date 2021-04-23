@@ -7,9 +7,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 if (RELEASE)
-    set(CMAKE_CXX_FLAGS "-pedantic -Wall -Werror -Ofast")
+    set(CMAKE_CXX_FLAGS "-pedantic -Wall -Werror -Ofast -static -static-libgcc -static-libstdc++")
 else(RELEASE)
-    set(CMAKE_CXX_FLAGS "-pedantic -Wall -Werror -O0 -g")
+    set(CMAKE_CXX_FLAGS "-pedantic -Wall -Werror -O0 -g -static -static-libgcc -static-libstdc++")
 endif(RELEASE)
 
 # GLFW flags
@@ -30,7 +30,7 @@ file(GLOB_RECURSE
 message(STATUS "Including files: ${ALL_SOURCE_FILES}")
 
 # ENGINE LIBRARY
-add_library(SargassoEngine ${ALL_SOURCE_FILES})
+add_library(SargassoEngine STATIC ${ALL_SOURCE_FILES})
 
 set_target_properties(SargassoEngine
     PROPERTIES
@@ -47,12 +47,12 @@ target_compile_definitions(SargassoEngine
     "SARGASSO_ENGINE_VERSION=${CMAKE_PROJECT_VERSION}"
 )
 
-if(!SARGASSO_VERBOSE_LOGS)
+if(NOT DEFINED SARGASSO_VERBOSE_LOGS)
     set(SARGASSO_VERBOSE_LOGS 2)
-endif(!SARGASSO_VERBOSE_LOGS)
+endif(NOT DEFINED SARGASSO_VERBOSE_LOGS)
 
 target_compile_definitions(SargassoEngine
-    PUBLIC
+    PRIVATE
     "LOG_VERBOSITY_LEVEL=${SARGASSO_VERBOSE_LOGS}"
 )
 message(STATUS "Verbosity set to level ${SARGASSO_VERBOSE_LOGS}")

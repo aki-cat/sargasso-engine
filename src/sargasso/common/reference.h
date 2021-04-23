@@ -1,6 +1,8 @@
 #ifndef SARGASSO_COMMON_REFERENCE_H_
 #define SARGASSO_COMMON_REFERENCE_H_
 
+#include <stdexcept>
+
 namespace sargasso {
 namespace common {
 

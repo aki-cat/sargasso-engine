@@ -30,7 +30,7 @@ bool OpenGLGraphics::initialize(void* proc_address) {
     return true;
 }
 
-void OpenGLGraphics::set_viewport(int x, int y, uint width, uint height) {
+void OpenGLGraphics::set_viewport(int x, int y, uint32_t width, uint32_t height) {
     glViewport(x, y, width, height);
 }
 

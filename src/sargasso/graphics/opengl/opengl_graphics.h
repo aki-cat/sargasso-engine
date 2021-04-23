@@ -21,7 +21,7 @@ class OpenGLGraphics : virtual public IGraphics {
     ~OpenGLGraphics() override {}
 
     bool initialize(void* proc_address) override;
-    void set_viewport(int x, int y, uint width, uint height) override;
+    void set_viewport(int x, int y, uint32_t width, uint32_t height) override;
     void set_clear_color(Color color) override;
     void clear() override;
     std::string get_version() const override;

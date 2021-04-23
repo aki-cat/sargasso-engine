@@ -10,7 +10,6 @@
 namespace sargasso {
 namespace common {
 
-#pragma region CLASS_DEFINITION
 
 class Log {
    public:
@@ -72,17 +71,13 @@ class Log {
     static const std::unordered_map<LogLevel, const char*> text_color;
 };
 
-#pragma endregion CLASS_DEFINITION
 
-#pragma region CONSTRUCTORS
 // Constructors
 
 inline Log::Log() : _name("<unnamed>") {}
 inline Log::Log(const std::string& name) : _name(name) {}
 
-#pragma endregion CONSTRUCTORS
-
-#pragma region LOG_METHODS
+// Log Methods
 
 template <typename... T>
 inline void Log::error(const char* fmt, T... data) const {
@@ -137,9 +132,7 @@ constexpr void Log::print(Log::LogLevel level, const char* str) const {
     std::fprintf(output, "%s[%s] %s%s\n", start, _name.c_str(), str, end);
 }
 
-#pragma endregion LOG_METHODS
-
-#pragma region OUTPUT_STREAM_METHODS
+// Output stream methods
 
 inline void Log::set_log_stream(const std::string& file_path) {
     std::FILE* file = std::fopen(file_path.c_str(), "w");
@@ -177,7 +170,6 @@ inline void Log::unset_err_stream() {
     err = stderr;
 }
 
-#pragma endregion OUTPUT_STREAM_METHODS
 
 }  // namespace common
 }  // namespace sargasso
