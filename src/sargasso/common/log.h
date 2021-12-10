@@ -10,18 +10,16 @@
 namespace sargasso {
 namespace common {
 
+#ifndef LOG_VERBOSITY_LEVEL
+#define LOG_VERBOSITY_LEVEL LogLevel::INFO
+#endif
 
 class Log {
    public:
     // Log Level enum
     enum LogLevel { SILENT = 0, ERROR = 1, WARNING = 2, INFO = 3, DEBUG = 4 };
 
-#ifndef LOG_VERBOSITY_LEVEL
-#define LOG_VERBOSITY_LEVEL LogLevel::INFO
-#endif
     static const LogLevel VERBOSITY = static_cast<LogLevel>(LOG_VERBOSITY_LEVEL);
-#undef LOG_VERBOSITY_LEVEL
-
     // Constructors
     Log();
     Log(const std::string& name);
@@ -70,7 +68,6 @@ class Log {
 
     static const std::unordered_map<LogLevel, const char*> text_color;
 };
-
 
 // Constructors
 
@@ -170,8 +167,9 @@ inline void Log::unset_err_stream() {
     err = stderr;
 }
 
-
 }  // namespace common
 }  // namespace sargasso
+
+#undef LOG_VERBOSITY_LEVEL
 
 #endif  // SARGASSO_COMMON_LOG_H_
