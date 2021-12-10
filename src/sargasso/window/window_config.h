@@ -1,6 +1,8 @@
 #ifndef SARGASSO_WINDOW_WINDOW_CONFIG_H
 #define SARGASSO_WINDOW_WINDOW_CONFIG_H
 
+#include <cstdint>
+
 namespace sargasso {
 namespace window {
 

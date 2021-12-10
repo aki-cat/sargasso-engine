@@ -1,6 +1,7 @@
 #ifndef SARGASSO_COMMON_REFERENCE_H_
 #define SARGASSO_COMMON_REFERENCE_H_
 
+#include <cstdint>
 #include <stdexcept>
 
 namespace sargasso {
