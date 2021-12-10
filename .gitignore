@@ -16,3 +16,10 @@
 
 # Python
 __pycache__/
+
+# CMake files
+CMakeCache.txt
+CMakeFiles/
+Makefile
+bin/
+cmake_install.cmake
