@@ -4,7 +4,7 @@ cmake_policy(SET CMP0076 NEW)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_CXX_FLAGS "-pedantic -Wall -Werror -static -static-libgcc -static-libstdc++")
+set(CMAKE_CXX_FLAGS "-pedantic -Wall -Werror -static-libgcc -static-libstdc++")
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/src")
 
