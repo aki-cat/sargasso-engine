@@ -10,6 +10,8 @@
 /lib/
 /bin/
 *.o
+/Sample
+/SargassoTests
 
 # VSCode
 .vscode/
