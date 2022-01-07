@@ -39,3 +39,26 @@ bool Log::is_stdout() {
 bool Log::is_stderr() {
     return Log::_err == Log::_unused;
 }
+
+void Log::print(Log::LogLevel level, const char* str) const {
+    if (level > Log::VERBOSITY) {
+        return;
+    }
+
+    bool is_error = level <= LogLevel::WARNING;
+    const std::string& target_path = is_error ? Log::_err : Log::_out;
+    bool is_std = target_path == Log::_unused;
+
+    const char* start = is_std ? Log::_text_color.at(level) : "";
+    const char* end = is_std ? "\033[0m" : "";
+
+    std::stringstream stream{};
+    stream << start << "[" << _name.c_str() << "] " << str << end << std::endl;
+
+    if (is_std) {
+        (is_error ? std::cerr : std::cout) << stream.str();
+    } else {
+        std::ofstream output(target_path, std::ios_base::app);
+        output << stream.str();
+    }
+}
