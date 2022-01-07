@@ -6,11 +6,7 @@ cmake_policy(SET CMP0076 NEW)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-if (RELEASE)
-    set(CMAKE_CXX_FLAGS "-pedantic -Wall -Werror -Ofast -static -static-libgcc -static-libstdc++")
-else(RELEASE)
-    set(CMAKE_CXX_FLAGS "-pedantic -Wall -Werror -O0 -g -static -static-libgcc -static-libstdc++")
-endif(RELEASE)
+message(STATUS Compile flags: ${CMAKE_CXX_FLAGS})
 
 # GLFW flags
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
@@ -71,8 +67,6 @@ target_include_directories(SargassoEngine PUBLIC
 
 # ENGINE TESTS
 if (SARGASSO_RUN_TESTS)
-    set(CMAKE_CXX_FLAGS "-pedantic -Wall -Werror -O0 -g")
-
     add_executable(SargassoTests "${PROJECT_SOURCE_DIR}/tests/tests.cxx")
     target_link_libraries(SargassoTests SargassoEngine)
     target_link_libraries(SargassoTests btl)

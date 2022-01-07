@@ -4,7 +4,14 @@ cmake_policy(SET CMP0076 NEW)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_CXX_FLAGS "-pedantic -Wall -Werror -static-libgcc -static-libstdc++")
+
+message(STATUS CMAKE_BUILD_TYPE is ${CMAKE_BUILD_TYPE})
+
+if(MSVC)
+    add_compile_options(/W3 /WX /Od)
+else(MSVC)
+    add_compile_options(-pedantic -Wall -static-libgcc -static-libstdc++)
+endif(MSVC)
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/src")
 
