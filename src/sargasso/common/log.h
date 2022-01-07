@@ -4,6 +4,9 @@
 #include <cerrno>
 #include <cstdio>
 #include <cstring>
+#include <fstream>
+#include <iostream>
+#include <sstream>
 #include <string>
 #include <unordered_map>
 
@@ -55,18 +58,19 @@ class Log {
     static void set_err_stream(const std::string& file_path);
     static void unset_err_stream();
 
+    bool is_stdout();
+    bool is_stderr();
+
    private:
     // Data
     const std::string _name;
 
-    // Formatting buffer
-    static char fmt_buffer[buffer_size];
-
     // Output pointers
-    static std::FILE* out;
-    static std::FILE* err;
+    static std::string _out;
+    static std::string _err;
 
-    static const std::unordered_map<LogLevel, const char*> text_color;
+    static const char* _unused;
+    static const std::unordered_map<LogLevel, const char*> _text_color;
 };
 
 // Constructors
@@ -78,35 +82,35 @@ inline Log::Log(const std::string& name) : _name(name) {}
 
 template <typename... T>
 inline void Log::error(const char* fmt, T... data) const {
-    printf(LogLevel::ERROR, fmt, data...);
+    this->printf(LogLevel::ERROR, fmt, data...);
 }
 
 inline void Log::error(const char* str) const {
-    print(LogLevel::ERROR, str);
+    this->print(LogLevel::ERROR, str);
 }
 
 template <typename... T>
 inline void Log::warning(const char* fmt, T... data) const {
-    printf(LogLevel::WARNING, fmt, data...);
+    this->printf(LogLevel::WARNING, fmt, data...);
 }
 inline void Log::warning(const char* str) const {
-    print(LogLevel::WARNING, str);
+    this->print(LogLevel::WARNING, str);
 }
 
 template <typename... T>
 inline void Log::info(const char* fmt, T... data) const {
-    printf(LogLevel::INFO, fmt, data...);
+    this->printf(LogLevel::INFO, fmt, data...);
 }
 inline void Log::info(const char* str) const {
-    print(LogLevel::INFO, str);
+    this->print(LogLevel::INFO, str);
 }
 
 template <typename... T>
 inline void Log::debug(const char* fmt, T... data) const {
-    printf(LogLevel::DEBUG, fmt, data...);
+    this->printf(LogLevel::DEBUG, fmt, data...);
 }
 inline void Log::debug(const char* str) const {
-    print(LogLevel::DEBUG, str);
+    this->print(LogLevel::DEBUG, str);
 }
 
 template <typename... T>
@@ -114,58 +118,36 @@ constexpr void Log::printf(Log::LogLevel level, const char* fmt, T... data) cons
     if (level > Log::VERBOSITY) {
         return;
     }
-    std::sprintf(fmt_buffer, fmt, data...);
-    print(level, fmt_buffer);
+    char fmt_buffer[Log::buffer_size]{};
+    std::snprintf(fmt_buffer, Log::buffer_size, fmt, data...);
+    this->print(level, fmt_buffer);
 }
 
 constexpr void Log::print(Log::LogLevel level, const char* str) const {
     if (level > Log::VERBOSITY) {
         return;
     }
-    FILE* output = (level <= LogLevel::WARNING) ? Log::err : Log::out;
-    bool colored_text = (output == stdout || output == stderr);
-    const char* start = colored_text ? Log::text_color.at(level) : "";
-    const char* end = colored_text ? "\033[0m" : "";
-    std::fprintf(output, "%s[%s] %s%s\n", start, _name.c_str(), str, end);
+
+    bool is_error = level <= LogLevel::WARNING;
+    const std::string& target_path = is_error ? Log::_err : Log::_out;
+    bool is_std = target_path == Log::_unused;
+
+    const char* start = is_std ? Log::_text_color.at(level) : "";
+    const char* end = is_std ? "\033[0m" : "";
+
+    std::stringstream stream{};
+    stream << start << "[" << _name.c_str() << "] " << str << end << std::endl;
+
+    if(is_std) {
+        (is_error ? std::cerr : std::cout) << stream.str();
+    }
+    else {
+        std::ofstream output(target_path, std::ios_base::app);
+        output << stream.str();
+    }
 }
 
 // Output stream methods
-
-inline void Log::set_log_stream(const std::string& file_path) {
-    std::FILE* file = std::fopen(file_path.c_str(), "w");
-
-    if (file == nullptr) {
-        Log("Log").error("Failed to open file '%s' for writing: %s", file_path.c_str(),
-                         std::strerror(errno));
-        return;
-    }
-
-    std::fclose(out);
-    out = file;
-}
-
-inline void Log::unset_log_stream() {
-    std::fclose(out);
-    out = stdout;
-}
-
-inline void Log::set_err_stream(const std::string& file_path) {
-    std::FILE* file = std::fopen(file_path.c_str(), "w");
-
-    if (file == nullptr) {
-        Log("Log").error("Failed to open file '%s' for writing: %s", file_path.c_str(),
-                         std::strerror(errno));
-        return;
-    }
-
-    std::fclose(err);
-    err = file;
-}
-
-inline void Log::unset_err_stream() {
-    std::fclose(err);
-    err = stderr;
-}
 
 }  // namespace common
 }  // namespace sargasso
