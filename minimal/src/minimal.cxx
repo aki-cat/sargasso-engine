@@ -4,13 +4,15 @@
 
 #include <GLFW/glfw3.h>
 #include <cmath>
-#include <iostream>
 #include <cstdint>
+#include <iostream>
+#include <string>
 
 // math library
 #include <sargasso/common/io.h>
 #include <sargasso/common/log.h>
 #include <sml/color.h>
+#include <sml/constants.h>
 #include <sml/matrix4.h>
 #include <sml/vector3.h>
 
@@ -74,17 +76,17 @@ static Vertex triangle_vertices[] = {
 };
 
 static Vertex cube_vertices[] = {
-    {Vec3(-.5f, -.5f, -.5f), Color::white()}, {Vec3(.5f, -.5f, -.5f), Color::white()},
-    {Vec3(.5f, .5f, -.5f), Color::white()},   {Vec3(-.5f, .5f, -.5f), Color::white()},
+    {Vec3(-.5f, -.5f, -.5f), Color::red()}, {Vec3(.5f, -.5f, -.5f), Color::red()},
+    {Vec3(.5f, .5f, -.5f), Color::green()}, {Vec3(-.5f, .5f, -.5f), Color::green()},
 
-    {Vec3(-.5f, -.5f, .5f), Color::white()},  {Vec3(.5f, -.5f, .5f), Color::white()},
-    {Vec3(.5f, .5f, .5f), Color::white()},    {Vec3(-.5f, .5f, .5f), Color::white()}};
+    {Vec3(-.5f, -.5f, .5f), Color::blue()}, {Vec3(.5f, -.5f, .5f), Color::blue()},
+    {Vec3(.5f, .5f, .5f), Color::gray()},   {Vec3(-.5f, .5f, .5f), Color::gray()}};
 
-static const uint64_t cube_vertex_indices[] = {
+static const uint32_t cube_vertex_indices[] = {
     // front
     0, 1, 2, 2, 3, 0,
     // top
-    4, 5, 1, 1, 0, 4,
+    5, 4, 1, 1, 0, 4,
     // right
     1, 5, 6, 6, 2, 1,
     // back
@@ -98,7 +100,13 @@ static void error_callback(int error, const char* description) {
     Log("GLFW").error("Error #%d: %s", error, description);
 }
 
+void nothing() {}
+
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    if (scancode | mods) {
+        nothing();
+    }
+
     if (key == GLFW_KEY_F8 && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GLFW_TRUE);
     }
@@ -108,10 +116,12 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     }
 
     if (key == GLFW_KEY_LEFT && action == GLFW_PRESS) {
-        state::eye_angle = std::fmod(state::eye_angle + (float) M_PI / 12.f, 2.f * (float) M_PI);
+        state::eye_angle =
+            std::fmod(state::eye_angle + (float) sml::PI / 12.f, 2.f * (float) sml::PI);
     }
     if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) {
-        state::eye_angle = std::fmod(state::eye_angle - (float) M_PI / 12.f, 2.f * (float) M_PI);
+        state::eye_angle =
+            std::fmod(state::eye_angle - (float) sml::PI / 12.f, 2.f * (float) sml::PI);
     }
     if (key == GLFW_KEY_UP && action == GLFW_PRESS) {
         state::eye_height = std::min(5.f, state::eye_height + .25f);
@@ -127,7 +137,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     }
 }
 
-constexpr const uint64_t WINDOW_WIDTH = 960, WINDOW_HEIGHT = 540;
+constexpr const uint32_t WINDOW_WIDTH = 960, WINDOW_HEIGHT = 540;
 // constexpr const float WINDOW_ASPECT = 1.f * WINDOW_WIDTH / WINDOW_HEIGHT;
 // constexpr const float CAMERA_HEIGHT = 2.f;
 // constexpr const float CAMERA_WIDTH = CAMERA_HEIGHT * WINDOW_ASPECT;
@@ -236,8 +246,8 @@ static GLuint create_and_link_shader_program(GLuint vertex_shader, GLuint fragme
 }
 
 static Mat4 generate_mvp_matrix() {
-    double angle = std::fmod(glfwGetTime(), 2.0 * M_PI);
-    Mat4 model = Mat4::identity().rotated(Vec3(1, -1, 0), angle);
+    double angle = std::fmod(glfwGetTime(), 2.0 * sml::PI);
+    Mat4 model = Mat4::identity().rotated(Vec3(1, -1, 0), static_cast<float>(angle));
 
     Vec3 eye_position =
         (state::eye_zoom * Vec3(0, state::eye_height, 5)).rotated(Vec3::y_axis(), state::eye_angle);
@@ -246,8 +256,8 @@ static Mat4 generate_mvp_matrix() {
     Mat4 projection;
 
     if (state::use_conical) {
-        projection =
-            Mat4::conical_projection(M_PI_4, 1.f * WINDOW_WIDTH / WINDOW_HEIGHT, 0.001f, 1000.f);
+        projection = Mat4::conical_projection(sml::PI * 0.25, 1.f * WINDOW_WIDTH / WINDOW_HEIGHT,
+                                              0.001f, 1000.f);
 
     } else {
         const float aspect = 1.f * WINDOW_WIDTH / WINDOW_HEIGHT;

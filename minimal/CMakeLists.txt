@@ -4,16 +4,21 @@ cmake_policy(SET CMP0076 NEW)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-add_compile_options(-Wpedantic -Wall -Werror -Wno-unknown-pragmas -O0 -g -static-libgcc -static-libstdc++)
+
+if(MSVC)
+    add_compile_options(/WX /W4 /Od)
+else(MSVC)
+    add_compile_options(-Wpedantic -Wall -Werror -Wno-unknown-pragmas -O0 -g -static-libgcc -static-libstdc++)
+endif(MSVC)
 
 file(GLOB_RECURSE EXAMPLE_ALL_SOURCE_FILES "${PROJECT_SOURCE_DIR}/src/*.cxx"
                                            "${PROJECT_SOURCE_DIR}/sargasso/common/io.cxx"
                                            "${PROJECT_SOURCE_DIR}/sargasso/common/log.cxx")
 add_executable(Minimal ${EXAMPLE_ALL_SOURCE_FILES})
 
-if (DEFINED ${LOG_LEVEL})
+if (DEFINED LOG_LEVEL)
     target_compile_definitions(Minimal PUBLIC "-DLOG_VERBOSITY_LEVEL=${LOG_LEVEL}")
-endif(DEFINED ${LOG_LEVEL})
+endif(DEFINED LOG_LEVEL)
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/glad")
 add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/glfw")
