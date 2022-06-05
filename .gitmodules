@@ -10,3 +10,6 @@
 [submodule "src/third_party/gl3w"]
 	path = src/third_party/gl3w
 	url = https://github.com/skaslev/gl3w.git
+[submodule "src/third_party/vulkan"]
+	path = src/third_party/vulkan
+	url = https://github.com/KhronosGroup/Vulkan-Hpp.git
