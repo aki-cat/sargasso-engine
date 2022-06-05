@@ -30,7 +30,7 @@ jobs:
 
       # Installs dependencies
       - name: Install dependencies
-        run: sudo apt-get install -y cmake g++-9 xorg-dev
+        run: sudo apt-get install -y cmake g++-9 xorg-dev libgl-dev
 
       # Configure build
       - name: Build
