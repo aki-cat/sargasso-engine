@@ -16,6 +16,7 @@ if(${MINI_BACKEND_API} MATCHES opengl)
 endif(${MINI_BACKEND_API} MATCHES opengl)
 
 if(${MINI_BACKEND_API} MATCHES vulkan)
+    find_package(Vulkan REQUIRED)
     set(MINI_TARGET_EXECUTABLE minivk)
     set(MINI_SOURCE_MAIN "${PROJECT_SOURCE_DIR}/mini_vulkan.cxx")
 endif(${MINI_BACKEND_API} MATCHES vulkan)
@@ -60,7 +61,6 @@ endif(${MINI_BACKEND_API} MATCHES opengl)
 
 
 if(${MINI_BACKEND_API} MATCHES vulkan)
-    add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/vulkan")
     target_link_libraries(${MINI_TARGET_EXECUTABLE} vulkan)
 endif(${MINI_BACKEND_API} MATCHES vulkan)
 

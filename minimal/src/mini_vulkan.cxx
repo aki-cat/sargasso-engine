@@ -1,35 +1,19 @@
 #define GLFW_INCLUDE_VULKAN
 
-#include <GLFW/glfw3.h>
-#include <sml/matrix4.h>
-#include <sml/vector3.h>
-#include <vulkan/vulkan.hpp>
+#include "miniVk/application.cxx"
 
-#include <iostream>
+#include <exception>
+#include <sargasso/common/log.h>
+
+using sargasso::common::Log;
 
 int main() {
-    glfwInit();
-
-    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Vulkan window", nullptr, nullptr);
-
-    uint32_t extensionCount = 0;
-
-    vk::enumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
-
-    std::cout << extensionCount << " extensions supported\n";
-
-    sml::Mat4 matrix;
-    sml::Vec3 vec;
-    auto test = matrix * vec;
-
-    while(!glfwWindowShouldClose(window)) {
-        glfwPollEvents();
+    miniVk::MiniVulkanApplication application;
+    try {
+        application.run();
+    } catch (const std::exception& e) {
+        Log("minVk").error(e.what());
+        return EXIT_FAILURE;
     }
-
-    glfwDestroyWindow(window);
-
-    glfwTerminate();
-
-    return 0;
+    return EXIT_SUCCESS;
 }
