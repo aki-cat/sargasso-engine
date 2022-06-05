@@ -13,7 +13,13 @@ set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
-add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/glad")
+execute_process(
+    COMMAND
+    python gl3w_gen.py --ext --root
+    ${PROJECT_BINARY_DIR}/third_party/gl3w WORKING_DIRECTORY
+    ${PROJECT_SOURCE_DIR}/third_party/gl3w)
+
+add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/gl3w")
 add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/glfw")
 add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/btl")
 add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/sml")
@@ -59,7 +65,7 @@ message(STATUS "Verbosity set to level ${SARGASSO_VERBOSE_LOGS}")
 target_link_libraries(SargassoEngine sml)
 
 # Rendering libraries
-target_link_libraries(SargassoEngine glad)
+target_link_libraries(SargassoEngine gl3w)
 target_link_libraries(SargassoEngine glfw)
 target_link_libraries(SargassoEngine OpenGL::GL)
 

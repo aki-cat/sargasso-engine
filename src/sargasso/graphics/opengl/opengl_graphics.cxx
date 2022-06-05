@@ -2,7 +2,7 @@
 
 #include "sargasso/common/log.h"
 
-#include <glad/glad.h>
+#include <GL/gl3w.h>
 
 #include <cstdint>
 #include <sml/color.h>
@@ -11,14 +11,19 @@ using sargasso::common::Log;
 using sargasso::graphics::opengl::OpenGLGraphics;
 using sml::Color;
 
-static Log logger = Log("OpenGLGraphics");
+const static Log logger = Log("OpenGLGraphics");
 
 bool OpenGLGraphics::initialize(void* proc_address) {
     logger.debug("Initializing OpenGL context...");
 
-    if (!gladLoadGLLoader((GLADloadproc) proc_address)) {
-        logger.error("OpenGL context initializing failed!");
-        return false;
+    if (gl3wInit()) {
+        logger.error("GL3W init failed.");
+        throw;
+    }
+
+    if (!gl3wIsSupported(4, 3)) {
+        logger.error("GL3W incompatible with OpenGL %.%", 4, 3);
+        throw;
     }
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
