@@ -20,13 +20,19 @@ if (DEFINED LOG_LEVEL)
     target_compile_definitions(Minimal PUBLIC "-DLOG_VERBOSITY_LEVEL=${LOG_LEVEL}")
 endif(DEFINED LOG_LEVEL)
 
-add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/glad")
+execute_process(
+    COMMAND
+    python gl3w_gen.py --ext --root
+    ${PROJECT_BINARY_DIR}/third_party/gl3w WORKING_DIRECTORY
+    ${PROJECT_SOURCE_DIR}/third_party/gl3w)
+
+add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/gl3w")
 add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/glfw")
 add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/sml")
 find_package(OpenGL REQUIRED)
 
 target_link_libraries(Minimal sml)
-target_link_libraries(Minimal glad)
+target_link_libraries(Minimal gl3w)
 target_link_libraries(Minimal glfw)
 target_link_libraries(Minimal OpenGL::GL)
 

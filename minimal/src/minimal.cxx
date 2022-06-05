@@ -1,6 +1,9 @@
-#include <glad/glad.h>
+#include <GL/gl3w.h>
 
 #define GLFW_INCLUDE_NONE
+
+#define MINIMAL_OPENGL_VERSION_MAJOR 4
+#define MINIMAL_OPENGL_VERSION_MINOR 3
 
 #include <GLFW/glfw3.h>
 #include <cmath>
@@ -154,8 +157,8 @@ GLFWwindow* create_window() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 #else
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, MINIMAL_OPENGL_VERSION_MAJOR);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, MINIMAL_OPENGL_VERSION_MINOR);
 #endif
 
     GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Minimal", NULL, NULL);
@@ -170,9 +173,17 @@ GLFWwindow* create_window() {
 
 static void setup_context(GLFWwindow* window) {
     glfwMakeContextCurrent(window);
-    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
+    if (gl3wInit()) {
+        Log("Minimal").error("GL3W init failed.");
         throw;
     }
+
+    if (!gl3wIsSupported(MINIMAL_OPENGL_VERSION_MAJOR, MINIMAL_OPENGL_VERSION_MINOR)) {
+        Log("Minimal").error("GL3W incompatible with OpenGL %.%", MINIMAL_OPENGL_VERSION_MAJOR,
+                             MINIMAL_OPENGL_VERSION_MINOR);
+        throw;
+    }
+
     glfwSwapInterval(1);
 
     Log("Minimal").info("Graphics API: %s | %s", glGetString(GL_VERSION), glfwGetVersionString());
