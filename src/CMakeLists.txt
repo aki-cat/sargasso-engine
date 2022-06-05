@@ -6,7 +6,7 @@ cmake_policy(SET CMP0076 NEW)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-message(STATUS Compile flags: ${CMAKE_CXX_FLAGS})
+message(STATUS "Compile flags: ${CMAKE_CXX_FLAGS}")
 
 # GLFW flags
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
@@ -42,6 +42,8 @@ target_compile_definitions(SargassoEngine
     PRIVATE
     "SARGASSO_ENGINE_VERSION=${CMAKE_PROJECT_VERSION}"
 )
+
+target_compile_options(SargassoEngine PRIVATE -Werror -Wall -Wno-unknown-pragmas -O0 -g -static-libgcc -static-libstdc++)
 
 if(NOT DEFINED SARGASSO_VERBOSE_LOGS)
     set(SARGASSO_VERBOSE_LOGS 3)
