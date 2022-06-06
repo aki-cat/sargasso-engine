@@ -19,6 +19,7 @@ if(${MINI_BACKEND_API} MATCHES vulkan)
     find_package(Vulkan REQUIRED)
     set(MINI_TARGET_EXECUTABLE minivk)
     set(MINI_SOURCE_MAIN "${PROJECT_SOURCE_DIR}/mini_vulkan.cxx")
+    file(GLOB_RECURSE MINI_SOURCE_FILES "${PROJECT_SOURCE_DIR}/miniVk/*")
 endif(${MINI_BACKEND_API} MATCHES vulkan)
 
 file(GLOB_RECURSE MINI_SOURCE_FILES ${MINI_SOURCE_MAIN}
@@ -74,4 +75,5 @@ set_target_properties(${MINI_TARGET_EXECUTABLE}
 target_include_directories(${MINI_TARGET_EXECUTABLE} PUBLIC
                            "${PROJECT_BINARY_DIR}"
                            "${PROJECT_SOURCE_DIR}"
+                           "${PROJECT_SOURCE_DIR}/src"
                            "${PROJECT_SOURCE_DIR}/sargasso")

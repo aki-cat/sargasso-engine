@@ -1,6 +1,9 @@
+#include "miniVk/validation.cxx"
+
 #include <GLFW/glfw3.h>
 #include <exception>
 #include <sargasso/common/log.h>
+#include <vector>
 #include <vulkan/vulkan.h>
 
 namespace miniVk {
@@ -18,6 +21,7 @@ class MiniVulkanApplication {
    private:
     GLFWwindow* _window;
     VkInstance _instance;
+    Validator _validator;
     Log _logger{"miniVk"};
 
     void init() {
@@ -29,9 +33,21 @@ class MiniVulkanApplication {
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
         _window = glfwCreateWindow(1280, 720, "Vulkan window", nullptr, nullptr);
-        glfwSetKeyCallback(_window, key_callback);
+        glfwSetKeyCallback(_window, keyInputCallback);
         createVkInstance();
+        _validator.initValidators(_instance);
+    }
 
+    void loop() {
+        while (!glfwWindowShouldClose(_window)) {
+            glfwPollEvents();
+        }
+    }
+
+    void teardown() {
+        vkDestroyInstance(_instance, nullptr);
+        glfwDestroyWindow(_window);
+        glfwTerminate();
     }
 
     void createVkInstance() {
@@ -43,23 +59,15 @@ class MiniVulkanApplication {
         app_info.pEngineName = "sargasso";
         app_info.apiVersion = VK_API_VERSION_1_0;
 
-        // load extensions?
-        uint32_t extensionCount = 0;
-        vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
-        _logger.info("%d extensions available!", extensionCount);
-        const char** glfwExtensions = glfwGetRequiredInstanceExtensions(&extensionCount);
-        _logger.info("%d extensions used:", extensionCount);
-        for (size_t i = 0; i < extensionCount; i++)
-        {
-            _logger.info("  [%d]: %s", i, glfwExtensions[i]);
-        }
+        // log available extensions
+        const auto extensions = loadRequiredExtensions();
 
         // instance info
         VkInstanceCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
         createInfo.pApplicationInfo = &app_info;
-        createInfo.enabledExtensionCount = extensionCount;
-        createInfo.ppEnabledExtensionNames = glfwExtensions;
+        createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
+        createInfo.ppEnabledExtensionNames = extensions.data();
         createInfo.enabledLayerCount = 0;
 
         if (vkCreateInstance(&createInfo, nullptr, &_instance) != VK_SUCCESS) {
@@ -67,19 +75,18 @@ class MiniVulkanApplication {
         };
     }
 
-    void loop() {
-        while (!glfwWindowShouldClose(_window)) {
-            glfwPollEvents();
-        }
+    std::vector<const char*> loadRequiredExtensions() {
+        uint32_t extensionCount = 0;
+        const char** glfwExtensions = glfwGetRequiredInstanceExtensions(&extensionCount);
+        std::vector<const char*> extensions(glfwExtensions, glfwExtensions + extensionCount);
+
+#ifndef NDEBUG
+        extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+#endif
+        return extensions;
     }
 
-    void teardown() {
-        glfwDestroyWindow(_window);
-
-        glfwTerminate();
-    }
-
-    static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    static void keyInputCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
         if (key == GLFW_KEY_F8 && action == GLFW_RELEASE) {
             glfwSetWindowShouldClose(window, GLFW_TRUE);
         }
