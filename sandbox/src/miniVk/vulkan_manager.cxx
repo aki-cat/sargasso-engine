@@ -3,10 +3,12 @@
 #include <GLFW/glfw3.h>
 #include <vector>
 #include <vulkan/vulkan.h>
+#include <sstream>
 
 namespace miniVk {
 
 static std::vector<const char*> loadRequiredExtensions();
+static bool isDeviceSuitable(VkPhysicalDevice device);
 
 VulkanManager::VulkanManager() {
     // application general info
@@ -39,6 +41,34 @@ VulkanManager::~VulkanManager() {
     vkDestroyInstance(_instance, nullptr);
 }
 
+void VulkanManager::setPhysicalDevice() {
+    uint32_t deviceCount = 0;
+    vkEnumeratePhysicalDevices(_instance, &deviceCount, nullptr);
+    if (deviceCount == 0) {
+        throw std::runtime_error("Failed to find GPUs with Vulkan support!");
+    }
+
+    std::vector<VkPhysicalDevice> devices(deviceCount);
+    vkEnumeratePhysicalDevices(_instance, &deviceCount, devices.data());
+
+    std::stringstream deviceList;
+    deviceList << "Device list:";
+    for (const auto& device : devices) {
+        VkPhysicalDeviceProperties deviceProperties;
+        vkGetPhysicalDeviceProperties(device, &deviceProperties);
+        deviceList << "\n  + " << deviceProperties.deviceName;
+        if (isDeviceSuitable(device)) {
+            _physicalDevice = device;
+            break;
+        }
+    }
+    _logger.info(deviceList.str().c_str());
+
+    if (_physicalDevice == VK_NULL_HANDLE) {
+        throw std::runtime_error("failed to find a suitable GPU!");
+    }
+}
+
 static std::vector<const char*> loadRequiredExtensions() {
     uint32_t extensionCount = 0;
     const char** glfwExtensions = glfwGetRequiredInstanceExtensions(&extensionCount);
@@ -48,6 +78,18 @@ static std::vector<const char*> loadRequiredExtensions() {
     extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 #endif
     return extensions;
+}
+
+static bool isDeviceSuitable(VkPhysicalDevice device) {
+    // TODO: Device suitability algorithm
+    return true;
+    // VkPhysicalDeviceProperties deviceProperties;
+    // VkPhysicalDeviceFeatures deviceFeatures;
+    // vkGetPhysicalDeviceProperties(device, &deviceProperties);
+    // vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
+
+    // return deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU &&
+    //        deviceFeatures.geometryShader;
 }
 
 }  // namespace miniVk

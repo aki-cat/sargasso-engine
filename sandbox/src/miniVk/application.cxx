@@ -34,6 +34,7 @@ class MiniVulkanApplication {
         glfwSetKeyCallback(_window, keyInputCallback);
 
         _vulkanManager = new VulkanManager();
+        _vulkanManager->setPhysicalDevice();
     }
 
     void loop() {

@@ -12,9 +12,11 @@ class VulkanManager {
    public:
     explicit VulkanManager();
     ~VulkanManager();
+    void setPhysicalDevice();
 
    private:
     VkInstance _instance;
+    VkPhysicalDevice _physicalDevice = VK_NULL_HANDLE;
     VulkanValidationManager _validatorManager{};
     sargasso::common::Log _logger{"miniVk::VulkanManager"};
 };
