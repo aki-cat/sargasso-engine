@@ -12,17 +12,19 @@ endif(NOT DEFINED MINI_BACKEND_API)
 if(${MINI_BACKEND_API} MATCHES opengl)
     find_package(OpenGL REQUIRED)
     set(MINI_TARGET_EXECUTABLE minigl)
-    set(MINI_SOURCE_MAIN "${PROJECT_SOURCE_DIR}/mini_opengl.cxx")
+    set(MINI_SOURCE_MAIN "${PROJECT_SOURCE_DIR}/src/mini_opengl.cxx")
+    file(GLOB_RECURSE MINI_SOURCE_SUBDIR_FILES "${PROJECT_SOURCE_DIR}/src/miniGl/*.cxx")
 endif(${MINI_BACKEND_API} MATCHES opengl)
 
 if(${MINI_BACKEND_API} MATCHES vulkan)
     find_package(Vulkan REQUIRED)
     set(MINI_TARGET_EXECUTABLE minivk)
-    set(MINI_SOURCE_MAIN "${PROJECT_SOURCE_DIR}/mini_vulkan.cxx")
-    file(GLOB_RECURSE MINI_SOURCE_FILES "${PROJECT_SOURCE_DIR}/miniVk/*")
+    set(MINI_SOURCE_MAIN "${PROJECT_SOURCE_DIR}/src/mini_vulkan.cxx")
+    file(GLOB_RECURSE MINI_SOURCE_SUBDIR_FILES "${PROJECT_SOURCE_DIR}/src/miniVk/*.cxx")
 endif(${MINI_BACKEND_API} MATCHES vulkan)
 
 file(GLOB_RECURSE MINI_SOURCE_FILES ${MINI_SOURCE_MAIN}
+                                    ${MINI_SOURCE_SUBDIR_FILES}
                                     "${PROJECT_SOURCE_DIR}/sargasso/common/io.cxx"
                                     "${PROJECT_SOURCE_DIR}/sargasso/common/log.cxx")
 
