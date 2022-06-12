@@ -1,14 +1,16 @@
 #include "miniVk/vulkan_manager.h"
 
 #include <GLFW/glfw3.h>
+#include <sstream>
+#include <tuple>
 #include <vector>
 #include <vulkan/vulkan.h>
-#include <sstream>
 
 namespace miniVk {
 
 static std::vector<const char*> loadRequiredExtensions();
 static bool isDeviceSuitable(VkPhysicalDevice device);
+static QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
 
 VulkanManager::VulkanManager() {
     // application general info
@@ -81,8 +83,10 @@ static std::vector<const char*> loadRequiredExtensions() {
 }
 
 static bool isDeviceSuitable(VkPhysicalDevice device) {
+    const QueueFamilyIndices indices = findQueueFamilies(device);
+
     // TODO: Device suitability algorithm
-    return true;
+    return indices.graphicsFamily.has_value();
     // VkPhysicalDeviceProperties deviceProperties;
     // VkPhysicalDeviceFeatures deviceFeatures;
     // vkGetPhysicalDeviceProperties(device, &deviceProperties);
@@ -90,6 +94,25 @@ static bool isDeviceSuitable(VkPhysicalDevice device) {
 
     // return deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU &&
     //        deviceFeatures.geometryShader;
+}
+
+static QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device) {
+    QueueFamilyIndices indices;
+
+    uint32_t queueFamilyCount = 0;
+    vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
+
+    std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+    vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
+    uint32_t i = 0;
+    for (const auto& queueFamily : queueFamilies) {
+        if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+            indices.graphicsFamily = i;
+        }
+        i++;
+    }
+
+    return indices;
 }
 
 }  // namespace miniVk
