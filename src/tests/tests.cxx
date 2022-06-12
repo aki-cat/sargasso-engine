@@ -5,7 +5,8 @@
 
 // Include tests now
 
-#include "spec/reference.spec.cxx"
+#include "spec/common/counter.spec.cxx"
+#include "spec/common/reference.spec.cxx"
 
 #include <btl.h>
 
@@ -15,7 +16,8 @@ using sargasso::common::Log;
 int main() {
     Log("TEST RUNNER").info("Starting up...\n");
 
-    TestRunner<Reference<Example>>::run();
+    TestRunner<sargasso::common::Counter>::run();
+    TestRunner<sargasso::common::Reference<test::Type>>::run();
 
     if (btl::has_errors()) {
         Log("TEST RUNNER").error("Errors occurred!");
