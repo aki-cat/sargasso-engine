@@ -21,8 +21,8 @@ class Log {
    public:
     // Log Level enum
     enum LogLevel { SILENT = 0, ERROR = 1, WARNING = 2, INFO = 3, DEBUG = 4 };
-
     static const LogLevel VERBOSITY = static_cast<LogLevel>(LOG_VERBOSITY_LEVEL);
+
     // Constructors
     Log();
     Log(const std::string& name);
@@ -122,7 +122,6 @@ constexpr void Log::printf(Log::LogLevel level, const char* fmt, T... data) cons
     std::snprintf(fmt_buffer, Log::buffer_size, fmt, data...);
     this->print(level, fmt_buffer);
 }
-
 
 // Output stream methods
 

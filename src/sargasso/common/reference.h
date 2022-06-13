@@ -13,20 +13,22 @@ namespace common {
 template <typename T>
 class Reference {
    public:
+    Reference() = delete;
     explicit Reference(T* data);
     Reference(const Reference&);  // copy
     ~Reference();
 
     T* operator->();
     const T* operator->() const;
+    uint64_t copy_count() const;
 
     bool is_alive() const;
     bool is_dead() const;
-    void destroy();
+    void clear();
 
    private:
-    Counter* _ref_count;
-    T* _ref;
+    Counter* _ref_count = nullptr;
+    T* _ref = nullptr;
 };
 
 template <typename T>
@@ -35,24 +37,31 @@ Reference<T>::Reference(T* data) : _ref(data) {
 
     _ref_count = new Counter();
     if (_ref) {
-        (*_ref_count)++;
+        _ref_count->increase();
     }
 }
 
 template <typename T>
 Reference<T>::Reference(const Reference<T>& original) {
     Log("Reference")
-        .debug("Reference<0x%x> copied (copy#%ld).", original._ref, *original._ref_count);
-    _ref = original._ref;
-    _ref_count = original._ref_count;
-    (*_ref_count)++;
+        .debug("Reference<0x%x> copied (copy#%ld).", original._ref, original._ref_count->get());
+    if (original._ref) {
+        _ref = original._ref;
+        _ref_count = original._ref_count;
+        _ref_count->increase();
+    } else {
+        throw std::runtime_error("Attempted to copy invalid reference.");
+    }
 }
 
 template <typename T>
 Reference<T>::~Reference() {
-    (*_ref_count)--;
+    if (is_dead()) {
+        return;
+    }
 
-    if (!is_alive()) {
+    _ref_count->decrease();
+    if (_ref_count->get() == 0) {
         Log("Reference").debug("Reference<0x%x> deleted.", _ref);
         delete _ref;
         delete _ref_count;
@@ -61,7 +70,7 @@ Reference<T>::~Reference() {
 
 template <typename T>
 T* Reference<T>::operator->() {
-    if (!is_alive()) {
+    if (is_dead()) {
         throw std::runtime_error("Attempt to access dead reference.");
     }
     return _ref;
@@ -69,10 +78,18 @@ T* Reference<T>::operator->() {
 
 template <typename T>
 const T* Reference<T>::operator->() const {
-    if (!is_alive()) {
+    if (is_dead()) {
         throw std::runtime_error("Attempt to access dead reference.");
     }
     return _ref;
+}
+
+template <typename T>
+uint64_t Reference<T>::copy_count() const {
+    if (is_dead()) {
+        return 0;
+    }
+    return _ref_count->get();
 }
 
 template <typename T>
@@ -82,15 +99,18 @@ bool Reference<T>::is_alive() const {
 
 template <typename T>
 bool Reference<T>::is_dead() const {
-    return !_ref || (*_ref_count) == 0;
+    return _ref == nullptr || _ref_count == nullptr || _ref_count->get() == 0;
 }
 
 template <typename T>
-void Reference<T>::destroy() {
-    Log("Reference").debug("Reference<0x%x> flagged for deletion.", _ref);
+void Reference<T>::clear() {
+    if (is_dead()) {
+        return;
+    }
+    _ref_count->decrease();
 
-    // doesn't immediately destroy, but object is destroyed as soon as the Reference is destroyed.
-    _ref_count->reset();
+    _ref = nullptr;
+    _ref_count = nullptr;
 }
 
 }  // namespace common

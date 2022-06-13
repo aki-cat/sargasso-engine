@@ -5,9 +5,9 @@
 using sargasso::common::Counter;
 
 DESCRIBE_CLASS(sargasso::common::Counter) {
-    DESCRIBE_TEST(operator--, Subtracted at zero, Avoid underflow) {
+    DESCRIBE_TEST(decrease(), Subtracted at zero, Avoid underflow) {
         Counter foo{};
-        --foo;
+        foo.decrease();
         ASSERT_IS_TRUE(foo == 0);
     };
 }

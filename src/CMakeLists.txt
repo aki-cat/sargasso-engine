@@ -94,11 +94,16 @@ if (SARGASSO_RUN_TESTS)
         "${PROJECT_SOURCE_DIR}/tests"
     )
 
-    add_custom_command(
-        TARGET SargassoTests
-        DEPENDS SargassoTests SargassoEngine
-        COMMAND "${CMAKE_BINARY_DIR}/SargassoTests"
+    target_compile_definitions(SargassoTests
+        PRIVATE
+        "LOG_VERBOSITY_LEVEL=${SARGASSO_VERBOSE_LOGS}"
     )
+
+    # add_custom_command(
+    #     TARGET SargassoTests
+    #     DEPENDS SargassoTests SargassoEngine
+    #     COMMAND "${CMAKE_BINARY_DIR}/SargassoTests"
+    # )
 endif(SARGASSO_RUN_TESTS)
 
 message(STATUS "Flags: ${CMAKE_CXX_FLAGS}")

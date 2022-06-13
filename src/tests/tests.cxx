@@ -14,16 +14,17 @@ using btl::TestRunner;
 using sargasso::common::Log;
 
 int main() {
-    Log("TEST RUNNER").info("Starting up...\n");
+    Log _logger("TestRunner");
+    _logger.info("Starting up...\n");
 
     TestRunner<sargasso::common::Counter>::run();
     TestRunner<sargasso::common::Reference<test::Type>>::run();
 
     if (btl::has_errors()) {
-        Log("TEST RUNNER").error("Errors occurred!");
+        _logger.error("Errors occurred!\n");
         return -1;
     }
 
-    Log("TEST RUNNER").info("Success!");
+    _logger.info("Success!\n");
     return 0;
 }

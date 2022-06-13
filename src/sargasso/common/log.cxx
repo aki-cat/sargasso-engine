@@ -14,7 +14,13 @@ const std::unordered_map<Log::LogLevel, const char*> Log::_text_color = {
     {Log::LogLevel::ERROR, "\033[91m"},
     {Log::LogLevel::WARNING, "\033[93m"},
     {Log::LogLevel::INFO, "\033[96m"},
-    {Log::LogLevel::DEBUG, "\033[0m"}};
+    {Log::LogLevel::DEBUG, "\033[94m"}};
+
+const std::unordered_map<Log::LogLevel, const char*> VERBOSITY_NAME = {
+    {Log::LogLevel::ERROR, "ERROR"},
+    {Log::LogLevel::WARNING, "WARNING"},
+    {Log::LogLevel::INFO, "INFO"},
+    {Log::LogLevel::DEBUG, "DEBUG"}};
 
 void Log::set_log_stream(const std::string& file_path) {
     Log::_out = file_path;
@@ -53,7 +59,8 @@ void Log::print(Log::LogLevel level, const char* str) const {
     const char* end = is_std ? "\033[0m" : "";
 
     std::stringstream stream{};
-    stream << start << "[" << _name.c_str() << "] " << str << end << std::endl;
+    stream << start << "[" << VERBOSITY_NAME.at(level) << "|" << _name.c_str() << "] " << str << end
+           << std::endl;
 
     if (is_std) {
         (is_error ? std::cerr : std::cout) << stream.str();
