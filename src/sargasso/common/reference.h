@@ -20,7 +20,7 @@ class Reference {
 
     T* operator->();
     const T* operator->() const;
-    uint64_t copy_count() const;
+    uint64_t copyCount() const;
 
     bool is_alive() const;
     bool is_dead() const;
@@ -85,7 +85,7 @@ const T* Reference<T>::operator->() const {
 }
 
 template <typename T>
-uint64_t Reference<T>::copy_count() const {
+uint64_t Reference<T>::copyCount() const {
     if (is_dead()) {
         return 0;
     }

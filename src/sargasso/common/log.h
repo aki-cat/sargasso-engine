@@ -19,9 +19,12 @@ namespace common {
 
 class Log {
    public:
-    // Log Level enum
+    // Enum
     enum LogLevel { SILENT = 0, ERROR = 1, WARNING = 2, INFO = 3, DEBUG = 4 };
+
+    // Class constants
     static const LogLevel VERBOSITY = static_cast<LogLevel>(LOG_VERBOSITY_LEVEL);
+    static const uint64_t BUFFER_SIZE = 1024;
 
     // Constructors
     Log();
@@ -49,17 +52,11 @@ class Log {
     constexpr void printf(LogLevel level, const char* fmt, T... data) const;
     void print(LogLevel level, const char* str) const;
 
-    // Global helper for laziness
-    static const size_t buffer_size = 1024;
-
     // Output setters
-    static void set_log_stream(const std::string& file_path);
-    static void unset_log_stream();
-    static void set_err_stream(const std::string& file_path);
-    static void unset_err_stream();
-
-    bool is_stdout();
-    bool is_stderr();
+    static void setLogStream(const std::string& file_path);
+    static void unsetLogStream();
+    static void setErrorStream(const std::string& file_path);
+    static void unsetErrorStream();
 
    private:
     // Data
@@ -70,7 +67,6 @@ class Log {
     static std::string _err;
 
     static const char* _unused;
-    static const std::unordered_map<LogLevel, const char*> _text_color;
 };
 
 // Constructors
@@ -118,8 +114,8 @@ constexpr void Log::printf(Log::LogLevel level, const char* fmt, T... data) cons
     if (level > Log::VERBOSITY) {
         return;
     }
-    char fmt_buffer[Log::buffer_size]{};
-    std::snprintf(fmt_buffer, Log::buffer_size, fmt, data...);
+    char fmt_buffer[Log::BUFFER_SIZE]{};
+    std::snprintf(fmt_buffer, Log::BUFFER_SIZE, fmt, data...);
     this->print(level, fmt_buffer);
 }
 

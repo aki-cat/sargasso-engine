@@ -13,27 +13,27 @@ struct Type {
 DESCRIBE_CLASS(sargasso::common::Reference<test::Type>) {
     DESCRIBE_TEST(operator->(), Accessed public member, Return expected value) {
         test::Type* foo = new test::Type{3, 4};
-        auto foo_reference = Reference<test::Type>(foo);
-        ASSERT_ARE_EQUAL(foo_reference->x, 3);
+        auto fooRef = Reference<test::Type>(foo);
+        ASSERT_ARE_EQUAL(fooRef->x, 3);
     };
 
     DESCRIBE_TEST(operator->(), Accessed public member, Return same reference value) {
         test::Type* foo = new test::Type{3, 4};
-        auto foo_reference = Reference<test::Type>(foo);
-        ASSERT_ARE_SAME(foo_reference->x, foo->x);
+        auto fooRef = Reference<test::Type>(foo);
+        ASSERT_ARE_SAME(fooRef->x, foo->x);
     };
 
     DESCRIBE_TEST(operator->(), Original data changed, Update data inside reference) {
         test::Type* foo = new test::Type{3, 4};
-        auto foo_reference = Reference<test::Type>(foo);
+        auto fooRef = Reference<test::Type>(foo);
         foo->x = 99;
-        ASSERT_ARE_EQUAL(foo_reference->x, 99);
+        ASSERT_ARE_EQUAL(fooRef->x, 99);
     };
 
     DESCRIBE_TEST(operator->(), Changed data via reference, Update original data) {
         test::Type* foo = new test::Type{3, 4};
-        auto foo_reference = Reference<test::Type>(foo);
-        foo_reference->x = 99;
+        auto fooRef = Reference<test::Type>(foo);
+        fooRef->x = 99;
         ASSERT_ARE_EQUAL(foo->x, 99);
     };
 
@@ -42,17 +42,17 @@ DESCRIBE_CLASS(sargasso::common::Reference<test::Type>) {
         auto foo = Ref(new test::Type{3, 4});
 
         // copying
-        const uint64_t copy_count = 100;
-        Ref* copy_refs[copy_count];
-        for (uint64_t i = 0; i < copy_count; i++) {
-            copy_refs[i] = new Ref(foo);
+        const uint64_t copyCount = 100;
+        Ref* copyRefs[copyCount];
+        for (uint64_t i = 0; i < copyCount; i++) {
+            copyRefs[i] = new Ref(foo);
         }
 
-        ASSERT_ARE_EQUAL(copy_refs[copy_count - 1]->copy_count(), copy_count + 1);
+        ASSERT_ARE_EQUAL(copyRefs[copyCount - 1]->copyCount(), copyCount + 1);
 
         // cleanup
-        for (uint64_t i = 0; i < copy_count; i++) {
-            delete copy_refs[i];
+        for (uint64_t i = 0; i < copyCount; i++) {
+            delete copyRefs[i];
         }
     };
 
@@ -61,18 +61,18 @@ DESCRIBE_CLASS(sargasso::common::Reference<test::Type>) {
         auto foo = Ref(new test::Type{3, 4});
 
         // copying
-        const uint64_t copy_count = 3;
-        Ref* copy_refs[copy_count];
-        for (uint64_t i = 0; i < copy_count; i++) {
-            copy_refs[i] = new Ref(foo);
+        const uint64_t copyCount = 3;
+        Ref* copyRefs[copyCount];
+        for (uint64_t i = 0; i < copyCount; i++) {
+            copyRefs[i] = new Ref(foo);
         }
 
-        copy_refs[copy_count - 1]->clear();
-        ASSERT_ARE_EQUAL(foo.copy_count(), copy_count);
+        copyRefs[copyCount - 1]->clear();
+        ASSERT_ARE_EQUAL(foo.copyCount(), copyCount);
 
         // cleanup
-        for (uint64_t i = 0; i < copy_count; i++) {
-            delete copy_refs[i];
+        for (uint64_t i = 0; i < copyCount; i++) {
+            delete copyRefs[i];
         }
     };
 }
