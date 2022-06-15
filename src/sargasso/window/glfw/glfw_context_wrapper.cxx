@@ -2,17 +2,17 @@
 #include "sargasso/window/glfw/glfw_context_wrapper.h"
 
 #include "sargasso/common/log.h"
-#include "sargasso/graphics/igraphics.h"
-#include "sargasso/window/icontext_wrapper.h"
-#include "sargasso/window/window_config.h"
+#include "sargasso/config/window_config.h"
+#include "sargasso/graphics/graphics.h"
+#include "sargasso/window/window_manager.h"
 
 #include <GLFW/glfw3.h>
 #include <cstdlib>
 #include <sml/color.h>
 
 using sargasso::common::Log;
-using sargasso::graphics::IGraphics;
-using sargasso::window::WindowConfig;
+using sargasso::config::WindowConfig;
+using sargasso::graphics::IGraphicsManager;
 using sargasso::window::glfw::GLFWContextWrapper;
 using sml::Color;
 
@@ -20,12 +20,12 @@ static Log logger = Log("GLFWContextWrapper");
 
 static void init_glfw();
 static GLFWwindow* init_window(WindowConfig config);
-static void init_graphics(GLFWwindow* window, IGraphics& graphics);
+static void init_graphics(GLFWwindow* window, IGraphicsManager& graphics);
 static void error_callback(int error_code, const char* error_description);
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
-GLFWContextWrapper::GLFWContextWrapper(WindowConfig config, IGraphics& graphics)
-    : IContextWrapper(config, graphics) {
+GLFWContextWrapper::GLFWContextWrapper(const WindowConfig& config, IGraphicsManager& graphics)
+    : IWindowManager(config, graphics) {
     init_glfw();
 
     _window = init_window(_config);
@@ -36,7 +36,7 @@ GLFWContextWrapper::GLFWContextWrapper(WindowConfig config, IGraphics& graphics)
     glfwSetErrorCallback(error_callback);
     glfwSetKeyCallback(_window, key_callback);
 
-    logger.info("Graphics API: %s | %s", graphics.get_version().c_str(), glfwGetVersionString());
+    logger.info("Graphics API: %s | %s", _graphics.getVersion(), glfwGetVersionString());
 }
 
 GLFWContextWrapper::~GLFWContextWrapper() {
@@ -55,8 +55,8 @@ void GLFWContextWrapper::run() {
         // Clear screen
         glfwGetFramebufferSize(_window, &width, &height);
 
-        _graphics.set_viewport(0, 0, width, height);
-        _graphics.set_clear_color(Color::invisible());
+        _graphics.setViewport(0, 0, width, height);
+        _graphics.setClearColor(Color::invisible());
         _graphics.clear();
 
         // Swap frame buffer
@@ -65,8 +65,8 @@ void GLFWContextWrapper::run() {
     logger.info("Loop ended");
 }
 
-void GLFWContextWrapper::key_action_handler(int key, int action) const {
-    std::string action_name = "happened???";
+void GLFWContextWrapper::keyActionHandler(int key, int action) const {
+    std::string action_name;
 
     if (action == GLFW_PRESS) {
         action_name = "pressed";
@@ -118,7 +118,7 @@ static GLFWwindow* init_window(WindowConfig config) {
     return window;
 }
 
-static void init_graphics(GLFWwindow* window, IGraphics& graphics) {
+static void init_graphics(GLFWwindow* window, IGraphicsManager& graphics) {
     glfwMakeContextCurrent(window);
 
     if (!graphics.initialize((void*) glfwGetProcAddress)) {
@@ -137,5 +137,5 @@ static void error_callback(int error_code, const char* error_description) {
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     GLFWContextWrapper& contextWrapper =
         *static_cast<GLFWContextWrapper*>(glfwGetWindowUserPointer(window));
-    contextWrapper.key_action_handler(key, action);
+    contextWrapper.keyActionHandler(key, action);
 }

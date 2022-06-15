@@ -49,6 +49,14 @@ target_compile_definitions(SargassoEngine
     "SARGASSO_ENGINE_VERSION=${CMAKE_PROJECT_VERSION}"
 )
 
+# BACKEND DEFINITION
+target_compile_definitions(SargassoEngine
+    PRIVATE
+    "SARGASSO_ENGINE_BACKEND_OPENGL=1"
+)
+# /BACKEND DEFINITION
+
+
 target_compile_options(SargassoEngine PRIVATE -Werror -Wall -Wno-unknown-pragmas -O0 -g -static-libgcc -static-libstdc++)
 
 if(NOT DEFINED SARGASSO_VERBOSE_LOGS)

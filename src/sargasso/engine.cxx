@@ -1,28 +1,37 @@
 
 #include "sargasso/engine.h"
 
+#include "sargasso/common/log.h"
 #include "sargasso/config.h"
-#include "sargasso/graphics/opengl/opengl_graphics.h"
+#include "sargasso/config/project_config.h"
+#include "sargasso/config/window_config.h"
 #include "sargasso/window/glfw/glfw_context_wrapper.h"
-#include "sargasso/window/window_config.h"
+
+#include SARGASSO_GRAPHICS_BACKEND_HEADER
 
 using sargasso::Engine;
-using sargasso::graphics::opengl::OpenGLGraphics;
-using sargasso::window::WindowConfig;
+using sargasso::common::Log;
+using sargasso::config::ProjectConfig;
+using sargasso::config::WindowConfig;
 using sargasso::window::glfw::GLFWContextWrapper;
 
-Engine::Engine() {
-    WindowConfig config;
+static const Log logger(sargasso::ENGINE_NAME);
 
-    _graphics = new OpenGLGraphics();
-    _contextWrapper = new GLFWContextWrapper(config, *_graphics);
+Engine::Engine(const ProjectConfig& projectConfig) : _projectConfig(projectConfig) {
+    logger.info("Version: %s", sargasso::ENGINE_VERSION);
 }
 
-Engine::~Engine() {
-    delete _contextWrapper;
+void Engine::setup() {
+    _graphics = new SargassoGraphicsBackend();
+    _windowManager = new GLFWContextWrapper(_projectConfig.window, *_graphics);
+    logger.info("Backend %s-%s", _graphics->getName(), _graphics->getVersion());
+}
+
+void Engine::terminate() {
+    delete _windowManager;
     delete _graphics;
 }
 
 void Engine::run() {
-    _contextWrapper->run();
+    _windowManager->run();
 }

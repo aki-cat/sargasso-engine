@@ -1,23 +1,34 @@
 #ifndef SARGASSO_ENGINE_H_
 #define SARGASSO_ENGINE_H_
 
-#include "sargasso/graphics/igraphics.h"
-#include "sargasso/window/icontext_wrapper.h"
+#include "sargasso/config/project_config.h"
+#include "sargasso/graphics/graphics.h"
+#include "sargasso/window/window_manager.h"
 
-using sargasso::graphics::IGraphics;
-using sargasso::window::IContextWrapper;
+#if SARGASSO_ENGINE_BACKEND_OPENGL
+#define SARGASSO_GRAPHICS_BACKEND_HEADER "sargasso/graphics/opengl/opengl_graphics.h"
+#define SargassoGraphicsBackend          sargasso::graphics::opengl::OpenGLGraphics
+#else
+#define SARGASSO_GRAPHICS_BACKEND_HEADER "sargasso/graphics/dummy_graphics.h"
+#define SargassoGraphicsBackend          sargasso::graphics::DummyGraphics
+#endif
+
+using sargasso::graphics::IGraphicsManager;
+using sargasso::window::IWindowManager;
 
 namespace sargasso {
 
 class Engine {
    public:
-    Engine();
-    ~Engine();
+    Engine(const config::ProjectConfig& projectConfig);
+    void setup();
+    void terminate();
     void run();
 
    private:
-    IContextWrapper* _contextWrapper;
-    IGraphics* _graphics;
+    const config::ProjectConfig& _projectConfig;
+    IWindowManager* _windowManager;
+    IGraphicsManager* _graphics;
 };
 
 }  // namespace sargasso

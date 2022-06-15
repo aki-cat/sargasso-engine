@@ -4,10 +4,10 @@
 #include <cstdint>
 
 namespace sargasso {
-namespace window {
+namespace config {
 
 struct WindowConfig {
-    char title[128] = "Sample\0";
+    char title[128] = "Sargasso Project\0";
     uint32_t width = 960;
     uint32_t height = 540;
     uint8_t msaa = 0;

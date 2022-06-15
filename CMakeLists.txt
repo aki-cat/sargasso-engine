@@ -9,7 +9,7 @@ message(STATUS CMAKE_BUILD_TYPE is ${CMAKE_BUILD_TYPE})
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/src")
 
-file(GLOB_RECURSE EXAMPLE_ALL_SOURCE_FILES "${PROJECT_SOURCE_DIR}/example/*.cc")
+file(GLOB_RECURSE EXAMPLE_ALL_SOURCE_FILES "${PROJECT_SOURCE_DIR}/example/*.cxx")
 
 add_executable(Sample ${EXAMPLE_ALL_SOURCE_FILES})
 

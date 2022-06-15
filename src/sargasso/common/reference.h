@@ -22,8 +22,11 @@ class Reference {
     const T* operator->() const;
     uint64_t copyCount() const;
 
-    bool is_alive() const;
-    bool is_dead() const;
+    const T& get() const;
+    T& get();
+
+    bool isAlive() const;
+    bool isDead() const;
     void clear();
 
    private:
@@ -56,7 +59,7 @@ Reference<T>::Reference(const Reference<T>& original) {
 
 template <typename T>
 Reference<T>::~Reference() {
-    if (is_dead()) {
+    if (isDead()) {
         return;
     }
 
@@ -70,7 +73,7 @@ Reference<T>::~Reference() {
 
 template <typename T>
 T* Reference<T>::operator->() {
-    if (is_dead()) {
+    if (isDead()) {
         throw std::runtime_error("Attempt to access dead reference.");
     }
     return _ref;
@@ -78,7 +81,7 @@ T* Reference<T>::operator->() {
 
 template <typename T>
 const T* Reference<T>::operator->() const {
-    if (is_dead()) {
+    if (isDead()) {
         throw std::runtime_error("Attempt to access dead reference.");
     }
     return _ref;
@@ -86,25 +89,41 @@ const T* Reference<T>::operator->() const {
 
 template <typename T>
 uint64_t Reference<T>::copyCount() const {
-    if (is_dead()) {
+    if (isDead()) {
         return 0;
     }
     return _ref_count->get();
 }
 
 template <typename T>
-bool Reference<T>::is_alive() const {
-    return !is_dead();
+const T& Reference<T>::get() const {
+    if (isDead()) {
+        throw std::runtime_error("Attempt to access dead reference.");
+    }
+    return *_ref;
 }
 
 template <typename T>
-bool Reference<T>::is_dead() const {
+T& Reference<T>::get() {
+    if (isDead()) {
+        throw std::runtime_error("Attempt to access dead reference.");
+    }
+    return *_ref;
+}
+
+template <typename T>
+bool Reference<T>::isAlive() const {
+    return !isDead();
+}
+
+template <typename T>
+bool Reference<T>::isDead() const {
     return _ref == nullptr || _ref_count == nullptr || _ref_count->get() == 0;
 }
 
 template <typename T>
 void Reference<T>::clear() {
-    if (is_dead()) {
+    if (isDead()) {
         return;
     }
     _ref_count->decrease();
