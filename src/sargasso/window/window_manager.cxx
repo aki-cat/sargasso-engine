@@ -1,52 +1,50 @@
 
-#include "sargasso/window/glfw/glfw_context_wrapper.h"
+#include "sargasso/window/window_manager.h"
 
 #include "sargasso/common/log.h"
-#include "sargasso/config/window_config.h"
 #include "sargasso/graphics/graphics.h"
+#include "sargasso/window/window_config.h"
 #include "sargasso/window/window_manager.h"
 
 #include <GLFW/glfw3.h>
 #include <cstdlib>
 #include <sml/color.h>
 
-using sargasso::common::Log;
-using sargasso::config::WindowConfig;
-using sargasso::graphics::IGraphicsManager;
-using sargasso::window::glfw::GLFWContextWrapper;
+namespace sargasso {
+namespace window {
+
 using sml::Color;
 
-static Log logger = Log("GLFWContextWrapper");
+static const common::Log logger("GLFW WindowManager");
 
-static void init_glfw();
-static GLFWwindow* init_window(WindowConfig config);
-static void init_graphics(GLFWwindow* window, IGraphicsManager& graphics);
-static void error_callback(int error_code, const char* error_description);
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+static void initGLFW();
+static GLFWwindow* initWindow(WindowConfig config, int majorVersion, int minorVersion);
+static void initGraphics(GLFWwindow* window, graphics::IGraphicsManager& graphics);
+static void errorCallback(int error_code, const char* error_description);
+static void keyActionCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
-GLFWContextWrapper::GLFWContextWrapper(const WindowConfig& config, IGraphicsManager& graphics)
-    : IWindowManager(config, graphics) {
-    init_glfw();
+void WindowManager::init() {
+    initGLFW();
 
-    _window = init_window(_config);
+    _window = initWindow(_config, _graphics.getVersionMajor(), _graphics.getVersionMinor());
 
-    init_graphics(_window, _graphics);
+    initGraphics(_window, _graphics);
 
     glfwSetWindowUserPointer(_window, this);
-    glfwSetErrorCallback(error_callback);
-    glfwSetKeyCallback(_window, key_callback);
+    glfwSetErrorCallback(errorCallback);
+    glfwSetKeyCallback(_window, keyActionCallback);
 
-    logger.info("Graphics API: %s | %s", _graphics.getVersion(), glfwGetVersionString());
+    logger.info("Graphics API: %s | %s", _graphics.getVersionString(), glfwGetVersionString());
 }
 
-GLFWContextWrapper::~GLFWContextWrapper() {
+void WindowManager::terminate() {
     logger.info("Closing window and terminating GLFW...");
 
     glfwDestroyWindow(_window);
     glfwTerminate();
 }
 
-void GLFWContextWrapper::run() {
+void WindowManager::run() {
     int width, height;
     while (!glfwWindowShouldClose(_window)) {
         // Get inputs
@@ -65,7 +63,7 @@ void GLFWContextWrapper::run() {
     logger.info("Loop ended");
 }
 
-void GLFWContextWrapper::keyActionHandler(int key, int action) const {
+void WindowManager::keyActionHandler(int key, int action) const {
     std::string action_name;
 
     if (action == GLFW_PRESS) {
@@ -83,7 +81,7 @@ void GLFWContextWrapper::keyActionHandler(int key, int action) const {
 
 // Helper private functions
 
-static void init_glfw() {
+static void initGLFW() {
     logger.debug("Initializing GLFW...");
     if (!glfwInit()) {
         logger.error("GLFW initialization failed!");
@@ -92,21 +90,17 @@ static void init_glfw() {
     logger.debug("GLFW initialized!");
 }
 
-static GLFWwindow* init_window(WindowConfig config) {
+static GLFWwindow* initWindow(WindowConfig config, int majorVersion, int minorVersion) {
     logger.debug("Setting up GLFW window config...");
 
     // Setup window config hints
     glfwWindowHint(GLFW_SAMPLES, config.msaa);
-#ifdef __APPLE__
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-#else
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-#endif
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, majorVersion);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, minorVersion);
 
     // Create window
     logger.debug("Creating GLFW window...");
+
     GLFWwindow* window = glfwCreateWindow(config.width, config.height, config.title, NULL, NULL);
     if (!window) {
         logger.error("Window creation failed! Terminating application...");
@@ -118,7 +112,7 @@ static GLFWwindow* init_window(WindowConfig config) {
     return window;
 }
 
-static void init_graphics(GLFWwindow* window, IGraphicsManager& graphics) {
+static void initGraphics(GLFWwindow* window, graphics::IGraphicsManager& graphics) {
     glfwMakeContextCurrent(window);
 
     if (!graphics.initialize((void*) glfwGetProcAddress)) {
@@ -130,12 +124,14 @@ static void init_graphics(GLFWwindow* window, IGraphicsManager& graphics) {
     logger.debug("Graphics initialized!");
 }
 
-static void error_callback(int error_code, const char* error_description) {
-    Log("GLFWContextWrapper").error("Error #%d: %s", error_code, error_description);
+static void errorCallback(int error_code, const char* error_description) {
+    logger.error("Error #%d: %s", error_code, error_description);
 }
 
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    GLFWContextWrapper& contextWrapper =
-        *static_cast<GLFWContextWrapper*>(glfwGetWindowUserPointer(window));
+static void keyActionCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    WindowManager& contextWrapper = *static_cast<WindowManager*>(glfwGetWindowUserPointer(window));
     contextWrapper.keyActionHandler(key, action);
 }
+
+}  // namespace window
+}  // namespace sargasso

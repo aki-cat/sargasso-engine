@@ -16,7 +16,9 @@ class DummyGraphics : virtual public IGraphicsManager {
     void clear() override;
 
     const char* getName() const override;
-    const char* getVersion() const override;
+    const char* getVersionString() const override;
+    const int getVersionMajor() const override;
+    const int getVersionMinor() const override;
 
    private:
     static const char* NAME;

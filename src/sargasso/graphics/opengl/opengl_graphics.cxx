@@ -52,6 +52,22 @@ const char* OpenGLGraphics::getName() const {
     return NAME;
 }
 
-const char* OpenGLGraphics::getVersion() const {
+const char* OpenGLGraphics::getVersionString() const {
     return reinterpret_cast<const char*>(glGetString(GL_VERSION));
 }
+
+const int OpenGLGraphics::getVersionMajor() const {
+#ifdef __APPLE__
+    return 2;
+#else
+    return 4;
+#endif
+};
+
+const int OpenGLGraphics::getVersionMinor() const {
+#ifdef __APPLE__
+    return 1;
+#else
+    return 3;
+#endif
+};

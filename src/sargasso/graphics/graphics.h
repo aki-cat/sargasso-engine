@@ -19,7 +19,9 @@ class IGraphicsManager {
     virtual void setClearColor(Color color) = 0;
     virtual void clear() = 0;
     virtual const char* getName() const = 0;
-    virtual const char* getVersion() const = 0;
+    virtual const char* getVersionString() const = 0;
+    virtual const int getVersionMajor() const = 0;
+    virtual const int getVersionMinor() const = 0;
 };
 
 }  // namespace graphics

@@ -1,10 +1,10 @@
-#ifndef SARGASSO_WINDOW_WINDOW_CONFIG_H
-#define SARGASSO_WINDOW_WINDOW_CONFIG_H
+#ifndef SARGASSO_CONFIG_H_
+#define SARGASSO_CONFIG_H_
 
 #include <cstdint>
 
 namespace sargasso {
-namespace config {
+namespace window {
 
 struct WindowConfig {
     char title[128] = "Sargasso Project\0";
@@ -16,4 +16,4 @@ struct WindowConfig {
 }  // namespace window
 }  // namespace sargasso
 
-#endif
+#endif  // SARGASSO_CONFIG_H_

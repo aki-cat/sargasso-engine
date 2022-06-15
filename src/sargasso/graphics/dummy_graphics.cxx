@@ -27,9 +27,17 @@ const char* DummyGraphics::getName() const {
     return NAME;
 }
 
-const char* DummyGraphics::getVersion() const {
+const char* DummyGraphics::getVersionString() const {
     return VERSION;
 }
+
+const int DummyGraphics::getVersionMajor() const {
+    return 1;
+};
+
+const int DummyGraphics::getVersionMinor() const {
+    return 0;
+};
 
 }  // namespace graphics
 }  // namespace sargasso

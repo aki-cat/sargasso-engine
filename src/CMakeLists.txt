@@ -46,13 +46,13 @@ find_library(sml third_party/sml)
 
 target_compile_definitions(SargassoEngine
     PRIVATE
-    "SARGASSO_ENGINE_VERSION=${CMAKE_PROJECT_VERSION}"
+    SARGASSO_ENGINE_VERSION=${CMAKE_PROJECT_VERSION}
 )
 
 # BACKEND DEFINITION
 target_compile_definitions(SargassoEngine
     PRIVATE
-    "SARGASSO_ENGINE_BACKEND_OPENGL=1"
+    SARGASSO_ENGINE_BACKEND=1
 )
 # /BACKEND DEFINITION
 
