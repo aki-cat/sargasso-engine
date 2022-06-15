@@ -129,8 +129,8 @@ static void errorCallback(int error_code, const char* error_description) {
 }
 
 static void keyActionCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    WindowManager& contextWrapper = *static_cast<WindowManager*>(glfwGetWindowUserPointer(window));
-    contextWrapper.keyActionHandler(key, action);
+    WindowManager& windowManager = *static_cast<WindowManager*>(glfwGetWindowUserPointer(window));
+    windowManager.keyActionHandler(key, action);
 }
 
 }  // namespace window
