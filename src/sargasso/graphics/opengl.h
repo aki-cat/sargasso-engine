@@ -1,5 +1,5 @@
-#ifndef SARGASSO_GRAPHICS_OPENGL_OPENGL_GRAPHICS_H_
-#define SARGASSO_GRAPHICS_OPENGL_OPENGL_GRAPHICS_H_
+#ifndef SARGASSO_GRAPHICS_OPENGL_GRAPHICS_H_
+#define SARGASSO_GRAPHICS_OPENGL_GRAPHICS_H_
 
 #include "sargasso/graphics/graphics.h"
 
@@ -8,7 +8,6 @@
 
 namespace sargasso {
 namespace graphics {
-namespace opengl {
 
 using sml::Color;
 
@@ -34,7 +33,6 @@ class OpenGLGraphics : virtual public IGraphicsManager {
     static const char* NAME;
 };
 
-}  // namespace opengl
 }  // namespace graphics
 }  // namespace sargasso
 

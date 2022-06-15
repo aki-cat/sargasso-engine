@@ -14,7 +14,7 @@ int main() {
         "Example Project\0", "1.0", {"Example Project Window\0", 960, 540, 1}};
 
     sargasso::Engine engine = sargasso::Engine(projectConfig);
-    engine.setup();
+    engine.initialize();
     engine.run();
     engine.terminate();
 

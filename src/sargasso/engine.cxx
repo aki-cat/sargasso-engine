@@ -21,7 +21,7 @@ Engine::Engine(const ProjectConfig& projectConfig) : _projectConfig(projectConfi
     logger.info("Version: %s", sargasso::ENGINE_VERSION);
 }
 
-void Engine::setup() {
+void Engine::initialize() {
     _graphics = new SargassoGraphicsBackend();
     _windowManager = new WindowManager(_projectConfig.window, *_graphics);
     _windowManager->init();

@@ -1,5 +1,5 @@
 
-#include "sargasso/graphics/dummy_graphics.h"
+#include "sargasso/graphics/dummy.h"
 
 namespace sargasso {
 namespace graphics {

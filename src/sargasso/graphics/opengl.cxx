@@ -1,4 +1,4 @@
-#include "sargasso/graphics/opengl/opengl_graphics.h"
+#include "sargasso/graphics/opengl.h"
 
 #include "sargasso/common/log.h"
 
@@ -6,11 +6,12 @@
 #include <cstdint>
 #include <sml/color.h>
 
-using sargasso::common::Log;
-using sargasso::graphics::opengl::OpenGLGraphics;
+namespace sargasso {
+namespace graphics {
+
 using sml::Color;
 
-const static Log logger = Log("OpenGLGraphics");
+const static common::Log logger("OpenGLGraphics");
 
 const char* OpenGLGraphics::NAME = "OpenGL";
 
@@ -62,7 +63,7 @@ const int OpenGLGraphics::getVersionMajor() const {
 #else
     return 4;
 #endif
-};
+}
 
 const int OpenGLGraphics::getVersionMinor() const {
 #ifdef __APPLE__
@@ -70,4 +71,7 @@ const int OpenGLGraphics::getVersionMinor() const {
 #else
     return 3;
 #endif
-};
+}
+
+}  // namespace graphics
+}  // namespace sargasso
