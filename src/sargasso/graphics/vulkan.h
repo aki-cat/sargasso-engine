@@ -1,16 +1,18 @@
-#ifndef SARGASSO_GRAPHICS_DUMMY_H_
-#define SARGASSO_GRAPHICS_DUMMY_H_
+#ifndef SARGASSO_GRAPHICS_VULKAN_H_
+#define SARGASSO_GRAPHICS_VULKAN_H_
+
+#error "Vulkan backend is not implemented!"
 
 #include "sargasso/graphics/graphics.h"
 
 namespace sargasso {
 namespace graphics {
 
-class DummyGraphics : virtual public IGraphicsManager {
+class VulkanGraphics : virtual public IGraphicsManager {
    public:
-    DummyGraphics() : IGraphicsManager() {}
-    DummyGraphics(const DummyGraphics&) = delete;
-    DummyGraphics(const DummyGraphics&&) = delete;
+    VulkanGraphics() : IGraphicsManager() {}
+    VulkanGraphics(const VulkanGraphics&) = delete;
+    VulkanGraphics(const VulkanGraphics&&) = delete;
 
     bool initialize(void* proc_address) override;
     void setViewport(int x, int y, uint32_t width, uint32_t height) override;
@@ -23,11 +25,10 @@ class DummyGraphics : virtual public IGraphicsManager {
     const int getVersionMinor() const override;
 
    private:
-    static const char* NAME;
-    static const char* VERSION;
+    /* data */
 };
 
 }  // namespace graphics
 }  // namespace sargasso
 
-#endif  // SARGASSO_GRAPHICS_DUMMY_H_
+#endif  // SARGASSO_GRAPHICS_VULKAN_H_

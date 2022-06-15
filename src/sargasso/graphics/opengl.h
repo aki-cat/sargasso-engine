@@ -1,5 +1,5 @@
-#ifndef SARGASSO_GRAPHICS_OPENGL_GRAPHICS_H_
-#define SARGASSO_GRAPHICS_OPENGL_GRAPHICS_H_
+#ifndef SARGASSO_GRAPHICS_OPENGL_H_
+#define SARGASSO_GRAPHICS_OPENGL_H_
 
 #include "sargasso/graphics/graphics.h"
 
@@ -16,8 +16,6 @@ class OpenGLGraphics : virtual public IGraphicsManager {
     OpenGLGraphics() : IGraphicsManager() {}
     OpenGLGraphics(const OpenGLGraphics&) = delete;
     OpenGLGraphics(const OpenGLGraphics&&) = delete;
-
-    ~OpenGLGraphics() override {}
 
     bool initialize(void* proc_address) override;
     void setViewport(int x, int y, uint32_t width, uint32_t height) override;
@@ -36,4 +34,4 @@ class OpenGLGraphics : virtual public IGraphicsManager {
 }  // namespace graphics
 }  // namespace sargasso
 
-#endif
+#endif  // SARGASSO_GRAPHICS_OPENGL_H_
