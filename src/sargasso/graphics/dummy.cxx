@@ -4,9 +4,6 @@
 namespace sargasso {
 namespace graphics {
 
-const char* DummyGraphics::NAME = "Dummy";
-const char* DummyGraphics::VERSION = "v1.0";
-
 bool DummyGraphics::initialize(void* proc_address) {
     return false;
 }
@@ -24,18 +21,18 @@ void DummyGraphics::clear() {
 }
 
 const char* DummyGraphics::getName() const {
-    return NAME;
+    return "Dummy";
 }
 
 const char* DummyGraphics::getVersionString() const {
-    return VERSION;
+    return "v1.0";
 }
 
-const int DummyGraphics::getVersionMajor() const {
+int DummyGraphics::getVersionMajor() const {
     return 1;
 };
 
-const int DummyGraphics::getVersionMinor() const {
+int DummyGraphics::getVersionMinor() const {
     return 0;
 };
 

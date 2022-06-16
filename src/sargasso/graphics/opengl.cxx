@@ -13,8 +13,6 @@ using sml::Color;
 
 const static common::Log logger("OpenGLGraphics");
 
-const char* OpenGLGraphics::NAME = "OpenGL";
-
 bool OpenGLGraphics::initialize(void* proc_address) {
     logger.debug("Initializing OpenGL context...");
 
@@ -50,14 +48,14 @@ void OpenGLGraphics::clear() {
 }
 
 const char* OpenGLGraphics::getName() const {
-    return NAME;
+    return "OpenGL";
 }
 
 const char* OpenGLGraphics::getVersionString() const {
     return reinterpret_cast<const char*>(glGetString(GL_VERSION));
 }
 
-const int OpenGLGraphics::getVersionMajor() const {
+int OpenGLGraphics::getVersionMajor() const {
 #ifdef __APPLE__
     return 2;
 #else
@@ -65,7 +63,7 @@ const int OpenGLGraphics::getVersionMajor() const {
 #endif
 }
 
-const int OpenGLGraphics::getVersionMinor() const {
+int OpenGLGraphics::getVersionMinor() const {
 #ifdef __APPLE__
     return 1;
 #else

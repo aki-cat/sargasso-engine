@@ -14,13 +14,13 @@ namespace sargasso {
 namespace common {
 
 #ifndef LOG_VERBOSITY_LEVEL
-#define LOG_VERBOSITY_LEVEL LogLevel::INFO
+#define LOG_VERBOSITY_LEVEL LogLevel::kInfo
 #endif
 
 class Log {
    public:
     // Enum
-    enum LogLevel { SILENT = 0, ERROR = 1, WARNING = 2, INFO = 3, DEBUG = 4 };
+    enum LogLevel { kSilent = 0, kError = 1, kWarning = 2, kInfo = 3, kDebug = 4 };
 
     // Class constants
     static const LogLevel VERBOSITY = static_cast<LogLevel>(LOG_VERBOSITY_LEVEL);
@@ -65,7 +65,6 @@ class Log {
     // Output pointers
     static std::string _out;
     static std::string _err;
-
     static const char* _unused;
 };
 
@@ -78,35 +77,35 @@ inline Log::Log(const std::string& name) : _name(name) {}
 
 template <typename... T>
 inline void Log::error(const char* fmt, T... data) const {
-    this->printf(LogLevel::ERROR, fmt, data...);
+    this->printf(LogLevel::kError, fmt, data...);
 }
 
 inline void Log::error(const char* str) const {
-    this->print(LogLevel::ERROR, str);
+    this->print(LogLevel::kError, str);
 }
 
 template <typename... T>
 inline void Log::warning(const char* fmt, T... data) const {
-    this->printf(LogLevel::WARNING, fmt, data...);
+    this->printf(LogLevel::kWarning, fmt, data...);
 }
 inline void Log::warning(const char* str) const {
-    this->print(LogLevel::WARNING, str);
+    this->print(LogLevel::kWarning, str);
 }
 
 template <typename... T>
 inline void Log::info(const char* fmt, T... data) const {
-    this->printf(LogLevel::INFO, fmt, data...);
+    this->printf(LogLevel::kInfo, fmt, data...);
 }
 inline void Log::info(const char* str) const {
-    this->print(LogLevel::INFO, str);
+    this->print(LogLevel::kInfo, str);
 }
 
 template <typename... T>
 inline void Log::debug(const char* fmt, T... data) const {
-    this->printf(LogLevel::DEBUG, fmt, data...);
+    this->printf(LogLevel::kDebug, fmt, data...);
 }
 inline void Log::debug(const char* str) const {
-    this->print(LogLevel::DEBUG, str);
+    this->print(LogLevel::kDebug, str);
 }
 
 template <typename... T>

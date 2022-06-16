@@ -24,11 +24,8 @@ class OpenGLGraphics : virtual public IGraphicsManager {
 
     const char* getName() const override;
     const char* getVersionString() const override;
-    const int getVersionMajor() const override;
-    const int getVersionMinor() const override;
-
-   private:
-    static const char* NAME;
+    int getVersionMajor() const override;
+    int getVersionMinor() const override;
 };
 
 }  // namespace graphics

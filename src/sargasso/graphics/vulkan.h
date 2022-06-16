@@ -1,8 +1,6 @@
 #ifndef SARGASSO_GRAPHICS_VULKAN_H_
 #define SARGASSO_GRAPHICS_VULKAN_H_
 
-#error "Vulkan backend is not implemented!"
-
 #include "sargasso/graphics/graphics.h"
 
 namespace sargasso {
@@ -21,8 +19,8 @@ class VulkanGraphics : virtual public IGraphicsManager {
 
     const char* getName() const override;
     const char* getVersionString() const override;
-    const int getVersionMajor() const override;
-    const int getVersionMinor() const override;
+    int getVersionMajor() const override;
+    int getVersionMinor() const override;
 
    private:
     /* data */

@@ -10,13 +10,11 @@
 namespace sargasso {
 namespace window {
 
-using graphics::IGraphicsManager;
-
 class IWindowManager {
    public:
     IWindowManager(const IWindowManager&) = delete;
     IWindowManager(const IWindowManager&&) = delete;
-    IWindowManager(const WindowConfig& config, IGraphicsManager& graphics)
+    IWindowManager(const WindowConfig& config, graphics::IGraphicsManager& graphics)
         : _config(config), _graphics(graphics) {}
     virtual ~IWindowManager() {}
 
@@ -26,24 +24,24 @@ class IWindowManager {
 
    protected:
     const WindowConfig _config;
-    IGraphicsManager& _graphics;
+    graphics::IGraphicsManager& _graphics;
 };
 
 class WindowManager : virtual public IWindowManager {
    public:
     WindowManager(const WindowManager&) = delete;
     WindowManager(const WindowManager&&) = delete;
-    WindowManager(const WindowConfig& config, IGraphicsManager& graphics)
+    WindowManager(const WindowConfig& config, graphics::IGraphicsManager& graphics)
         : IWindowManager(config, graphics) {}
 
     void init() override;
     void terminate() override;
     void run() override;
-
     void keyActionHandler(int key, int action) const;
 
    private:
     GLFWwindow* _window;
+    void initCallbacks(GLFWwindow& window);
 };
 
 }  // namespace window

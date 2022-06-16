@@ -1,28 +1,19 @@
 #ifndef SARGASSO_GRAPHICS_IGRAPHICS_H_
 #define SARGASSO_GRAPHICS_IGRAPHICS_H_
 
-#define SARGASSO_BACKEND_ENUM_DUMMY   0
-#define SARGASSO_BACKEND_ENUM_OPEN_GL 1
-#define SARGASSO_BACKEND_ENUM_VULKAN  2  // not implemented
-
-#if SARGASSO_ENGINE_BACKEND == SARGASSO_BACKEND_ENUM_DUMMY
-#define SARGASSO_GRAPHICS_BACKEND_HEADER "sargasso/graphics/dummy.h"
-#define SargassoGraphicsBackend          sargasso::graphics::DummyGraphics
-#include <GL/gl3w.h>  // GL loader must be included BEFORE glfw
-#elif SARGASSO_ENGINE_BACKEND == SARGASSO_BACKEND_ENUM_OPEN_GL
-#define GLFW_INCLUDE_NONE
-#define SARGASSO_GRAPHICS_BACKEND_HEADER "sargasso/graphics/opengl.h"
-#define SargassoGraphicsBackend          sargasso::graphics::OpenGLGraphics
-#elif SARGASSO_ENGINE_BACKEND == SARGASSO_BACKEND_ENUM_VULKAN
-#define GLFW_INCLUDE_VULKAN
-#define SARGASSO_GRAPHICS_BACKEND_HEADER "sargasso/graphics/vulkan.h"
-#define SargassoGraphicsBackend          sargasso::graphics::VulkanGraphics
-#endif
+// #define GLFW_INCLUDE_VULKAN
+#define GLFW_INCLUDE_NONE  // Change this when using vulkan.
 
 #include <sml/color.h>
 
 namespace sargasso {
 namespace graphics {
+
+enum EGraphicsBackend {
+    kDummy = 0x00,
+    kOpenGL = 0x01,
+    kVulkan = 0x02  // Not implemented.
+};
 
 using sml::Color;
 
@@ -38,8 +29,8 @@ class IGraphicsManager {
     virtual void clear() = 0;
     virtual const char* getName() const = 0;
     virtual const char* getVersionString() const = 0;
-    virtual const int getVersionMajor() const = 0;
-    virtual const int getVersionMinor() const = 0;
+    virtual int getVersionMajor() const = 0;
+    virtual int getVersionMinor() const = 0;
 };
 
 }  // namespace graphics
