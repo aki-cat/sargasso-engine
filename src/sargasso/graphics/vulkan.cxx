@@ -6,7 +6,7 @@
 namespace sargasso {
 namespace graphics {
 
-bool VulkanGraphics::initialize(void* proc_address) {
+bool VulkanGraphics::initialize() {
     throw std::runtime_error("Not implemented yet.");
 }
 

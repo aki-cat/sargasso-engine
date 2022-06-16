@@ -13,7 +13,8 @@ using sml::Color;
 
 const static common::Log logger("OpenGLGraphics");
 
-bool OpenGLGraphics::initialize(void* proc_address) {
+// Initialization
+bool OpenGLGraphics::initialize() {
     logger.debug("Initializing OpenGL context...");
 
     if (gl3wInit()) {
@@ -35,6 +36,7 @@ bool OpenGLGraphics::initialize(void* proc_address) {
     return true;
 }
 
+// Imperative rendering
 void OpenGLGraphics::setViewport(int x, int y, uint32_t width, uint32_t height) {
     glViewport(x, y, width, height);
 }
@@ -46,6 +48,8 @@ void OpenGLGraphics::setClearColor(Color color) {
 void OpenGLGraphics::clear() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
+
+// Meta information
 
 const char* OpenGLGraphics::getName() const {
     return "OpenGL";

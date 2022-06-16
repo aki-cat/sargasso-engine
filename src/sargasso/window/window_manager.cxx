@@ -126,7 +126,7 @@ static GLFWwindow& initWindow(WindowConfig config, int majorVersion, int minorVe
 static void initGraphics(GLFWwindow& window, graphics::IGraphicsManager& graphics) {
     glfwMakeContextCurrent(&window);
 
-    if (!graphics.initialize((void*) glfwGetProcAddress)) {
+    if (!graphics.initialize()) {
         logger.error("Graphics initialization failed! Terminating application...");
         glfwTerminate();
         std::exit(EXIT_FAILURE);

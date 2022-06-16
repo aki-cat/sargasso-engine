@@ -12,7 +12,7 @@ class DummyGraphics : virtual public IGraphicsManager {
     DummyGraphics(const DummyGraphics&) = delete;
     DummyGraphics(const DummyGraphics&&) = delete;
 
-    bool initialize(void* proc_address) override;
+    bool initialize() override;
     void setViewport(int x, int y, uint32_t width, uint32_t height) override;
     void setClearColor(Color color) override;
     void clear() override;

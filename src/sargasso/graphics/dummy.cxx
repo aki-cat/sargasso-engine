@@ -4,7 +4,7 @@
 namespace sargasso {
 namespace graphics {
 
-bool DummyGraphics::initialize(void* proc_address) {
+bool DummyGraphics::initialize() {
     return false;
 }
 

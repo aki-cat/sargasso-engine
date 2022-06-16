@@ -23,10 +23,16 @@ class IGraphicsManager {
     IGraphicsManager(const IGraphicsManager&) = delete;
     IGraphicsManager(const IGraphicsManager&&) = delete;
     virtual ~IGraphicsManager() {}
-    virtual bool initialize(void* proc_address) = 0;
+
+    // Initialization
+    virtual bool initialize() = 0;
+
+    // Imperative rendering
     virtual void setViewport(int x, int y, uint32_t width, uint32_t height) = 0;
     virtual void setClearColor(Color color) = 0;
     virtual void clear() = 0;
+
+    // Meta information
     virtual const char* getName() const = 0;
     virtual const char* getVersionString() const = 0;
     virtual int getVersionMajor() const = 0;
