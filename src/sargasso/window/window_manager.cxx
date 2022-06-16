@@ -49,6 +49,18 @@ void WindowManager::terminate() {
 
 void WindowManager::run() {
     int width, height;
+    void* renderParams = nullptr;
+    switch (_graphics.getType()) {
+        case graphics::EGraphicsBackend::kOpenGL:
+            logger.info("Rendering with OpenGL");
+            renderParams = _window;
+            break;
+        case graphics::EGraphicsBackend::kVulkan:
+        case graphics::EGraphicsBackend::kDummy:
+        default:
+            logger.warning("Rendering with unimplemented backend: %p", _graphics.getType());
+            break;
+    }
     while (!glfwWindowShouldClose(_window)) {
         // Get inputs
         glfwPollEvents();
@@ -59,9 +71,7 @@ void WindowManager::run() {
         _graphics.setViewport(0, 0, width, height);
         _graphics.setClearColor(sml::Color::invisible());
         _graphics.clear();
-
-        // Swap frame buffer
-        glfwSwapBuffers(_window);
+        _graphics.present(renderParams);
     }
     logger.info("Loop ended");
 }

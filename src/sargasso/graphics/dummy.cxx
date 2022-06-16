@@ -1,6 +1,8 @@
 
 #include "sargasso/graphics/dummy.h"
 
+#include <sml/color.h>
+
 namespace sargasso {
 namespace graphics {
 
@@ -12,12 +14,16 @@ void DummyGraphics::setViewport(int x, int y, uint32_t width, uint32_t height) {
     // empty on purpose
 }
 
-void DummyGraphics::setClearColor(Color color) {
+void DummyGraphics::setClearColor(sml::Color color) {
     // empty on purpose
 }
 
 void DummyGraphics::clear() {
     // empty on purpose
+}
+
+const EGraphicsBackend DummyGraphics::getType() const {
+    return EGraphicsBackend::kDummy;
 }
 
 const char* DummyGraphics::getName() const {
@@ -28,11 +34,11 @@ const char* DummyGraphics::getVersionString() const {
     return "v1.0";
 }
 
-int DummyGraphics::getVersionMajor() const {
+const int DummyGraphics::getVersionMajor() const {
     return 1;
 };
 
-int DummyGraphics::getVersionMinor() const {
+const int DummyGraphics::getVersionMinor() const {
     return 0;
 };
 

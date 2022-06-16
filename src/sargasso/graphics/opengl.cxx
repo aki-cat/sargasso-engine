@@ -3,6 +3,7 @@
 #include "sargasso/common/log.h"
 
 #include <GL/gl3w.h>
+#include <GLFW/glfw3.h>
 #include <cstdint>
 #include <sml/color.h>
 
@@ -13,7 +14,11 @@ using sml::Color;
 
 const static common::Log logger("OpenGLGraphics");
 
-// Initialization
+/* ==================
+ * | Initialization |
+ * ==================
+ * */
+
 bool OpenGLGraphics::initialize() {
     logger.debug("Initializing OpenGL context...");
 
@@ -36,7 +41,14 @@ bool OpenGLGraphics::initialize() {
     return true;
 }
 
-// Imperative rendering
+/* ========================
+ * | Imperative rendering |
+ * ======================== */
+
+void OpenGLGraphics::present(void* windowPointer) {
+    glfwSwapBuffers((GLFWwindow*) windowPointer);
+}
+
 void OpenGLGraphics::setViewport(int x, int y, uint32_t width, uint32_t height) {
     glViewport(x, y, width, height);
 }
@@ -49,7 +61,13 @@ void OpenGLGraphics::clear() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-// Meta information
+/* ====================
+ * | Meta information |
+ * ==================== */
+
+const EGraphicsBackend OpenGLGraphics::getType() const {
+    return EGraphicsBackend::kOpenGL;
+}
 
 const char* OpenGLGraphics::getName() const {
     return "OpenGL";
@@ -59,7 +77,7 @@ const char* OpenGLGraphics::getVersionString() const {
     return reinterpret_cast<const char*>(glGetString(GL_VERSION));
 }
 
-int OpenGLGraphics::getVersionMajor() const {
+const int OpenGLGraphics::getVersionMajor() const {
 #ifdef __APPLE__
     return 2;
 #else
@@ -67,7 +85,7 @@ int OpenGLGraphics::getVersionMajor() const {
 #endif
 }
 
-int OpenGLGraphics::getVersionMinor() const {
+const int OpenGLGraphics::getVersionMinor() const {
 #ifdef __APPLE__
     return 1;
 #else

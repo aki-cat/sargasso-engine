@@ -17,15 +17,22 @@ class OpenGLGraphics : virtual public IGraphicsManager {
     OpenGLGraphics(const OpenGLGraphics&) = delete;
     OpenGLGraphics(const OpenGLGraphics&&) = delete;
 
+    // Initialization
     bool initialize() override;
+
+    // Imperative rendering
+    void present(void* params) override;
     void setViewport(int x, int y, uint32_t width, uint32_t height) override;
     void setClearColor(Color color) override;
     void clear() override;
 
+    // Meta information
+    const EGraphicsBackend getType() const override;
     const char* getName() const override;
     const char* getVersionString() const override;
-    int getVersionMajor() const override;
-    int getVersionMinor() const override;
+    const int getVersionMajor() const override;
+    const int getVersionMinor() const override;
+    const EGraphicsBackend backendType = EGraphicsBackend::kOpenGL;
 };
 
 }  // namespace graphics
