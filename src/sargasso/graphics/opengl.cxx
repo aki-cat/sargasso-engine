@@ -35,7 +35,7 @@ bool OpenGLGraphics::initialize() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_VERTEX_ARRAY);
+    glEnable(GL_MULTISAMPLE);
 
     logger.debug("OpenGL context initialized!");
     return true;
