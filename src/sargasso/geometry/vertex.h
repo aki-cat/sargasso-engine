@@ -8,9 +8,9 @@ namespace sargasso {
 namespace geometry {
 
 struct Vertex {
-    Vec3 position;
-    Color color;
-    Vec3 normal;
+    sml::Vec3 position;
+    sml::Color color;
+    sml::Vec3 normal;
     struct {
         float x, y;
     } uv;
