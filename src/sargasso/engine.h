@@ -18,6 +18,8 @@ class Engine {
     void initialize();
     void terminate();
     void run();
+    const IGraphicsManager& getGraphics() const;
+    IGraphicsManager& getGraphics();
 
    private:
     const ProjectConfig& _projectConfig;

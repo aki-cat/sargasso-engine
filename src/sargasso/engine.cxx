@@ -57,4 +57,13 @@ void Engine::terminate() {
 void Engine::run() {
     _windowManager->run();
 }
+
+const IGraphicsManager& Engine::getGraphics() const {
+    return *_graphics;
+}
+
+IGraphicsManager& Engine::getGraphics() {
+    return *_graphics;
+}
+
 }  // namespace sargasso
