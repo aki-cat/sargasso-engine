@@ -9,31 +9,9 @@
 #include "sargasso/window/window_manager.h"
 
 // Importing these last
-#include "sargasso/graphics/dummy.h"
 #include "sargasso/graphics/opengl.h"
-#include "sargasso/graphics/vulkan.h"
 
 namespace sargasso {
-namespace graphics {
-
-IGraphicsManager* instantiateBackend(const EGraphicsBackend backend) {
-    IGraphicsManager* graphicsBackend = nullptr;
-    switch (backend) {
-        case EGraphicsBackend::kOpenGL:
-            graphicsBackend = new OpenGLGraphics();
-            break;
-        case EGraphicsBackend::kVulkan:
-            graphicsBackend = new VulkanGraphics();
-            break;
-        case EGraphicsBackend::kDummy:
-        default:
-            graphicsBackend = new DummyGraphics();
-            break;
-    }
-    return graphicsBackend;
-}
-
-}  // namespace graphics
 
 static const common::Log logger(sargasso::ENGINE_NAME);
 
@@ -42,28 +20,62 @@ Engine::Engine(const ProjectConfig& projectConfig) : _projectConfig(projectConfi
 }
 
 void Engine::initialize() {
-    _graphics = graphics::instantiateBackend(_projectConfig.graphicsBackend);
-    _windowManager = new window::WindowManager(_projectConfig.window, *_graphics);
-    _windowManager->init();
-    logger.info("Backend %s-%s", _graphics->getName(), _graphics->getVersionString());
+    switch (_projectConfig.graphicsBackend) {
+        case graphics::EGraphicsBackend::kOpenGL:
+            _glGraphics = new graphics::GraphicsManager<graphics::OpenGL>();
+            _glWindowManager =
+                new window::WindowManager<graphics::OpenGL>(_projectConfig.window, *_glGraphics);
+            _glWindowManager->init();
+            logger.info("Backend %s-%s", graphics::GraphicsManager<graphics::OpenGL>::BACKEND_NAME,
+                        graphics::GraphicsManager<graphics::OpenGL>::getVersionString().c_str());
+            break;
+        case graphics::EGraphicsBackend::kVulkan:
+        case graphics::EGraphicsBackend::kDummy:
+        case graphics::EGraphicsBackend::kUndefined:
+        default:
+            logger.error("<initialize()> Specified backend not implemented.");
+            break;
+    }
 }
 
 void Engine::terminate() {
-    _windowManager->terminate();
-    delete _windowManager;
-    delete _graphics;
+    switch (_projectConfig.graphicsBackend) {
+        case graphics::EGraphicsBackend::kOpenGL:
+            _glWindowManager->terminate();
+            delete _glWindowManager;
+            delete _glGraphics;
+            break;
+        case graphics::EGraphicsBackend::kVulkan:
+        case graphics::EGraphicsBackend::kDummy:
+        case graphics::EGraphicsBackend::kUndefined:
+        default:
+            logger.error("<terminate()> Specified backend not implemented.");
+            break;
+    }
 }
 
 void Engine::run() {
-    _windowManager->run();
+    switch (_projectConfig.graphicsBackend) {
+        case graphics::EGraphicsBackend::kOpenGL:
+            _glWindowManager->run();
+            break;
+        case graphics::EGraphicsBackend::kVulkan:
+        case graphics::EGraphicsBackend::kDummy:
+        case graphics::EGraphicsBackend::kUndefined:
+        default:
+            logger.error("<run()> Specified backend not implemented.");
+            break;
+    }
 }
 
-const IGraphicsManager& Engine::getGraphics() const {
-    return *_graphics;
+template <>
+const graphics::GraphicsManager<graphics::OpenGL>& Engine::getGraphics() const {
+    return *_glGraphics;
 }
 
-IGraphicsManager& Engine::getGraphics() {
-    return *_graphics;
+template <>
+graphics::GraphicsManager<graphics::OpenGL>& Engine::getGraphics() {
+    return *_glGraphics;
 }
 
 }  // namespace sargasso

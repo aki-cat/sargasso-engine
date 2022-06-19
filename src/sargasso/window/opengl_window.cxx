@@ -1,66 +1,63 @@
 
-#include "sargasso/window/window_manager.h"
-
 #include "sargasso/common/log.h"
 #include "sargasso/graphics/graphics.h"
+#include "sargasso/graphics/opengl.h"
 #include "sargasso/window/window_config.h"
 #include "sargasso/window/window_manager.h"
 
 #include <GLFW/glfw3.h>
+#include <cstdint>
 #include <cstdlib>
 #include <sml/color.h>
 
 namespace sargasso {
 namespace window {
 
-static const common::Log logger("GLFW WindowManager");
+using graphics::OpenGL;
+
+static const common::Log logger("WindowManager<OpenGL>");
 
 /* ===========================================
  * | Forward declaration of helper functions |
  * =========================================== */
 
 static void initGLFW();
-static GLFWwindow& initWindow(WindowConfig config, int majorVersion, int minorVersion);
-static void initGraphics(GLFWwindow& window, graphics::IGraphicsManager& graphics);
-static void errorCallback(int errorCode, const char* errorDescription);
-static void keyActionCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+static GLFWwindow& initWindow(WindowConfig config, uint32_t majorVersion, uint32_t minorVersion);
+static void initGraphics(GLFWwindow& window, graphics::GraphicsManager<OpenGL>& graphics);
+static void initCallbacks(WindowManager<OpenGL>& manager, GLFWwindow& window);
+static void errorCallback(int32_t errorCode, const char* errorDescription);
+static void keyActionCallback(GLFWwindow* window, int32_t key, int32_t scancode, int32_t action,
+                              int32_t mods);
 
 /* ======================================
  * | WindowManager class implementation |
  * ====================================== */
 
-void WindowManager::init() {
+template <>
+void WindowManager<OpenGL>::init() {
     initGLFW();
 
-    _window = &initWindow(_config, _graphics.getVersionMajor(), _graphics.getVersionMinor());
+    _window = &initWindow(_config, graphics::GraphicsManager<OpenGL>::BACKEND_VERSION_MAJOR,
+                          graphics::GraphicsManager<OpenGL>::BACKEND_VERSION_MINOR);
 
     initGraphics(*_window, _graphics);
-    initCallbacks(*_window);
+    initCallbacks(*this, *_window);
 
-    logger.info("Graphics API: %s | %s", _graphics.getVersionString(), glfwGetVersionString());
+    logger.info("Graphics API: %s | %s", _graphics.getVersionString().c_str(),
+                glfwGetVersionString());
 }
 
-void WindowManager::terminate() {
+template <>
+void WindowManager<OpenGL>::terminate() {
     logger.info("Closing window and terminating GLFW...");
 
     glfwDestroyWindow(_window);
     glfwTerminate();
 }
 
-void WindowManager::run() {
+template <>
+void WindowManager<OpenGL>::run() {
     int width, height;
-    void* renderParams = nullptr;
-    switch (_graphics.getType()) {
-        case graphics::EGraphicsBackend::kOpenGL:
-            logger.info("Rendering with OpenGL");
-            renderParams = _window;
-            break;
-        case graphics::EGraphicsBackend::kVulkan:
-        case graphics::EGraphicsBackend::kDummy:
-        default:
-            logger.warning("Rendering with unimplemented backend: %p", _graphics.getType());
-            break;
-    }
     while (!glfwWindowShouldClose(_window)) {
         // Get inputs
         glfwPollEvents();
@@ -71,12 +68,13 @@ void WindowManager::run() {
         _graphics.setViewport(0, 0, width, height);
         _graphics.setClearColor(sml::Color::invisible());
         _graphics.clear();
-        _graphics.present(renderParams);
+        _graphics.present();
     }
     logger.info("Loop ended");
 }
 
-void WindowManager::keyActionHandler(int key, int action) const {
+template <>
+void WindowManager<OpenGL>::keyActionHandler(int key, int action) const {
     std::string actionName;
 
     if (action == GLFW_PRESS) {
@@ -92,12 +90,6 @@ void WindowManager::keyActionHandler(int key, int action) const {
     logger.debug("Key %s %s", glfwGetKeyName(key, glfwGetKeyScancode(key)), actionName.c_str());
 }
 
-void WindowManager::initCallbacks(GLFWwindow& window) {
-    glfwSetWindowUserPointer(&window, this);
-    glfwSetErrorCallback(errorCallback);
-    glfwSetKeyCallback(&window, keyActionCallback);
-}
-
 /* ===================================
  * | Helper functions implementation |
  * =================================== */
@@ -111,7 +103,7 @@ static void initGLFW() {
     logger.debug("GLFW initialized!");
 }
 
-static GLFWwindow& initWindow(WindowConfig config, int majorVersion, int minorVersion) {
+static GLFWwindow& initWindow(WindowConfig config, uint32_t majorVersion, uint32_t minorVersion) {
     logger.debug("Setting up GLFW window config...");
 
     // Setup window config hints
@@ -133,7 +125,7 @@ static GLFWwindow& initWindow(WindowConfig config, int majorVersion, int minorVe
     return *window;
 }
 
-static void initGraphics(GLFWwindow& window, graphics::IGraphicsManager& graphics) {
+static void initGraphics(GLFWwindow& window, graphics::GraphicsManager<OpenGL>& graphics) {
     glfwMakeContextCurrent(&window);
 
     if (!graphics.initialize()) {
@@ -145,12 +137,19 @@ static void initGraphics(GLFWwindow& window, graphics::IGraphicsManager& graphic
     logger.debug("Graphics initialized!");
 }
 
+static void initCallbacks(WindowManager<OpenGL>& manager, GLFWwindow& window) {
+    glfwSetWindowUserPointer(&window, &manager);
+    glfwSetErrorCallback(errorCallback);
+    glfwSetKeyCallback(&window, keyActionCallback);
+}
+
 static void errorCallback(int errorCode, const char* errorDescription) {
     logger.error("Error #%d: %s", errorCode, errorDescription);
 }
 
 static void keyActionCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    WindowManager& windowManager = *static_cast<WindowManager*>(glfwGetWindowUserPointer(window));
+    WindowManager<OpenGL>& windowManager =
+        *static_cast<WindowManager<OpenGL>*>(glfwGetWindowUserPointer(window));
     windowManager.keyActionHandler(key, action);
 }
 

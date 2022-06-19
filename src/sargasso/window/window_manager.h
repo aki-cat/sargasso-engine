@@ -5,43 +5,31 @@
 #include "sargasso/window/window_config.h"
 
 #include <GLFW/glfw3.h>
-#include <cstdint>
 
 namespace sargasso {
 namespace window {
 
-class IWindowManager {
+template <typename T>
+class WindowManager {
    public:
-    IWindowManager(const IWindowManager&) = delete;
-    IWindowManager(const IWindowManager&&) = delete;
-    IWindowManager(const WindowConfig& config, graphics::IGraphicsManager& graphics)
-        : _config(config), _graphics(graphics) {}
-    virtual ~IWindowManager() {}
+    WindowManager(const WindowConfig& config, graphics::GraphicsManager<T>& graphics)
+        : _config{config}, _graphics{graphics} {}
 
-    virtual void init() = 0;
-    virtual void terminate() = 0;
-    virtual void run() = 0;
-
-   protected:
-    const WindowConfig _config;
-    graphics::IGraphicsManager& _graphics;
-};
-
-class WindowManager : virtual public IWindowManager {
-   public:
+    // Deleted constructors
+    WindowManager(WindowManager&) = delete;
+    WindowManager(WindowManager&&) = delete;
     WindowManager(const WindowManager&) = delete;
     WindowManager(const WindowManager&&) = delete;
-    WindowManager(const WindowConfig& config, graphics::IGraphicsManager& graphics)
-        : IWindowManager(config, graphics) {}
 
-    void init() override;
-    void terminate() override;
-    void run() override;
+    void init();
+    void terminate();
+    void run();
     void keyActionHandler(int key, int action) const;
 
    private:
+    const WindowConfig& _config;
+    graphics::GraphicsManager<T>& _graphics;
     GLFWwindow* _window;
-    void initCallbacks(GLFWwindow& window);
 };
 
 }  // namespace window

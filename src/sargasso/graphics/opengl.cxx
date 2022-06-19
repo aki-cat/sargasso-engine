@@ -10,16 +10,24 @@
 namespace sargasso {
 namespace graphics {
 
-using sml::Color;
-
-const static common::Log logger("OpenGLGraphics");
+const static common::Log logger("GraphicsManager<OpenGL>");
 
 /* ==================
  * | Initialization |
  * ==================
  * */
 
-bool OpenGLGraphics::initialize() {
+template <>
+const EGraphicsBackend GraphicsManager<OpenGL>::BACKEND_TYPE = EGraphicsBackend::kOpenGL;
+template <>
+const char* GraphicsManager<OpenGL>::BACKEND_NAME = "OpenGL";
+template <>
+const uint32_t GraphicsManager<OpenGL>::BACKEND_VERSION_MAJOR = 4;
+template <>
+const uint32_t GraphicsManager<OpenGL>::BACKEND_VERSION_MINOR = 3;
+
+template <>
+bool GraphicsManager<OpenGL>::initialize() {
     logger.debug("Initializing OpenGL context...");
 
     if (gl3wInit()) {
@@ -27,8 +35,11 @@ bool OpenGLGraphics::initialize() {
         throw;
     }
 
-    if (!gl3wIsSupported(4, 3)) {
-        logger.error("GL3W incompatible with OpenGL %.%", 4, 3);
+    if (!gl3wIsSupported(GraphicsManager<OpenGL>::BACKEND_VERSION_MAJOR,
+                         GraphicsManager<OpenGL>::BACKEND_VERSION_MINOR)) {
+        logger.error("GL3W incompatible with OpenGL %.%",
+                     GraphicsManager<OpenGL>::BACKEND_VERSION_MAJOR,
+                     GraphicsManager<OpenGL>::BACKEND_VERSION_MINOR);
         throw;
     }
 
@@ -45,53 +56,30 @@ bool OpenGLGraphics::initialize() {
  * | Imperative rendering |
  * ======================== */
 
-void OpenGLGraphics::present(void* windowPointer) {
+template <>
+void GraphicsManager<OpenGL>::present() {
+    GLFWwindow* windowPointer = glfwGetCurrentContext();
     glfwSwapBuffers((GLFWwindow*) windowPointer);
 }
 
-void OpenGLGraphics::setViewport(int x, int y, uint32_t width, uint32_t height) {
+template <>
+void GraphicsManager<OpenGL>::setViewport(int x, int y, uint32_t width, uint32_t height) {
     glViewport(x, y, width, height);
 }
 
-void OpenGLGraphics::setClearColor(Color color) {
+template <>
+void GraphicsManager<OpenGL>::setClearColor(sml::Color color) {
     glClearColor(color.r, color.g, color.b, color.a);
 }
 
-void OpenGLGraphics::clear() {
+template <>
+void GraphicsManager<OpenGL>::clear() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 /* ====================
  * | Meta information |
  * ==================== */
-
-const EGraphicsBackend OpenGLGraphics::getType() const {
-    return EGraphicsBackend::kOpenGL;
-}
-
-const char* OpenGLGraphics::getName() const {
-    return "OpenGL";
-}
-
-const char* OpenGLGraphics::getVersionString() const {
-    return reinterpret_cast<const char*>(glGetString(GL_VERSION));
-}
-
-const int OpenGLGraphics::getVersionMajor() const {
-#ifdef __APPLE__
-    return 2;
-#else
-    return 4;
-#endif
-}
-
-const int OpenGLGraphics::getVersionMinor() const {
-#ifdef __APPLE__
-    return 1;
-#else
-    return 3;
-#endif
-}
 
 }  // namespace graphics
 }  // namespace sargasso

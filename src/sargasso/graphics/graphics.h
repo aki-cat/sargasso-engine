@@ -5,6 +5,8 @@
 #define GLFW_INCLUDE_NONE  // Change this when using vulkan.
 
 #include <sml/color.h>
+#include <sstream>
+#include <string>
 
 namespace sargasso {
 namespace graphics {
@@ -16,28 +18,39 @@ enum EGraphicsBackend {
     kUndefined = 0xff
 };
 
-class IGraphicsManager {
+template <typename T>
+class GraphicsManager {
    public:
-    IGraphicsManager() {}
-    IGraphicsManager(const IGraphicsManager&) = delete;
-    IGraphicsManager(const IGraphicsManager&&) = delete;
-    virtual ~IGraphicsManager() {}
+    GraphicsManager() = default;
+
+    // Deleted constructors
+    GraphicsManager(GraphicsManager&) = delete;
+    GraphicsManager(GraphicsManager&&) = delete;
+    GraphicsManager(const GraphicsManager&) = delete;
+    GraphicsManager(const GraphicsManager&&) = delete;
 
     // Initialization
-    virtual bool initialize() = 0;
+    bool initialize() {
+        return false;
+    }
 
     // Imperative rendering
-    virtual void present(void* params) = 0;
-    virtual void setViewport(int x, int y, uint32_t width, uint32_t height) = 0;
-    virtual void setClearColor(sml::Color color) = 0;
-    virtual void clear() = 0;
+    void present() {}
+    void setViewport(int x, int y, uint32_t width, uint32_t height) {}
+    void setClearColor(sml::Color color) {}
+    void clear() {}
 
-    // Meta information
-    virtual const EGraphicsBackend getType() const = 0;
-    virtual const char* getName() const = 0;
-    virtual const char* getVersionString() const = 0;
-    virtual const int getVersionMajor() const = 0;
-    virtual const int getVersionMinor() const = 0;
+    static const std::string getVersionString() {
+        std::stringstream str;
+        str << "v" << BACKEND_VERSION_MAJOR << "." << BACKEND_VERSION_MINOR;
+        return str.str();
+    }
+
+    static const char* BACKEND_NAME;
+    static const uint32_t BACKEND_VERSION_MAJOR;
+    static const uint32_t BACKEND_VERSION_MINOR;
+    static const EGraphicsBackend BACKEND_TYPE;
+
 };
 
 }  // namespace graphics
