@@ -16,7 +16,11 @@ static constexpr const int GL_VERSION_MINOR = 5;
 
 static const common::Log logger("SargassoEngine");
 
-Engine::Engine(const ProjectConfig& projectConfig) : _projectConfig(projectConfig) {
+// constructor
+Engine::Engine(const ProjectConfig& projectConfig)
+    : _projectConfig(projectConfig),
+      _windowWidth(projectConfig.windowWidth),
+      _windowHeight(projectConfig.windowHeight) {
     if (!glfwInit()) {
         throw std::runtime_error("Unable to initialize GLFW.");
     }
@@ -24,8 +28,8 @@ Engine::Engine(const ProjectConfig& projectConfig) : _projectConfig(projectConfi
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, GL_VERSION_MAJOR);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GL_VERSION_MINOR);
 
-    GLFWwindow* window = glfwCreateWindow(_projectConfig.windowWidth, _projectConfig.windowHeight,
-                                          _projectConfig.projectName, NULL, NULL);
+    GLFWwindow* window =
+        glfwCreateWindow(_windowWidth, _windowHeight, _projectConfig.projectName, NULL, NULL);
 
     if (!window) {
         glfwTerminate();
@@ -33,6 +37,7 @@ Engine::Engine(const ProjectConfig& projectConfig) : _projectConfig(projectConfi
     }
 
     glfwMakeContextCurrent(window);
+    glfwSetWindowUserPointer(window, this);
 
     if (gl3wInit()) {
         throw std::runtime_error("Unable to initialize OpenGL functions.");
@@ -43,6 +48,8 @@ Engine::Engine(const ProjectConfig& projectConfig) : _projectConfig(projectConfi
         throw;
     }
 }
+
+// public methods
 
 void Engine::run() {
     init();
@@ -55,10 +62,12 @@ void Engine::run() {
     while (!quitRequested()) {
         auto frameStart = std::chrono::steady_clock::now();
 
-        pollEvents();
+        resetViewport();
+        clear();
         update(dt);
         draw();
         swapBuffer();
+        pollEvents();
 
         auto frameDuration = std::chrono::steady_clock::now() - frameStart;
         dt = 1.0 * frameDuration.count() * toSeconds;
@@ -67,18 +76,30 @@ void Engine::run() {
     quit();
 }
 
+// virtual methods
+
 void Engine::load() {}
 
 void Engine::update(const double dt) {}
 
 void Engine::draw() {}
 
+// private methods
+
+void Engine::pollEvents() {
+    glfwPollEvents();
+}
+
 void Engine::swapBuffer() {
     glfwSwapBuffers(glfwGetCurrentContext());
 }
 
-void Engine::pollEvents() {
-    glfwPollEvents();
+void Engine::resetViewport() {
+    glViewport(0, 0, _windowWidth, _windowHeight);
+}
+
+void Engine::clear() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Engine::init() {
@@ -89,8 +110,11 @@ void Engine::init() {
     glEnable(GL_DEPTH_TEST);
 
     GLFWwindow* window = glfwGetCurrentContext();
-    glfwSetErrorCallback(Engine::error);
-    glfwSetKeyCallback(window, Engine::keyAction);
+    glfwSetErrorCallback(Engine::onError);
+    glfwSetKeyCallback(window, Engine::onKeyAction);
+    glfwSetFramebufferSizeCallback(window, Engine::onWindowResize);
+
+    glClearColor(0.4f, 0.3f, 0.2f, 1.0f);
 }
 
 void Engine::quit() {
@@ -98,19 +122,46 @@ void Engine::quit() {
     glfwTerminate();
 }
 
-bool Engine::quitRequested() const {
+bool Engine::quitRequested() {
     GLFWwindow* window = glfwGetCurrentContext();
     return glfwWindowShouldClose(window);
 }
 
-void Engine::error(int errorCode, const char* errorMessage) {
+void Engine::requestQuit() {
+    GLFWwindow* window = glfwGetCurrentContext();
+    glfwSetWindowShouldClose(window, true);
+}
+
+// instance callbacks
+
+void Engine::onKeyPressed(int key) {}
+
+void Engine::onKeyReleased(int key) {
+    if (key == GLFW_KEY_F8) {
+        requestQuit();
+    }
+}
+
+// static callbacks
+
+void Engine::onError(int errorCode, const char* errorMessage) {
     common::Log("GLFW").error("Code 0x%X: %s", errorCode, errorMessage);
 }
 
-void Engine::keyAction(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    if (key == GLFW_KEY_F8 && action == GLFW_RELEASE) {
-        glfwSetWindowShouldClose(window, true);
+void Engine::onKeyAction(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    Engine* instance = (Engine*) glfwGetWindowUserPointer(window);
+    if (action == GLFW_PRESS) {
+        instance->onKeyPressed(key);
     }
+    if (action == GLFW_RELEASE) {
+        instance->onKeyReleased(key);
+    }
+}
+
+void Engine::onWindowResize(GLFWwindow* window, int width, int height) {
+    Engine* instance = (Engine*) glfwGetWindowUserPointer(window);
+    instance->_windowWidth = width;
+    instance->_windowHeight = height;
 }
 
 }  // namespace sargasso

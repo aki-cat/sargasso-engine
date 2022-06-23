@@ -23,22 +23,39 @@ class Engine {
     Engine& operator=(Engine&) = delete;
     const Engine& operator=(const Engine&) = delete;
 
-    virtual void load();
-    virtual void update(const double dt);
-    virtual void draw();
+    // methods
     void run();
 
    protected:
     const ProjectConfig _projectConfig;
 
+    // methods
+    virtual void load();
+    virtual void update(const double dt);
+    virtual void draw();
+
    private:
+    unsigned int _windowWidth;
+    unsigned int _windowHeight;
+
+    // methods
     void pollEvents();
     void swapBuffer();
+    void resetViewport();
+    void clear();
     void init();
     void quit();
-    bool quitRequested() const;
-    static void error(int errorCode, const char* errorMessage);
-    static void keyAction(GLFWwindow* window, int key, int scancode, int action, int mods);
+    bool quitRequested();
+    void requestQuit();
+
+    // instance callbacks
+    void onKeyPressed(int key);
+    void onKeyReleased(int key);
+
+    // static callbacks
+    static void onError(int errorCode, const char* errorMessage);
+    static void onKeyAction(GLFWwindow* window, int key, int scancode, int action, int mods);
+    static void onWindowResize(GLFWwindow* window, int width, int height);
 };
 
 }  // namespace sargasso
