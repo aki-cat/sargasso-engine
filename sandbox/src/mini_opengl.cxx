@@ -3,7 +3,7 @@
 #define GLFW_INCLUDE_NONE
 
 #define MINIMAL_OPENGL_VERSION_MAJOR 4
-#define MINIMAL_OPENGL_VERSION_MINOR 3
+#define MINIMAL_OPENGL_VERSION_MINOR 5
 
 #include <GLFW/glfw3.h>
 #include <cmath>

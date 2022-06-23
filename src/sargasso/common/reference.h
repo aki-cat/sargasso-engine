@@ -13,10 +13,12 @@ namespace common {
 template <typename T>
 class Reference {
    public:
-    Reference() = delete;
     explicit Reference(T* data);
-    Reference(const Reference&);  // copy
+    Reference(const Reference&);
     ~Reference();
+
+    Reference() = delete;
+    Reference& operator=(const Reference&) = delete;
 
     T* operator->();
     const T* operator->() const;
