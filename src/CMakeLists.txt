@@ -56,7 +56,7 @@ if(NOT DEFINED SARGASSO_VERBOSE_LOGS)
 endif(NOT DEFINED SARGASSO_VERBOSE_LOGS)
 
 target_compile_definitions(SargassoEngine
-    PRIVATE
+    PUBLIC
     "LOG_VERBOSITY_LEVEL=${SARGASSO_VERBOSE_LOGS}"
 )
 message(STATUS "Verbosity set to level ${SARGASSO_VERBOSE_LOGS}")

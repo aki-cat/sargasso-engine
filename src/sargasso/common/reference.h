@@ -13,12 +13,13 @@ namespace common {
 template <typename T>
 class Reference {
    public:
-    explicit Reference(T* data);
+    Reference() = default;
+    Reference(T* data);
     Reference(const Reference&);
+    Reference& operator=(const Reference&);
+    Reference(Reference&) = delete;
+    Reference& operator=(Reference&) = delete;
     ~Reference();
-
-    Reference() = delete;
-    Reference& operator=(const Reference&) = delete;
 
     T* operator->();
     const T* operator->() const;
@@ -38,7 +39,7 @@ class Reference {
 
 template <typename T>
 Reference<T>::Reference(T* data) : _ref(data) {
-    Log("Reference").debug("Reference<0x%x> created", _ref);
+    Log("Reference").debug("Reference<%p> created", _ref);
 
     _ref_count = new Counter();
     if (_ref) {
@@ -47,27 +48,38 @@ Reference<T>::Reference(T* data) : _ref(data) {
 }
 
 template <typename T>
-Reference<T>::Reference(const Reference<T>& original) {
-    Log("Reference")
-        .debug("Reference<0x%x> copied (copy#%ld).", original._ref, original._ref_count->get());
-    if (original._ref) {
-        _ref = original._ref;
-        _ref_count = original._ref_count;
+Reference<T>& Reference<T>::operator=(const Reference& assigned) {
+    _ref = assigned._ref;
+    _ref_count = assigned._ref_count;
+    if (_ref_count) {
+        Log("Reference").debug("Reference<%p> copy-assigned (copy#%ld).", _ref, _ref_count->get());
         _ref_count->increase();
-    } else {
-        throw std::runtime_error("Attempted to copy invalid reference.");
+    }
+    return *this;
+}
+
+template <typename T>
+Reference<T>::Reference(const Reference<T>& original) {
+    _ref = original._ref;
+    _ref_count = original._ref_count;
+    if (_ref_count) {
+        Log("Reference").debug("Reference<%p> copied (copy#%ld).", _ref, _ref_count->get());
+        _ref_count->increase();
     }
 }
 
 template <typename T>
 Reference<T>::~Reference() {
-    if (isDead()) {
+    Log("Reference").debug("Reference<%p> destructor called.", _ref);
+
+    if (_ref == nullptr || _ref_count == nullptr) {
+        Log("Reference").warning("DELETING DEAD REFERENCE");
         return;
     }
 
     _ref_count->decrease();
     if (_ref_count->get() == 0) {
-        Log("Reference").debug("Reference<0x%x> deleted.", _ref);
+        Log("Reference").debug("Reference<%p> deleted.", _ref);
         delete _ref;
         delete _ref_count;
     }
@@ -137,4 +149,4 @@ void Reference<T>::clear() {
 }  // namespace common
 }  // namespace sargasso
 
-#endif
+#endif  // SARGASSO_COMMON_REFERENCE_H_
