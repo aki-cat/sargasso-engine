@@ -17,8 +17,6 @@ class Reference {
     Reference(T* data);
     Reference(const Reference&);
     Reference& operator=(const Reference&);
-    Reference(Reference&) = delete;
-    Reference& operator=(Reference&) = delete;
     ~Reference();
 
     T* operator->();

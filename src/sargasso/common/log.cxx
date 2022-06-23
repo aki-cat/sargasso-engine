@@ -9,17 +9,35 @@ const char* Log::_unused = "\0";
 std::string Log::_out = Log::_unused;
 std::string Log::_err = Log::_unused;
 
-static const std::unordered_map<Log::LogLevel, const char*> TEXT_COLOR = {
-    {Log::LogLevel::kError, "\033[91m"},
-    {Log::LogLevel::kWarning, "\033[93m"},
-    {Log::LogLevel::kInfo, "\033[96m"},
-    {Log::LogLevel::kDebug, "\033[94m"}};
+static constexpr const char* getTextColor(Log::LogLevel level) {
+    switch (level) {
+        case Log::LogLevel::kError:
+            return "\033[91m";
+        case Log::LogLevel::kWarning:
+            return "\033[93m";
+        case Log::LogLevel::kInfo:
+            return "\033[96m";
+        case Log::LogLevel::kDebug:
+            return "\033[94m";
+        default:
+            throw std::out_of_range("Invalid LogLevel value");
+    }
+}
 
-static const std::unordered_map<Log::LogLevel, const char*> VERBOSITY_NAME = {
-    {Log::LogLevel::kError, "ERROR"},
-    {Log::LogLevel::kWarning, "WARNING"},
-    {Log::LogLevel::kInfo, "INFO"},
-    {Log::LogLevel::kDebug, "DEBUG"}};
+static constexpr const char* getVerbosityName(Log::LogLevel level) {
+    switch (level) {
+        case Log::LogLevel::kError:
+            return "ERROR";
+        case Log::LogLevel::kWarning:
+            return "WARNING";
+        case Log::LogLevel::kInfo:
+            return "INFO";
+        case Log::LogLevel::kDebug:
+            return "DEBUG";
+        default:
+            throw std::out_of_range("Invalid LogLevel value");
+    }
+}
 
 void Log::setLogStream(const std::string& file_path) {
     Log::_out = file_path;
@@ -46,11 +64,11 @@ void Log::print(Log::LogLevel level, const char* str) const {
     const std::string& targetPath = isError ? Log::_err : Log::_out;
     bool isStd = targetPath == Log::_unused;
 
-    const char* start = isStd ? TEXT_COLOR.at(level) : "";
+    const char* start = isStd ? getTextColor(level) : "";
     const char* end = isStd ? "\033[0m" : "";
 
     std::stringstream stream{};
-    stream << start << "[" << VERBOSITY_NAME.at(level) << "|" << _name.c_str() << "] " << str << end
+    stream << start << "[" << getVerbosityName(level) << "|" << _name.c_str() << "] " << str << end
            << std::endl;
 
     if (isStd) {

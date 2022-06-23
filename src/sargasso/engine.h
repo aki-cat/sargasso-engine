@@ -1,6 +1,7 @@
 #ifndef SARGASSO_ENGINE_H_
 #define SARGASSO_ENGINE_H_
 
+#include "sargasso/graphics.h"
 #include "sargasso/project_config.h"
 
 #include <GL/gl3w.h>
@@ -28,6 +29,7 @@ class Engine {
 
    protected:
     const ProjectConfig _projectConfig;
+    Graphics _graphics;
 
     // methods
     virtual void load();
