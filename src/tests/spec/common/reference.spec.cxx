@@ -42,16 +42,16 @@ DESCRIBE_CLASS(sargasso::common::Reference<test::Type>) {
         auto foo = Ref(new test::Type{3, 4});
 
         // copying
-        const uint64_t copyCount = 100;
+        const size_t copyCount = 100;
         Ref* copyRefs[copyCount];
-        for (uint64_t i = 0; i < copyCount; i++) {
+        for (size_t i = 0; i < copyCount; i++) {
             copyRefs[i] = new Ref(foo);
         }
 
         ASSERT_ARE_EQUAL(copyRefs[copyCount - 1]->copyCount(), copyCount + 1);
 
         // cleanup
-        for (uint64_t i = 0; i < copyCount; i++) {
+        for (size_t i = 0; i < copyCount; i++) {
             delete copyRefs[i];
         }
     };
@@ -61,9 +61,9 @@ DESCRIBE_CLASS(sargasso::common::Reference<test::Type>) {
         auto foo = Ref(new test::Type{3, 4});
 
         // copying
-        const uint64_t copyCount = 3;
+        const size_t copyCount = 3;
         Ref* copyRefs[copyCount];
-        for (uint64_t i = 0; i < copyCount; i++) {
+        for (size_t i = 0; i < copyCount; i++) {
             copyRefs[i] = new Ref(foo);
         }
 
@@ -71,7 +71,7 @@ DESCRIBE_CLASS(sargasso::common::Reference<test::Type>) {
         ASSERT_ARE_EQUAL(foo.copyCount(), copyCount);
 
         // cleanup
-        for (uint64_t i = 0; i < copyCount; i++) {
+        for (size_t i = 0; i < copyCount; i++) {
             delete copyRefs[i];
         }
     };

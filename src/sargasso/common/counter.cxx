@@ -1,7 +1,6 @@
 #include "sargasso/common/counter.h"
 
-#include <cstdint>
-#include <iostream>
+#include <cstdlib>
 
 namespace sargasso {
 namespace common {
@@ -21,27 +20,27 @@ void Counter::decrease() {
     _count--;
 }
 
-bool Counter::operator==(uint64_t n) const {
+bool Counter::operator==(size_t n) const {
     return _count == n;
 }
 
-bool Counter::operator>(uint64_t n) const {
+bool Counter::operator>(size_t n) const {
     return _count > n;
 }
 
-bool Counter::operator>=(uint64_t n) const {
+bool Counter::operator>=(size_t n) const {
     return _count >= n;
 }
 
-bool Counter::operator<=(uint64_t n) const {
+bool Counter::operator<=(size_t n) const {
     return _count <= n;
 }
 
-bool Counter::operator<(uint64_t n) const {
+bool Counter::operator<(size_t n) const {
     return _count <= n;
 }
 
-uint64_t Counter::get() const {
+size_t Counter::get() const {
     return _count;
 }
 

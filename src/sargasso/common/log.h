@@ -24,7 +24,7 @@ class Log {
 
     // Class constants
     static const LogLevel VERBOSITY = static_cast<LogLevel>(LOG_VERBOSITY_LEVEL);
-    static const uint64_t BUFFER_SIZE = 1024;
+    static const size_t BUFFER_SIZE = 1024;
 
     // Constructors
     Log();

@@ -2,80 +2,115 @@
 #include "sargasso/engine.h"
 
 #include "sargasso/common/log.h"
-#include "sargasso/config.h"
-#include "sargasso/graphics/graphics.h"
-#include "sargasso/project_config.h"
-#include "sargasso/window/window_config.h"
-#include "sargasso/window/window_manager.h"
 
-// Importing these last
-#include "sargasso/graphics/opengl.h"
+#include <GL/gl3w.h>
+#include <GLFW/glfw3.h>
+#include <chrono>
+#include <cstdlib>
+#include <exception>
 
 namespace sargasso {
 
-static const common::Log logger(sargasso::ENGINE_NAME);
+static constexpr const int GL_VERSION_MAJOR = 4;
+static constexpr const int GL_VERSION_MINOR = 5;
+
+static const common::Log logger("SargassoEngine");
 
 Engine::Engine(const ProjectConfig& projectConfig) : _projectConfig(projectConfig) {
-    logger.info("Version: %s", sargasso::ENGINE_VERSION);
-}
-
-void Engine::initialize() {
-    switch (_projectConfig.graphicsBackend) {
-        case graphics::EGraphicsBackend::kOpenGL:
-            _glGraphics = new graphics::GraphicsManager<graphics::OpenGL>();
-            _glWindowManager =
-                new window::WindowManager<graphics::OpenGL>(_projectConfig.window, *_glGraphics);
-            _glWindowManager->init();
-            logger.info("Backend %s-%s", graphics::GraphicsManager<graphics::OpenGL>::BACKEND_NAME,
-                        graphics::GraphicsManager<graphics::OpenGL>::getVersionString().c_str());
-            break;
-        case graphics::EGraphicsBackend::kVulkan:
-        case graphics::EGraphicsBackend::kDummy:
-        case graphics::EGraphicsBackend::kUndefined:
-        default:
-            logger.error("<initialize()> Specified backend not implemented.");
-            break;
+    if (!glfwInit()) {
+        throw std::runtime_error("Unable to initialize GLFW.");
     }
-}
+    glfwWindowHint(GLFW_SAMPLES, _projectConfig.msaa);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, GL_VERSION_MAJOR);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GL_VERSION_MINOR);
 
-void Engine::terminate() {
-    switch (_projectConfig.graphicsBackend) {
-        case graphics::EGraphicsBackend::kOpenGL:
-            _glWindowManager->terminate();
-            delete _glWindowManager;
-            delete _glGraphics;
-            break;
-        case graphics::EGraphicsBackend::kVulkan:
-        case graphics::EGraphicsBackend::kDummy:
-        case graphics::EGraphicsBackend::kUndefined:
-        default:
-            logger.error("<terminate()> Specified backend not implemented.");
-            break;
+    GLFWwindow* window = glfwCreateWindow(_projectConfig.windowWidth, _projectConfig.windowHeight,
+                                          _projectConfig.projectName, NULL, NULL);
+
+    if (!window) {
+        glfwTerminate();
+        throw std::runtime_error("Unable to initialize Window.");
+    }
+
+    glfwMakeContextCurrent(window);
+
+    if (gl3wInit()) {
+        throw std::runtime_error("Unable to initialize OpenGL functions.");
+    }
+
+    if (!gl3wIsSupported(GL_VERSION_MAJOR, GL_VERSION_MINOR)) {
+        logger.error("GL3W incompatible with OpenGL %.%", GL_VERSION_MAJOR, GL_VERSION_MINOR);
+        throw;
     }
 }
 
 void Engine::run() {
-    switch (_projectConfig.graphicsBackend) {
-        case graphics::EGraphicsBackend::kOpenGL:
-            _glWindowManager->run();
-            break;
-        case graphics::EGraphicsBackend::kVulkan:
-        case graphics::EGraphicsBackend::kDummy:
-        case graphics::EGraphicsBackend::kUndefined:
-        default:
-            logger.error("<run()> Specified backend not implemented.");
-            break;
+    init();
+    load();
+
+    const double toSeconds =
+        1.0 * std::chrono::steady_clock::period::num / std::chrono::steady_clock::period::den;
+
+    double dt = 0.0;
+    while (!quitRequested()) {
+        auto frameStart = std::chrono::steady_clock::now();
+
+        pollEvents();
+        update(dt);
+        draw();
+        swapBuffer();
+
+        auto frameDuration = std::chrono::steady_clock::now() - frameStart;
+        dt = 1.0 * frameDuration.count() * toSeconds;
     }
+
+    quit();
 }
 
-template <>
-const graphics::GraphicsManager<graphics::OpenGL>& Engine::getGraphics() const {
-    return *_glGraphics;
+void Engine::load() {}
+
+void Engine::update(const double dt) {}
+
+void Engine::draw() {}
+
+void Engine::swapBuffer() {
+    glfwSwapBuffers(glfwGetCurrentContext());
 }
 
-template <>
-graphics::GraphicsManager<graphics::OpenGL>& Engine::getGraphics() {
-    return *_glGraphics;
+void Engine::pollEvents() {
+    glfwPollEvents();
+}
+
+void Engine::init() {
+    glfwSwapInterval(1);
+
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    glEnable(GL_DEPTH_TEST);
+
+    GLFWwindow* window = glfwGetCurrentContext();
+    glfwSetErrorCallback(Engine::error);
+    glfwSetKeyCallback(window, Engine::keyAction);
+}
+
+void Engine::quit() {
+    glfwDestroyWindow(glfwGetCurrentContext());
+    glfwTerminate();
+}
+
+bool Engine::quitRequested() const {
+    GLFWwindow* window = glfwGetCurrentContext();
+    return glfwWindowShouldClose(window);
+}
+
+void Engine::error(int errorCode, const char* errorMessage) {
+    common::Log("GLFW").error("Code 0x%X: %s", errorCode, errorMessage);
+}
+
+void Engine::keyAction(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    if (key == GLFW_KEY_F8 && action == GLFW_RELEASE) {
+        glfwSetWindowShouldClose(window, true);
+    }
 }
 
 }  // namespace sargasso

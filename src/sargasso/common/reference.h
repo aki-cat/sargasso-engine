@@ -4,7 +4,7 @@
 #include "sargasso/common/counter.h"
 #include "sargasso/common/log.h"
 
-#include <cstdint>
+#include <cstdlib>
 #include <stdexcept>
 
 namespace sargasso {
@@ -20,7 +20,7 @@ class Reference {
 
     T* operator->();
     const T* operator->() const;
-    uint64_t copyCount() const;
+    size_t copyCount() const;
 
     const T& get() const;
     T& get();
@@ -88,7 +88,7 @@ const T* Reference<T>::operator->() const {
 }
 
 template <typename T>
-uint64_t Reference<T>::copyCount() const {
+size_t Reference<T>::copyCount() const {
     if (isDead()) {
         return 0;
     }

@@ -1,16 +1,16 @@
 #ifndef SARGASSO_PROJECT_CONFIG_H_
 #define SARGASSO_PROJECT_CONFIG_H_
 
-#include "sargasso/graphics/graphics.h"
-#include "sargasso/window/window_config.h"
+#include <cstdint>
 
 namespace sargasso {
 
 struct ProjectConfig {
     const char projectName[128];
     const char version[32];
-    const graphics::EGraphicsBackend graphicsBackend;
-    const window::WindowConfig window;
+    const unsigned int windowWidth;
+    const unsigned int windowHeight;
+    const unsigned int msaa;
 };
 
 }  // namespace sargasso

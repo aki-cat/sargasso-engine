@@ -3,93 +3,48 @@
 
 #include "sargasso/geometry/vertex.h"
 
-#include <cstdint>
-#include <cstring>
+#include <cstdlib>
+#include <vector>
 
 namespace sargasso {
 namespace geometry {
 
-using Triangle = uint32_t[3];
+using Triangle = unsigned int[3];
 
 class Mesh {
    public:
-    Mesh() = default;
+    explicit Mesh(const std::vector<Vertex>& vertices, const std::vector<Triangle>& triangles)
+        : _vertices(vertices), _triangles(triangles) {}
 
-    // Deleted constructors
-    Mesh(Mesh&) = delete;
-    Mesh(Mesh&&) = delete;
-    Mesh(const Mesh&) = delete;
-    Mesh(const Mesh&&) = delete;
-
-    Mesh(const Vertex* vertices, const size_t vertexCount, const Triangle* triangles,
-         const size_t triCount) {
-        setVertices(vertices, vertexCount);
-        setTriangles(triangles, triCount);
-    }
-
-    ~Mesh() {
-        unsetVertices();
-        unsetTriangles();
-    }
-
-    void setVertices(const Vertex* vertices, const size_t vertexCount) {
-        unsetVertices();
-        _vertices = new Vertex[vertexCount];
-        _vertexCount = vertexCount;
-        std::memcpy(_vertices, vertices, vertexCount * sizeof(Vertex));
-    }
-
-    void setTriangles(const Triangle* triangles, const size_t triCount) {
-        unsetTriangles();
-        _triangles = new Triangle[triCount];
-        _triCount = triCount;
-        std::memcpy(_triangles, triangles, triCount * sizeof(Triangle));
-    }
-
-    void unsetVertices() {
-        if (_vertices != nullptr) {
-            delete[] _vertices;
-            _vertices = nullptr;
-            _vertexCount = 0;
-        }
-    }
-
-    void unsetTriangles() {
-        if (_triangles != nullptr) {
-            delete[] _triangles;
-            _triangles = nullptr;
-            _triCount = 0;
-        }
-    }
+    ~Mesh() {}
 
     const size_t getVertexCount() const {
-        return _vertexCount;
+        return _vertices.size();
     }
 
     const size_t getTriangleCount() const {
-        return _triCount;
+        return _triangles.size();
     }
 
-    const void* getVertexData() const {
-        return reinterpret_cast<void*>(_vertices);
+    const float* getVertexData() const {
+        return reinterpret_cast<const float*>(_vertices.data());
     }
 
-    const void* getTriangleData() const {
-        return reinterpret_cast<void*>(_triangles);
+    const unsigned int* getTriangleData() const {
+        return reinterpret_cast<const unsigned int*>(_triangles.data());
     }
 
     const size_t getVertexDataSize() const {
-        return _vertexCount * sizeof(Vertex);
+        return getVertexCount() * sizeof(Vertex);
     }
 
     const size_t getTriangleDataSize() const {
-        return _triCount * sizeof(Triangle);
+        return getTriangleCount() * sizeof(Triangle);
     }
 
    private:
-    size_t _vertexCount = 0, _triCount = 0;
-    Vertex* _vertices = nullptr;
-    Triangle* _triangles = nullptr;
+    const std::vector<Vertex> _vertices;
+    const std::vector<Triangle> _triangles;
 };
 
 }  // namespace geometry
