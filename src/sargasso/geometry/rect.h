@@ -26,7 +26,7 @@ class Rect {
                 std::vector<IndexTriPlane>{IndexTriPlane{0, 1, 2}, IndexTriPlane{2, 3, 0}}) {}
 
     const Mesh& getMesh() const {
-        return _mesh;
+        return *&_mesh;
     }
 
    private:

@@ -18,16 +18,14 @@ class Mesh {
     explicit Mesh(const std::vector<Vertex>& vertices, const std::vector<IndexTriPlane>& triPlanes)
         : _vertices(vertices), _triPlanes(triPlanes) {}
 
-    Mesh(Mesh&) = delete;
     Mesh(const Mesh&) = delete;
-    Mesh& operator=(Mesh&) = delete;
-    const Mesh& operator=(const Mesh&) = delete;
+    Mesh& operator=(const Mesh&) = delete;
 
-    const size_t getVertexCount() const {
+    size_t getVertexCount() const {
         return _vertices.size();
     }
 
-    const size_t getTriPlaneCount() const {
+    size_t getTriPlaneCount() const {
         return _triPlanes.size();
     }
 
@@ -39,11 +37,11 @@ class Mesh {
         return reinterpret_cast<const unsigned int*>(_triPlanes.data());
     }
 
-    const size_t getVertexDataSize() const {
+    size_t getVertexDataSize() const {
         return getVertexCount() * sizeof(Vertex);
     }
 
-    const size_t getTriPlaneDataSize() const {
+    size_t getTriPlaneDataSize() const {
         return getTriPlaneCount() * sizeof(IndexTriPlane);
     }
 

@@ -46,7 +46,7 @@ int main() {
 
 void Game::load() {
     static const Log logger("Game::load()");
-    sampleRect = _graphics.newRect(5, 8);
+    sampleRect = _graphics.newRect(.5, .8);
 }
 
 void Game::update(const double dt) {
@@ -55,4 +55,5 @@ void Game::update(const double dt) {
 
 void Game::draw() {
     static const Log logger("Game::draw()");
+    _graphics.drawRect(sampleRect);
 }

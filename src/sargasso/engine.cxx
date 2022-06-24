@@ -11,8 +11,8 @@
 
 namespace sargasso {
 
-static constexpr const int GL_VERSION_MAJOR = 4;
-static constexpr const int GL_VERSION_MINOR = 5;
+static constexpr const int GL_VERSION_MAJOR = 3;
+static constexpr const int GL_VERSION_MINOR = 3;
 
 static const common::Log logger("SargassoEngine");
 
@@ -115,6 +115,8 @@ void Engine::init() {
     glfwSetFramebufferSizeCallback(window, Engine::onWindowResize);
 
     glClearColor(0.4f, 0.3f, 0.2f, 1.0f);
+
+    _graphics.initShader();
 }
 
 void Engine::quit() {
