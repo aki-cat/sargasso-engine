@@ -5,9 +5,11 @@
 
 #include <GL/gl3w.h>
 #include <GLFW/glfw3.h>
+#include <algorithm>
 #include <chrono>
 #include <cstdlib>
 #include <exception>
+#include <random>
 
 namespace sargasso {
 
@@ -17,10 +19,7 @@ static constexpr const int GL_VERSION_MINOR = 3;
 static const common::Log logger("SargassoEngine");
 
 // constructor
-Engine::Engine(const ProjectConfig& projectConfig)
-    : _projectConfig(projectConfig),
-      _windowWidth(projectConfig.windowWidth),
-      _windowHeight(projectConfig.windowHeight) {
+Engine::Engine(const ProjectConfig& projectConfig) : _projectConfig(projectConfig) {
     if (!glfwInit()) {
         throw std::runtime_error("Unable to initialize GLFW.");
     }
@@ -28,8 +27,11 @@ Engine::Engine(const ProjectConfig& projectConfig)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, GL_VERSION_MAJOR);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GL_VERSION_MINOR);
 
-    GLFWwindow* window =
-        glfwCreateWindow(_windowWidth, _windowHeight, _projectConfig.projectName, NULL, NULL);
+    _graphics.setWidth(_projectConfig.windowWidth);
+    _graphics.setHeight(_projectConfig.windowHeight);
+
+    GLFWwindow* window = glfwCreateWindow(_graphics.getWidth(), _graphics.getHeight(),
+                                          _projectConfig.projectName, NULL, NULL);
 
     if (!window) {
         glfwTerminate();
@@ -95,7 +97,7 @@ void Engine::swapBuffer() {
 }
 
 void Engine::resetViewport() {
-    glViewport(0, 0, _windowWidth, _windowHeight);
+    glViewport(0, 0, _graphics.getWidth(), _graphics.getHeight());
 }
 
 void Engine::clear() {
@@ -103,6 +105,16 @@ void Engine::clear() {
 }
 
 void Engine::init() {
+    {
+        auto time = std::chrono::steady_clock::now().time_since_epoch().count();
+        std::string timeString = std::to_string(time);
+        logger.info("seed: %s", timeString.c_str());
+        std::reverse(timeString.rbegin(), timeString.rend());
+        logger.info("Rseed: %s", timeString.substr(0, 8).c_str());
+        long seed = std::atoi(timeString.c_str());
+        std::srand(seed);
+    }
+
     glfwSwapInterval(1);
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -114,7 +126,10 @@ void Engine::init() {
     glfwSetKeyCallback(window, Engine::onKeyAction);
     glfwSetFramebufferSizeCallback(window, Engine::onWindowResize);
 
-    glClearColor(0.4f, 0.3f, 0.2f, 1.0f);
+    const sml::Color bgColor = sml::Color(.1f, .1f, .1f, 1.f);
+    glClearColor(bgColor.r, bgColor.g, bgColor.b, bgColor.a);
+
+    logger.info("Graphics API: %s | %s", glGetString(GL_VERSION), glfwGetVersionString());
 
     _graphics.initShader();
 }
@@ -162,8 +177,8 @@ void Engine::onKeyAction(GLFWwindow* window, int key, int scancode, int action, 
 
 void Engine::onWindowResize(GLFWwindow* window, int width, int height) {
     Engine* instance = (Engine*) glfwGetWindowUserPointer(window);
-    instance->_windowWidth = width;
-    instance->_windowHeight = height;
+    instance->_graphics.setWidth(width);
+    instance->_graphics.setHeight(height);
 }
 
 }  // namespace sargasso

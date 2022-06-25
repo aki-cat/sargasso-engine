@@ -37,9 +37,6 @@ class Engine {
     virtual void draw();
 
    private:
-    unsigned int _windowWidth;
-    unsigned int _windowHeight;
-
     // methods
     void pollEvents();
     void swapBuffer();
@@ -51,8 +48,8 @@ class Engine {
     void requestQuit();
 
     // instance callbacks
-    void onKeyPressed(int key);
-    void onKeyReleased(int key);
+    virtual void onKeyPressed(int key);
+    virtual void onKeyReleased(int key);
 
     // static callbacks
     static void onError(int errorCode, const char* errorMessage);

@@ -5,21 +5,28 @@
 
 #include <GL/gl3w.h>
 #include <GLFW/glfw3.h>
+#include <sml/matrix4.h>
 
 namespace sargasso {
 
 constexpr const char* DEFAULT_VERTEX_SHADER =
     "#version 330 core\n"
     "layout(location = 0) in vec3 vPos;\n"
+    "layout(location = 1) in vec4 vCol;\n"
+    "uniform mat4 projMatrix;\n"
+    "uniform mat4 transform;\n"
+    "out vec4 color;\n"
     "void main() {\n"
-    "   gl_Position = vec4(vPos, 1.0);\n"
+    "   color = vCol;\n"
+    "   gl_Position = projMatrix * transform * vec4(vPos, 1.0);\n"
     "}\n";
 
 constexpr const char* DEFAULT_FRAG_SHADER =
     "#version 330 core\n"
+    "in vec4 color;\n"
     "out vec4 fragColor;\n"
     "void main() {\n"
-    "    fragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+    "    fragColor = color;\n"
     "}\n";
 
 class ShaderProgram {
@@ -32,6 +39,11 @@ class ShaderProgram {
 
     void use() const {
         glUseProgram(_shaderProgram);
+    }
+
+    void setMat4Uniform(const char* uniformName, const sml::Mat4& mat) const {
+        const int mat4Location = glGetUniformLocation(_shaderProgram, uniformName);
+        glUniformMatrix4fv(mat4Location, 1, false, (const float*) &mat);
     }
 
     static unsigned int compileShader(const ShaderProgram::ShaderType shaderType,
