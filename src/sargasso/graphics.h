@@ -65,7 +65,7 @@ class Graphics {
         const float halfWidth = aspect * _height * unit;
         const float halfHeight = _height * unit;
         const sml::Mat4 projMatrix = sml::Mat4::orthogonal_projection(
-            -halfWidth, halfHeight, halfWidth, -halfHeight, -100, 1000);
+            -halfWidth, halfHeight, halfWidth, -halfHeight, 0, 1000);
         return projMatrix;
     }
 
@@ -73,7 +73,7 @@ class Graphics {
     common::Reference<ShaderProgram> _shaderProgram;
     std::map<const geometry::Mesh*, unsigned int> _vaoIds;
     unsigned int _width, _height;
-    float _heightInUnits = 5.f;
+    const float _heightInUnits = 5.f;
 };
 
 inline Graphics::Graphics() {}

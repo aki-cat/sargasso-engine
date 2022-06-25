@@ -64,6 +64,8 @@ inline ShaderProgram::ShaderProgram() {
     glAttachShader(_shaderProgram, vertexShader);
     glAttachShader(_shaderProgram, fragShader);
     glLinkProgram(_shaderProgram);
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragShader);
 
     if (!getShaderLinkingStatus(_shaderProgram)) {
         throw std::runtime_error("SHADER LINK ERROR");
