@@ -4,13 +4,14 @@
 #include "sargasso/geometry/vertex.h"
 
 #include <cstdlib>
+#include <cstdint>
 #include <vector>
 
 namespace sargasso {
 namespace geometry {
 
 struct IndexTriPlane {
-    unsigned int indices[3];
+    uint indices[3];
 };
 
 class Mesh {
@@ -33,8 +34,8 @@ class Mesh {
         return reinterpret_cast<const float*>(_vertices.data());
     }
 
-    const unsigned int* getTriPlaneData() const {
-        return reinterpret_cast<const unsigned int*>(_triPlanes.data());
+    const uint* getTriPlaneData() const {
+        return reinterpret_cast<const uint*>(_triPlanes.data());
     }
 
     size_t getVertexDataSize() const {

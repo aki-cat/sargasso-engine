@@ -5,6 +5,7 @@
 
 #include <GL/gl3w.h>
 #include <GLFW/glfw3.h>
+#include <cstdint>
 #include <sml/matrix4.h>
 
 namespace sargasso {
@@ -35,81 +36,19 @@ class ShaderProgram {
 
     // constructors
     ShaderProgram();
-    ShaderProgram(const char* vertexShaderCode, const char* fragShaderCode);
+    ShaderProgram(const std::string& vertexShaderCode, const std::string& fragShaderCode);
 
-    void use() const {
-        glUseProgram(_shaderProgram);
-    }
-
-    void setMat4Uniform(const char* uniformName, const sml::Mat4& mat) const {
-        const int mat4Location = glGetUniformLocation(_shaderProgram, uniformName);
-        glUniformMatrix4fv(mat4Location, 1, false, (const float*) &mat);
-    }
-
-    static unsigned int compileShader(const ShaderProgram::ShaderType shaderType,
-                                      const char* shaderCode);
-    static bool getShaderCompilationStatus(unsigned int shader);
-    static bool getShaderLinkingStatus(unsigned int shaderProgram);
+    void use() const;
+    void setMat4Uniform(const std::string& var, const sml::Mat4& value) const;
 
    private:
-    unsigned int _shaderProgram;
+    uint _shaderProgram;
+
+    static uint linkShader(uint vertexShader, uint fragShader);
+    static uint compileShader(const ShaderType shaderType, const std::string& shaderCode);
+    static bool getShaderCompilationStatus(uint shader);
+    static bool getShaderLinkingStatus(uint shaderProgram);
 };
-
-inline ShaderProgram::ShaderProgram() {
-    unsigned int vertexShader =
-        ShaderProgram::compileShader(ShaderType::kVertex, DEFAULT_VERTEX_SHADER);
-    unsigned int fragShader = ShaderProgram::compileShader(ShaderType::kFrag, DEFAULT_FRAG_SHADER);
-
-    _shaderProgram = glCreateProgram();
-    glAttachShader(_shaderProgram, vertexShader);
-    glAttachShader(_shaderProgram, fragShader);
-    glLinkProgram(_shaderProgram);
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragShader);
-
-    if (!getShaderLinkingStatus(_shaderProgram)) {
-        throw std::runtime_error("SHADER LINK ERROR");
-    }
-}
-
-inline ShaderProgram::ShaderProgram(const char* vertexShaderCode, const char* fragShaderCode) {}
-
-inline unsigned int ShaderProgram::compileShader(const ShaderProgram::ShaderType shaderType,
-                                                 const char* shaderCode) {
-    unsigned int shader = glCreateShader(shaderType);
-    glShaderSource(shader, 1, &shaderCode, NULL);
-    glCompileShader(shader);
-
-    if (!getShaderCompilationStatus(shader)) {
-        throw std::runtime_error("SHADER LINK ERROR");
-    }
-
-    return shader;
-}
-
-inline bool ShaderProgram::getShaderCompilationStatus(unsigned int shader) {
-    int success;
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        char infoLog[512];
-        glGetShaderInfoLog(shader, 512, NULL, infoLog);
-        common::Log("Shader").error("Error compiling shader: %s", infoLog);
-        return false;
-    }
-    return true;
-}
-
-inline bool ShaderProgram::getShaderLinkingStatus(unsigned int shaderProgram) {
-    int success;
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (!success) {
-        char infoLog[512];
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        common::Log("Shader").error("Error linking shader: %s", infoLog);
-        return false;
-    }
-    return true;
-}
 
 }  // namespace sargasso
 

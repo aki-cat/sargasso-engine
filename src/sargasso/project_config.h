@@ -8,9 +8,9 @@ namespace sargasso {
 struct ProjectConfig {
     const char projectName[128];
     const char version[32];
-    const unsigned int windowWidth;
-    const unsigned int windowHeight;
-    const unsigned int msaa;
+    const uint windowWidth;
+    const uint windowHeight;
+    const uint msaa;
 };
 
 }  // namespace sargasso

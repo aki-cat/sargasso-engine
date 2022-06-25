@@ -1,11 +1,6 @@
 
 #include <cstdlib>
-#include <sargasso/common/log.h>
-#include <sargasso/common/reference.h>
 #include <sargasso/engine.h>
-#include <sargasso/geometry/rect.h>
-#include <sargasso/graphics.h>
-#include <sargasso/project_config.h>
 #include <sml/sml.h>
 #include <string>
 
