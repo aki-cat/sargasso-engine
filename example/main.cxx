@@ -57,11 +57,12 @@ void Game::load() {
     static const Log logger("Game::load()");
 
     // window size debugging rects
+    float unit = 1.f;
     for (uint x = 0; x < WIDTH_UNITS; x++) {
         for (uint y = 0; y < HEIGHT_UNITS; y++) {
-            auto rect = _graphics.newRect(1, 1);
-            const float posX = 0.5f + x * WIDTH_UNITS * .5f;
-            const float posY = 0.5f + y * HEIGHT_UNITS * .5f;
+            auto rect = _graphics.newRect(unit, unit);
+            const float posX = .5f * unit + x * unit - unit * WIDTH_UNITS * .5f;
+            const float posY = .5f * unit + y * unit - unit * HEIGHT_UNITS * .5f;
             const sml::Vec3 pos(posX, posY, 0);
             rect->setTransform(sml::Mat4().translated(pos));
             sampleRects[x][y] = rect;

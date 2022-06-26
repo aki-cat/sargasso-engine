@@ -38,7 +38,7 @@ class Graphics {
 
     // mutable viewport methods
     void setDefaultViewport();
-    void newViewport(uint width, uint height, uint unit, float zNear, float zFar);
+    void newViewport(uint width, uint height, uint unit);
     void setWidth(const uint width);
     void setHeight(const uint height);
 

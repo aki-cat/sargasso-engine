@@ -112,8 +112,6 @@ void Engine::init() {
         std::srand(seed);
     }
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
     glfwSwapInterval(1);
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -130,9 +128,11 @@ void Engine::init() {
 
     logger.info("Graphics API: %s | %s", glGetString(GL_VERSION), glfwGetVersionString());
 
+    const uint width = _projectConfig.windowWidth;
+    const uint height = _projectConfig.windowHeight;
+    const uint ppu = _projectConfig.ppu;
     _graphics.initShader();
-    _graphics.newViewport(_projectConfig.windowWidth, _projectConfig.windowHeight,
-                          _projectConfig.ppu, .001f, 1000.f);
+    _graphics.newViewport(width, height, ppu);
 }
 
 void Engine::quit() {

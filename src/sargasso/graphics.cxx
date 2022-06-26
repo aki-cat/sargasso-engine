@@ -71,10 +71,9 @@ void Graphics::setDefaultViewport() {
     glViewport(0, 0, getWidth(), getHeight());
 }
 
-void Graphics::newViewport(uint width, uint height, uint unit, float, float) {
+void Graphics::newViewport(uint width, uint height, uint unit) {
     _viewport.clear();
     Viewport viewport = Viewport::ortho(width, height, unit);
-    // Viewport viewport = Viewport::conical(width, height, sml::PI / 2, .001f, 1000.f);
     _viewport = new Viewport(viewport);
 }
 
