@@ -19,7 +19,8 @@ constexpr const char* DEFAULT_VERTEX_SHADER =
     "out vec4 color;\n"
     "void main() {\n"
     "   color = vCol;\n"
-    "   gl_Position = projMatrix * transform * vec4(vPos, 1.0);\n"
+    "   mat4 mvp = projMatrix * transform;\n"
+    "   gl_Position = mvp * vec4(vPos, 1.0);\n"
     "}\n";
 
 constexpr const char* DEFAULT_FRAG_SHADER =

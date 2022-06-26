@@ -26,15 +26,13 @@ class Rect {
         : _width(width),
           _height(height),
           _transform(sml::Mat4::identity()),
-          _mesh(std::vector<Vertex>{Vertex{sml::Vec3(-.5f * width, -.5f * height, 0), randColor(),
-                                           sml::Vec3::zero(), 0.f, 0.f},
-                                    Vertex{sml::Vec3(+.5f * width, -.5f * height, 0), randColor(),
-                                           sml::Vec3::zero(), 0.f, 0.f},
-                                    Vertex{sml::Vec3(+.5f * width, +.5f * height, 0), randColor(),
-                                           sml::Vec3::zero(), 0.f, 0.f},
-                                    Vertex{sml::Vec3(-.5f * width, +.5f * height, 0), randColor(),
-                                           sml::Vec3::zero(), 0.f, 0.f}},
-                std::vector<IndexTriPlane>{IndexTriPlane{0, 1, 2}, IndexTriPlane{2, 3, 0}}) {}
+          _mesh(
+              std::vector<Vertex>{
+                  Vertex{sml::Vec3(-.5f * width, -.5f * height, 0), sml::Color::white(), {}, 0.f, 0.f},
+                  Vertex{sml::Vec3(+.5f * width, -.5f * height, 0), sml::Color::white(), {}, 1.f, 0.f},
+                  Vertex{sml::Vec3(+.5f * width, +.5f * height, 0), sml::Color::white(), {}, 1.f, 1.f},
+                  Vertex{sml::Vec3(-.5f * width, +.5f * height, 0), sml::Color::white(), {}, 0.f, 1.f}},
+              std::vector<IndexTriPlane>{IndexTriPlane{0, 1, 2}, IndexTriPlane{2, 3, 0}}) {}
 
     const Mesh& getMesh() const {
         return *&_mesh;

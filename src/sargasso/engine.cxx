@@ -27,10 +27,7 @@ Engine::Engine(const ProjectConfig& projectConfig) : _projectConfig(projectConfi
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, GL_VERSION_MAJOR);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GL_VERSION_MINOR);
 
-    _graphics.setWidth(_projectConfig.windowWidth);
-    _graphics.setHeight(_projectConfig.windowHeight);
-
-    GLFWwindow* window = glfwCreateWindow(_graphics.getWidth(), _graphics.getHeight(),
+    GLFWwindow* window = glfwCreateWindow(_projectConfig.windowWidth, _projectConfig.windowHeight,
                                           _projectConfig.projectName, NULL, NULL);
 
     if (!window) {
@@ -82,7 +79,7 @@ void Engine::run() {
 
 void Engine::load() {}
 
-void Engine::update(const double dt) {}
+void Engine::update(const double) {}
 
 void Engine::draw() {}
 
@@ -97,7 +94,7 @@ void Engine::swapBuffer() {
 }
 
 void Engine::resetViewport() {
-    glViewport(0, 0, _graphics.getWidth(), _graphics.getHeight());
+    _graphics.setDefaultViewport();
 }
 
 void Engine::clear() {
@@ -114,6 +111,8 @@ void Engine::init() {
         long seed = std::atoi(timeString.c_str());
         std::srand(seed);
     }
+
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     glfwSwapInterval(1);
 
@@ -132,6 +131,8 @@ void Engine::init() {
     logger.info("Graphics API: %s | %s", glGetString(GL_VERSION), glfwGetVersionString());
 
     _graphics.initShader();
+    _graphics.newViewport(_projectConfig.windowWidth, _projectConfig.windowHeight,
+                          _projectConfig.ppu, .001f, 1000.f);
 }
 
 void Engine::quit() {
@@ -151,7 +152,7 @@ void Engine::requestQuit() {
 
 // instance callbacks
 
-void Engine::onKeyPressed(int key) {}
+void Engine::onKeyPressed(int) {}
 
 void Engine::onKeyReleased(int key) {
     if (key == GLFW_KEY_F8) {
@@ -165,7 +166,7 @@ void Engine::onError(int errorCode, const char* errorMessage) {
     common::Log("GLFW").error("Code 0x%X: %s", errorCode, errorMessage);
 }
 
-void Engine::onKeyAction(GLFWwindow* window, int key, int scancode, int action, int mods) {
+void Engine::onKeyAction(GLFWwindow* window, int key, int, int action, int) {
     Engine* instance = (Engine*) glfwGetWindowUserPointer(window);
     if (action == GLFW_PRESS) {
         instance->onKeyPressed(key);

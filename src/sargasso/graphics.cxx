@@ -4,6 +4,7 @@
 #include "sargasso/geometry/mesh.h"
 #include "sargasso/geometry/rect.h"
 #include "sargasso/shader.h"
+#include "sargasso/viewport.h"
 
 #include <GL/gl3w.h>
 #include <GLFW/glfw3.h>
@@ -18,12 +19,6 @@ Graphics::Graphics() {}
 
 void Graphics::initShader() {
     _shaderProgram = new ShaderProgram();
-}
-
-RectRef Graphics::newRect(float w, float h) {
-    RectRef rect = new geometry::Rect(w, h);
-    loadMesh(rect->getMesh());
-    return rect;
 }
 
 void Graphics::loadMesh(const geometry::Mesh& mesh) {
@@ -50,12 +45,8 @@ void Graphics::loadMesh(const geometry::Mesh& mesh) {
     _vaoIds.emplace(&mesh, vaoId);
 }
 
-void Graphics::Graphics::drawRect(const RectRef& rect) const {
-    const geometry::Mesh& rectMesh = rect->getMesh();
-    drawMesh(rectMesh, rect->getTransform());
-}
-
-void Graphics::drawMesh(const geometry::Mesh& mesh, const sml::Mat4& transform) const {
+void Graphics::drawMesh(const geometry::Mesh& mesh, const sml::Mat4& transform) {
+    _viewport->clearDirty();
     _shaderProgram->use();
     _shaderProgram->setMat4Uniform("projMatrix", getProjection());
     _shaderProgram->setMat4Uniform("transform", transform);
@@ -64,37 +55,55 @@ void Graphics::drawMesh(const geometry::Mesh& mesh, const sml::Mat4& transform) 
     glDrawElements(GL_TRIANGLES, mesh.getTriPlaneCount() * 3, GL_UNSIGNED_INT, NULL);
 }
 
-uint Graphics::getWidth() const {
-    return _width;
+common::Reference<geometry::Rect> Graphics::newRect(float w, float h) {
+    common::Reference<geometry::Rect> rect = new geometry::Rect(w, h);
+    loadMesh(rect->getMesh());
+    return rect;
 }
+
+void Graphics::Graphics::drawRect(const common::Reference<geometry::Rect>& rect) {
+    const geometry::Mesh& rectMesh = rect->getMesh();
+    drawMesh(rectMesh, rect->getTransform());
+}
+
+void Graphics::setDefaultViewport() {
+    _viewport->clearDirty();
+    glViewport(0, 0, getWidth(), getHeight());
+}
+
+void Graphics::newViewport(uint width, uint height, uint unit, float, float) {
+    _viewport.clear();
+    Viewport viewport = Viewport::ortho(width, height, unit);
+    // Viewport viewport = Viewport::conical(width, height, sml::PI / 2, .001f, 1000.f);
+    _viewport = new Viewport(viewport);
+}
+
+uint Graphics::getWidth() const {
+    return _viewport->getWidth();
+}
+
 uint Graphics::getHeight() const {
-    return _height;
+    return _viewport->getHeight();
 }
 
 void Graphics::setWidth(const uint width) {
-    _width = width;
+    _viewport->setWidth(width);
 }
 
 void Graphics::setHeight(const uint height) {
-    _height = height;
+    _viewport->setHeight(height);
 }
 
 float Graphics::getAspect() const {
-    return 1.f * _width / _height;
+    return _viewport->getAspect();
 }
 
 float Graphics::getUnitSize() const {
-    return _heightInUnits / (.5f * _height);
+    return _viewport->getUnitSize();
 }
 
-sml::Mat4 Graphics::getProjection() const {
-    const float aspect = getAspect();
-    const float unit = getUnitSize();
-    const float halfWidth = aspect * _height * unit;
-    const float halfHeight = _height * unit;
-    const sml::Mat4 projMatrix =
-        sml::Mat4::orthogonal_projection(-halfWidth, halfHeight, halfWidth, -halfHeight, 0, 1000);
-    return projMatrix;
+const sml::Mat4& Graphics::getProjection() const {
+    return _viewport->getProjMatrix();
 }
 
 }  // namespace sargasso

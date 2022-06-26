@@ -35,6 +35,7 @@ class Engine {
     virtual void load();
     virtual void update(const double dt);
     virtual void draw();
+    void requestQuit();
 
    private:
     // methods
@@ -45,7 +46,6 @@ class Engine {
     void init();
     void quit();
     bool quitRequested();
-    void requestQuit();
 
     // instance callbacks
     virtual void onKeyPressed(int key);

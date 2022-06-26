@@ -5,6 +5,7 @@
 #include "sargasso/geometry/mesh.h"
 #include "sargasso/geometry/rect.h"
 #include "sargasso/shader.h"
+#include "sargasso/viewport.h"
 
 #include <GL/gl3w.h>
 #include <GLFW/glfw3.h>
@@ -15,10 +16,6 @@
 
 namespace sargasso {
 
-namespace {
-using RectRef = common::Reference<geometry::Rect>;
-}
-
 class Graphics {
    public:
     explicit Graphics();
@@ -28,26 +25,34 @@ class Graphics {
     Graphics&& operator=(Graphics&&) = delete;
     Graphics&& operator=(const Graphics&&) = delete;
 
-    // methods
+    // shader methods
     void initShader();
-    RectRef newRect(float w, float h);
-    void loadMesh(const geometry::Mesh& mesh);
-    void drawRect(const RectRef& rect) const;
-    void drawMesh(const geometry::Mesh& mesh, const sml::Mat4& transform) const;
 
-    uint getWidth() const;
-    uint getHeight() const;
+    // general drawing methods
+    void loadMesh(const geometry::Mesh& mesh);
+    void drawMesh(const geometry::Mesh& mesh, const sml::Mat4& transform);
+
+    // specific drawing methods
+    common::Reference<geometry::Rect> newRect(float w, float h);
+    void drawRect(const common::Reference<geometry::Rect>& rect);
+
+    // mutable viewport methods
+    void setDefaultViewport();
+    void newViewport(uint width, uint height, uint unit, float zNear, float zFar);
     void setWidth(const uint width);
     void setHeight(const uint height);
+
+    // immutable viewport methods
+    uint getWidth() const;
+    uint getHeight() const;
     float getAspect() const;
     float getUnitSize() const;
-    sml::Mat4 getProjection() const;
+    const sml::Mat4& getProjection() const;
 
    private:
     common::Reference<ShaderProgram> _shaderProgram;
+    common::Reference<Viewport> _viewport;
     std::map<const geometry::Mesh*, uint> _vaoIds;
-    uint _width, _height;
-    const float _heightInUnits = 5.f;
 };
 
 }  // namespace sargasso

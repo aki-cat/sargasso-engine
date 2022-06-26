@@ -10,6 +10,7 @@ struct ProjectConfig {
     const char version[32];
     const uint windowWidth;
     const uint windowHeight;
+    const uint ppu; // pixels per unit
     const uint msaa;
 };
 
