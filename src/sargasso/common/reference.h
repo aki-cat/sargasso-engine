@@ -37,7 +37,7 @@ class Reference {
 
 template <typename T>
 Reference<T>::Reference(T* data) : _ref(data) {
-    Log("Reference").debug("Reference<%p> created", _ref);
+    // Log("Reference").debug("Reference<%p> created", _ref);
 
     _ref_count = new Counter();
     if (_ref) {
@@ -50,7 +50,7 @@ Reference<T>& Reference<T>::operator=(const Reference& assigned) {
     _ref = assigned._ref;
     _ref_count = assigned._ref_count;
     if (_ref_count) {
-        Log("Reference").debug("Reference<%p> copy-assigned (copy#%ld).", _ref, _ref_count->get());
+        // Log("Reference").debug("Reference<%p> copy-assigned (copy#%ld).", _ref, _ref_count->get());
         _ref_count->increase();
     }
     return *this;
@@ -61,23 +61,22 @@ Reference<T>::Reference(const Reference<T>& original) {
     _ref = original._ref;
     _ref_count = original._ref_count;
     if (_ref_count) {
-        Log("Reference").debug("Reference<%p> copied (copy#%ld).", _ref, _ref_count->get());
+        // Log("Reference").debug("Reference<%p> copied (copy#%ld).", _ref, _ref_count->get());
         _ref_count->increase();
     }
 }
 
 template <typename T>
 Reference<T>::~Reference() {
-    Log("Reference").debug("Reference<%p> destructor called.", _ref);
+    // Log("Reference").debug("Reference<%p> destructor called.", _ref);
 
     if (_ref == nullptr || _ref_count == nullptr) {
-        Log("Reference").warning("DELETING DEAD REFERENCE");
         return;
     }
 
     _ref_count->decrease();
     if (_ref_count->get() == 0) {
-        Log("Reference").debug("Reference<%p> deleted.", _ref);
+        // Log("Reference").debug("Reference<%p> deleted.", _ref);
         delete _ref;
         delete _ref_count;
     }

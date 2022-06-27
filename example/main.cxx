@@ -23,7 +23,7 @@ float rWidth, rHeight;
 
 class Game : public Engine {
    public:
-    Game(const ProjectConfig& projectConfig) : Engine(projectConfig) {}
+    Game(const ProjectConfig& projectConfig, const char* argv0) : Engine(projectConfig, argv0) {}
     void load() override;
     void update(const double dt) override;
     void draw() override;
@@ -32,14 +32,14 @@ class Game : public Engine {
     void onKeyReleased(int key) override;
 };
 
-int main() {
+int main(int, const char** argv) {
     static const Log logger("main");
-    logger.info("Starting example project...");
+    logger.info("[%s] Starting example project...", argv[0]);
 
     try {
-        const ProjectConfig projectConfig = {"Example Project", "1.0", WINDOW_WIDTH,
-                                             WINDOW_HEIGHT,     PPU,   0};
-        Game game(projectConfig);
+        const ProjectConfig projectConfig = {"Example Project", "coffeecat", "1.0", WINDOW_WIDTH,
+                                             WINDOW_HEIGHT,     PPU,         0};
+        Game game(projectConfig, argv[0]);
         game.run();
     } catch (const std::exception& e) {
         logger.error(e.what());

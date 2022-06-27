@@ -1,5 +1,5 @@
-#ifndef SARGASSO_GEOMETRY_VERTEX_H
-#define SARGASSO_GEOMETRY_VERTEX_H
+#ifndef SARGASSO_GEOMETRY_VERTEX_H_
+#define SARGASSO_GEOMETRY_VERTEX_H_
 
 #include <sml/color.h>
 #include <sml/vector3.h>
@@ -19,4 +19,4 @@ struct Vertex {
 }  // namespace geometry
 }  // namespace sargasso
 
-#endif
+#endif  // SARGASSO_GEOMETRY_VERTEX_H_

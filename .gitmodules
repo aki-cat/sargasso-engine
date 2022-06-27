@@ -10,3 +10,6 @@
 [submodule "src/third_party/gl3w"]
 	path = src/third_party/gl3w
 	url = https://github.com/skaslev/gl3w.git
+[submodule "src/third_party/physfs"]
+	path = src/third_party/physfs
+	url = https://github.com/icculus/physfs.git

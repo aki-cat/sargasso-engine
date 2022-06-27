@@ -7,6 +7,7 @@ namespace sargasso {
 
 struct ProjectConfig {
     const char projectName[128];
+    const char organizationName[128];
     const char version[32];
     const uint windowWidth;
     const uint windowHeight;

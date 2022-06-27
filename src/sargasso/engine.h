@@ -1,6 +1,8 @@
 #ifndef SARGASSO_ENGINE_H_
 #define SARGASSO_ENGINE_H_
 
+#include "sargasso/common/typedefs.h"
+#include "sargasso/file_system.h"
 #include "sargasso/graphics.h"
 #include "sargasso/project_config.h"
 
@@ -11,7 +13,8 @@ namespace sargasso {
 
 class Engine {
    public:
-    Engine(const ProjectConfig& projectConfig);
+    Engine(const ProjectConfig& projectConfig, const char* argv0);
+    virtual ~Engine() = default;
 
     Engine() = delete;
     Engine(Engine&&) = delete;
@@ -29,6 +32,7 @@ class Engine {
 
    protected:
     const ProjectConfig _projectConfig;
+    FileSystem _fileSystem;
     Graphics _graphics;
 
     // methods

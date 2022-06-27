@@ -19,7 +19,8 @@ static constexpr const int GL_VERSION_MINOR = 3;
 static const common::Log logger("SargassoEngine");
 
 // constructor
-Engine::Engine(const ProjectConfig& projectConfig) : _projectConfig(projectConfig) {
+Engine::Engine(const ProjectConfig& projectConfig, const char* argv0)
+    : _projectConfig(projectConfig), _fileSystem(projectConfig, argv0) {
     if (!glfwInit()) {
         throw std::runtime_error("Unable to initialize GLFW.");
     }
