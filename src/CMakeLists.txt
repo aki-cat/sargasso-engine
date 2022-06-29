@@ -90,12 +90,15 @@ target_include_directories(SargassoEngine PUBLIC
 
 set(SOURCE_SHADER_DIRECTORY ${PROJECT_SOURCE_DIR}/sargasso/shaders)
 set(BINARY_SHADER_DIRECTORY ${CMAKE_BINARY_DIR}/shaders)
-add_custom_command(
-    TARGET SargassoEngine POST_BUILD
+
+add_custom_target(SargassoShaders
+    COMMENT "Copying built-in shaders to build directory..."
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/shaders
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${PROJECT_SOURCE_DIR}/sargasso/shaders ${CMAKE_BINARY_DIR}/shaders
 )
+
+add_dependencies(SargassoEngine SargassoShaders)
 
 # ENGINE TESTS
 if (SARGASSO_RUN_TESTS)
