@@ -2,7 +2,7 @@
 #define SARGASSO_ENGINE_H_
 
 #include "sargasso/common/typedefs.h"
-#include "sargasso/file_system.h"
+#include "sargasso/filesystem/filesystem.h"
 #include "sargasso/graphics.h"
 #include "sargasso/project_config.h"
 
@@ -32,7 +32,7 @@ class Engine {
 
    protected:
     const ProjectConfig _projectConfig;
-    FileSystem _fileSystem;
+    filesystem::FileSystem _fileSystem;
     Graphics _graphics;
 
     // methods

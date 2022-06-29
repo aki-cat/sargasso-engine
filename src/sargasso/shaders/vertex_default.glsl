@@ -10,9 +10,11 @@ uniform mat4 projMatrix;
 uniform mat4 transform;
 
 out vec4 color;
+out vec2 uv;
 
 void main() {
     color = vCol;
+    uv = vUV;
     mat4 mvp = projMatrix * transform;
     gl_Position = mvp * vec4(vPos, 1.0);
 }

@@ -9,22 +9,24 @@
 using sargasso::common::IO;
 using sargasso::common::Log;
 
-void IO::write(const std::string& file_path, const char* data, size_t data_size) {
-    std::fstream file(file_path, std::ios::out);
+static const Log logger("IO");
+
+void IO::write(const std::filesystem::path& filePath, const char* data, size_t dataSize) {
+    std::fstream file(filePath, std::ios::out);
 
     if (!file.is_open()) {
-        Log("IO").error("Failed to open file '%s' for writing.", file_path.c_str());
+        logger.error("Failed to open file '%s' for writing.", filePath.c_str());
         return;
     }
-    file.write(data, data_size);
+    file.write(data, dataSize);
     file.close();
 }
 
-const std::string IO::read(const std::string& file_path) {
-    std::fstream file(file_path, std::ios::in);
+const std::string IO::read(const std::filesystem::path& filePath) {
+    std::fstream file(filePath, std::ios::in);
 
     if (!file.is_open()) {
-        Log("IO").error("Failed to open file '%s' for reading: %s", file_path.c_str());
+        logger.error("Failed to open file '%s' for reading: %s", filePath.c_str());
         return "";
     }
 
