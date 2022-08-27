@@ -12,9 +12,11 @@
 *.o
 /Sample
 /SargassoTests
+/out
 
 # VSCode
 .vscode/
+.vs/
 
 # Python
 __pycache__/
