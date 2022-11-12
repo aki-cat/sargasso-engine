@@ -72,10 +72,10 @@ class FileSystem : public FileSystemInitializer {
      * @param maxByteCount
      * @return std::string
      */
-    const std::string readFile(const std::filesystem::path& filePath, long maxByteCount);
+    const std::string readFile(const std::filesystem::path& filePath, size_t maxByteCount);
 
     // Writes to a file up to 'byteCount' bytes. If file does not exist, it is created.
-    void writeFile(const std::filesystem::path& filePath, const char* data, long byteCount);
+    void writeFile(const std::filesystem::path& filePath, const char* data, size_t byteCount);
 
    private:
     const ProjectConfig& _projectConfig;

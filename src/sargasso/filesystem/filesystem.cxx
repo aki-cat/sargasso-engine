@@ -108,7 +108,7 @@ const std::filesystem::path& FileSystem::getUserDirectory() const {
     return _prefsDirectory;
 }
 
-const std::string FileSystem::readFile(const std::filesystem::path& filePath, long maxByteCount) {
+const std::string FileSystem::readFile(const std::filesystem::path& filePath, size_t maxByteCount) {
     auto fileHandle = openFile(filePath, FileMode::kRead);
     char* buffer = new char[maxByteCount];
 
@@ -121,7 +121,7 @@ const std::string FileSystem::readFile(const std::filesystem::path& filePath, lo
 }
 
 void FileSystem::writeFile(const std::filesystem::path& filePath, const char* data,
-                           long maxByteCount) {
+                           size_t maxByteCount) {
     const auto fileHandle = openFile(filePath, FileMode::kWrite);
 
     CHECK_SUCCESS(PHYSFS_writeBytes(FileReference{fileHandle.handle}, data, maxByteCount) ==
@@ -131,16 +131,17 @@ void FileSystem::writeFile(const std::filesystem::path& filePath, const char* da
 
 FileHandle FileSystem::openFile(const std::filesystem::path& path, FileMode mode) {
     PHYSFS_File* openedFile = nullptr;
+    const char* filepath = reinterpret_cast<const char*>(path.c_str());
 
     switch (mode) {
         case FileMode::kRead:
-            openedFile = PHYSFS_openRead(path.c_str());
+            openedFile = PHYSFS_openRead(filepath);
             break;
         case FileMode::kWrite:
-            openedFile = PHYSFS_openWrite(path.c_str());
+            openedFile = PHYSFS_openWrite(filepath);
             break;
         case FileMode::kAppend:
-            openedFile = PHYSFS_openAppend(path.c_str());
+            openedFile = PHYSFS_openAppend(filepath);
             break;
         default:
             break;
@@ -165,9 +166,10 @@ static bool setGameDirectory(const FileSystem& fileSystem) {
         return false;
     }
 
-    const char* executableDir = fileSystem.getExecutableDirectory().c_str();
+    const char* executableDir =
+        reinterpret_cast<const char*>(fileSystem.getExecutableDirectory().c_str());
 
-    if (!PHYSFS_mount(executableDir, GAME_ROOT.c_str(), 0)) {
+    if (!PHYSFS_mount(executableDir, reinterpret_cast<const char*>(GAME_ROOT.c_str()), 0)) {
         return false;
     }
     return true;
@@ -178,14 +180,15 @@ static bool testGameDirectory(FileSystem& fileSystem) {
     if (!PHYSFS_isInit()) {
         return false;
     }
-
     const std::filesystem::path testFilePath = GAME_ROOT / "shaders/vertex_default.glsl";
-    if (PHYSFS_exists(testFilePath.c_str())) {
-        logger.debug("Test file found @ `%s` !", testFilePath.c_str());
+    const char* filePathRaw = reinterpret_cast<const char*>(testFilePath.c_str());
+
+    if (PHYSFS_exists(filePathRaw)) {
+        logger.debug("Test file found @ `%s` !", filePathRaw);
     }
 
     std::string contents = fileSystem.readFile(testFilePath, 1024);
-    logger.debug("%s contents:\n%s\n", testFilePath.c_str(), contents.c_str());
+    logger.debug("%s contents:\n%s\n", filePathRaw, contents.c_str());
     return true;
 }
 
@@ -195,7 +198,8 @@ static bool setUserDirectory(const FileSystem& fileSystem) {
         return false;
     }
 
-    const char* prefsDirectoryRawPath = fileSystem.getUserDirectory().c_str();
+    const char* prefsDirectoryRawPath =
+        reinterpret_cast<const char*>(fileSystem.getUserDirectory().c_str());
     if (!PHYSFS_exists(prefsDirectoryRawPath)) {
         PHYSFS_mkdir(prefsDirectoryRawPath);
     }
