@@ -10,6 +10,7 @@ using sargasso::ProjectConfig;
 using sargasso::common::Log;
 using sargasso::common::Reference;
 using sargasso::geometry::Rect;
+using sargasso::uint;
 
 const uint WINDOW_WIDTH = 1024;
 const uint WINDOW_HEIGHT = 576;

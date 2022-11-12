@@ -20,7 +20,7 @@ static constexpr void dirtyWarning(const Viewport& viewport, const char* funcNam
     }
 }
 
-static constexpr float DEFAULT_ANGLE = 75.f * sml::TAU / 360.f;  // 75 degrees
+static constexpr float DEFAULT_ANGLE = 75.f * (float) sml::TAU / 360.f;  // 75 degrees
 static constexpr float DEFAULT_Z_NEAR = -1000.f;
 static constexpr float DEFAULT_Z_FAR = 1000.f;
 static constexpr int DIRTY_TRUE = 0xffffffff;
@@ -130,7 +130,7 @@ float Viewport::getAspect() const {
 
 float Viewport::getUnitSize() const {
     dirtyWarning(*this, __func__);
-    return _unit;
+    return 1.f * _unit;
 }
 
 float Viewport::getCameraAngle() const {

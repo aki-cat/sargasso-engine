@@ -2,6 +2,7 @@
 #define SARGASSO_SHADER_H_
 
 #include "sargasso/common/log.h"
+#include "sargasso/common/typedefs.h"
 
 #include <GL/gl3w.h>
 #include <GLFW/glfw3.h>

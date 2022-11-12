@@ -1,6 +1,7 @@
 #include "sargasso/graphics.h"
 
 #include "sargasso/common/reference.h"
+#include "sargasso/common/typedefs.h"
 #include "sargasso/geometry/mesh.h"
 #include "sargasso/geometry/rect.h"
 #include "sargasso/shader.h"
@@ -52,7 +53,7 @@ void Graphics::drawMesh(const geometry::Mesh& mesh, const sml::Mat4& transform) 
     _shaderProgram->setMat4Uniform("transform", transform);
     uint vaoId = _vaoIds.at(&mesh);
     glBindVertexArray(vaoId);
-    glDrawElements(GL_TRIANGLES, mesh.getTriPlaneCount() * 3, GL_UNSIGNED_INT, NULL);
+    glDrawElements(GL_TRIANGLES, (GLsizei) (mesh.getTriPlaneCount() * 3), GL_UNSIGNED_INT, NULL);
 }
 
 common::Reference<geometry::Rect> Graphics::newRect(float w, float h) {

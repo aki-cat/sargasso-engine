@@ -1,6 +1,8 @@
 #ifndef SARGASSO_VIEWPORT_H_
 #define SARGASSO_VIEWPORT_H_
 
+#include "sargasso/common/typedefs.h"
+
 #include <cstdint>
 #include <cstdio>
 #include <sml/constants.h>

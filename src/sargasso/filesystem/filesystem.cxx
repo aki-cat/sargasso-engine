@@ -168,6 +168,7 @@ static bool setGameDirectory(const FileSystem& fileSystem) {
 
     const char* executableDir =
         reinterpret_cast<const char*>(fileSystem.getExecutableDirectory().c_str());
+    logger.info("Executable directory: %", executableDir);
 
     if (!PHYSFS_mount(executableDir, reinterpret_cast<const char*>(GAME_ROOT.c_str()), 0)) {
         return false;

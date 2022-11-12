@@ -2,6 +2,7 @@
 #define SARGASSO_GRAPHICS_H_
 
 #include "sargasso/common/reference.h"
+#include "sargasso/common/typedefs.h"
 #include "sargasso/geometry/mesh.h"
 #include "sargasso/geometry/rect.h"
 #include "sargasso/shader.h"
