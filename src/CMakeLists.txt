@@ -54,10 +54,15 @@ set_target_properties(SargassoEngine
 
 find_package(OpenGL REQUIRED)
 
-target_compile_options(SargassoEngine
-    PUBLIC -static-libgcc -static-libstdc++
-    PRIVATE -Wextra -Werror -Wall -Wno-unknown-pragmas -O0 -g
-)
+if(MSVC)
+    target_compile_options(SargassoEngine PRIVATE /W3 /WX /Od)
+else(MSVC)
+    target_compile_options(SargassoEngine
+        PUBLIC -static-libgcc -static-libstdc++
+        PRIVATE -Wextra -Werror -Wall -Wno-unknown-pragmas -O0 -g
+    )
+endif(MSVC)
+
 
 if(NOT DEFINED SARGASSO_VERBOSE_LOGS)
     set(SARGASSO_VERBOSE_LOGS 3)
