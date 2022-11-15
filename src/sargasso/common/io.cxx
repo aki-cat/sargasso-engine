@@ -11,7 +11,7 @@ using sargasso::common::Log;
 
 static const Log logger("IO");
 
-void IO::write(const std::filesystem::path& filePath, const char* data, size_t dataSize) {
+void IO::write(const std::string& filePath, const char* data, size_t dataSize) {
     std::fstream file(filePath, std::ios::out);
 
     if (!file.is_open()) {
@@ -22,7 +22,7 @@ void IO::write(const std::filesystem::path& filePath, const char* data, size_t d
     file.close();
 }
 
-const std::string IO::read(const std::filesystem::path& filePath) {
+const std::string IO::read(const std::string& filePath) {
     std::fstream file(filePath, std::ios::in);
 
     if (!file.is_open()) {

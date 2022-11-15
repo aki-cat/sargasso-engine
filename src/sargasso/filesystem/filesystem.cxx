@@ -12,7 +12,7 @@
 namespace sargasso {
 namespace filesystem {
 
-static const std::filesystem::path GAME_ROOT = "GameRoot/";
+static const char* GAME_ROOT = "GameRoot/";
 
 static const common::Log logger("Filesystem");
 
@@ -40,6 +40,18 @@ static void throwErr(const std::string& where) {
     throw std::runtime_error(stream.str());
 }
 
+#if SARGASSO_WINDOWS
+static std::string toUTF8(const std::wstring& wstr) {
+    std::string strTo;
+    char* szTo = new char[wstr.length() + 1];
+    szTo[wstr.size()] = '\0';
+    WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), -1, szTo, (int) wstr.length(), NULL, NULL);
+    std::string out = szTo;
+    delete[] szTo;
+    return out;
+}
+#endif
+
 struct FileReference {
     const void* ptr;
     operator const void*() {
@@ -49,6 +61,23 @@ struct FileReference {
         return (PHYSFS_File*) ptr;
     }
 };
+
+static std::string extractPlatformExecutablePath(const char* argv0) {
+    logger.info("Extract platform-specific executable path...");
+    std::string executablePath(reinterpret_cast<const char*>(argv0));
+#if SARGASSO_WINDOWS
+    // Shamelessly stolen and adapted from Love2D's Filesystem.cpp @ github.com/love2d/love
+    wchar_t buffer[MAX_PATH + 1] = {0};
+    if (GetModuleFileNameW(nullptr, buffer, MAX_PATH) == 0) {
+        logger.error("WINDOWS: Unable to fetch filename!?");
+        throw;
+    }
+    executablePath = toUTF8(buffer);
+    logger.info("Executable path: %s", executablePath.c_str());
+#endif
+
+    return executablePath;
+}
 
 FileSystemInitializer::FileSystemInitializer(const char* argv0) {
     CHECK_SUCCESS(initPhysfs(argv0));
@@ -61,7 +90,7 @@ FileSystemInitializer::~FileSystemInitializer() {
 FileSystem::FileSystem(const ProjectConfig& config, const char* argv0)
     : FileSystemInitializer(argv0),
       _projectConfig(config),
-      _executablePath(argv0),
+      _executablePath(extractPlatformExecutablePath(argv0)),
       _prefsDirectory(
           PHYSFS_getPrefDir(_projectConfig.organizationName, _projectConfig.projectName)) {
     CHECK_SUCCESS(setGameDirectory(*this));
@@ -99,16 +128,20 @@ FileSystem::~FileSystem() {
 
 // public API
 
-const std::filesystem::path& FileSystem::getExecutableDirectory() const {
-    static std::filesystem::path directoryPath = _executablePath.parent_path();
-    return directoryPath;
+std::string FileSystem::getExecutableDirectory() const {
+    std::filesystem::path execPath = std::filesystem::path(_executablePath).parent_path();
+#if SARGASSO_WINDOWS
+    return toUTF8(execPath.native());
+#else
+    return execPath.native();
+#endif
 }
 
-const std::filesystem::path& FileSystem::getUserDirectory() const {
+std::string FileSystem::getUserDirectory() const {
     return _prefsDirectory;
 }
 
-const std::string FileSystem::readFile(const std::filesystem::path& filePath, size_t maxByteCount) {
+std::string FileSystem::readFile(const std::string& filePath, size_t maxByteCount) {
     auto fileHandle = openFile(filePath, FileMode::kRead);
     char* buffer = new char[maxByteCount];
 
@@ -120,8 +153,7 @@ const std::string FileSystem::readFile(const std::filesystem::path& filePath, si
     return result;
 }
 
-void FileSystem::writeFile(const std::filesystem::path& filePath, const char* data,
-                           size_t maxByteCount) {
+void FileSystem::writeFile(const std::string& filePath, const char* data, size_t maxByteCount) {
     const auto fileHandle = openFile(filePath, FileMode::kWrite);
 
     CHECK_SUCCESS(PHYSFS_writeBytes(FileReference{fileHandle.handle}, data, maxByteCount) ==
@@ -129,9 +161,10 @@ void FileSystem::writeFile(const std::filesystem::path& filePath, const char* da
     CHECK_SUCCESS(closeFile(fileHandle));
 }
 
-FileHandle FileSystem::openFile(const std::filesystem::path& path, FileMode mode) {
+FileHandle FileSystem::openFile(const std::string& path, FileMode mode) {
+    logger.info("Opening file: %s...", path.c_str());
     PHYSFS_File* openedFile = nullptr;
-    const char* filepath = reinterpret_cast<const char*>(path.c_str());
+    const char* filepath = path.c_str();
 
     switch (mode) {
         case FileMode::kRead:
@@ -166,11 +199,10 @@ static bool setGameDirectory(const FileSystem& fileSystem) {
         return false;
     }
 
-    const char* executableDir =
-        reinterpret_cast<const char*>(fileSystem.getExecutableDirectory().c_str());
-    logger.info("Executable directory: %", executableDir);
+    const std::string baseDir = PHYSFS_getBaseDir();
+    logger.info("base dir: %s", baseDir.c_str());
 
-    if (!PHYSFS_mount(executableDir, reinterpret_cast<const char*>(GAME_ROOT.c_str()), 0)) {
+    if (!PHYSFS_mount(baseDir.c_str(), GAME_ROOT, 0)) {
         return false;
     }
     return true;
@@ -181,8 +213,8 @@ static bool testGameDirectory(FileSystem& fileSystem) {
     if (!PHYSFS_isInit()) {
         return false;
     }
-    const std::filesystem::path testFilePath = GAME_ROOT / "shaders/vertex_default.glsl";
-    const char* filePathRaw = reinterpret_cast<const char*>(testFilePath.c_str());
+    const std::string testFilePath = std::string(GAME_ROOT) + "shaders/vertex_default.glsl";
+    const char* filePathRaw = testFilePath.c_str();
 
     if (PHYSFS_exists(filePathRaw)) {
         logger.debug("Test file found @ `%s` !", filePathRaw);
@@ -199,19 +231,19 @@ static bool setUserDirectory(const FileSystem& fileSystem) {
         return false;
     }
 
-    const char* prefsDirectoryRawPath =
-        reinterpret_cast<const char*>(fileSystem.getUserDirectory().c_str());
-    if (!PHYSFS_exists(prefsDirectoryRawPath)) {
-        PHYSFS_mkdir(prefsDirectoryRawPath);
+    std::string prefsDirPath = fileSystem.getUserDirectory();
+    const char* prefsDirRaw = prefsDirPath.c_str();
+    logger.info("UserPath: %s", prefsDirRaw);
+
+    if (!PHYSFS_exists(prefsDirRaw)) {
+        PHYSFS_mkdir(prefsDirRaw);
     }
 
-    logger.debug("UserPath: %s", prefsDirectoryRawPath);
-
-    if (!PHYSFS_setWriteDir(prefsDirectoryRawPath)) {
+    if (!PHYSFS_setWriteDir(prefsDirRaw)) {
         return false;
     }
 
-    if (!PHYSFS_mount(prefsDirectoryRawPath, nullptr, 0)) {
+    if (!PHYSFS_mount(prefsDirRaw, nullptr, 0)) {
         return false;
     }
 
@@ -223,7 +255,7 @@ static bool testUserDirectory(FileSystem& fileSystem) {
     if (!PHYSFS_isInit()) {
         return false;
     }
-    const std::filesystem::path testFilePath = "prefs.txt";
+    const std::string testFilePath = "prefs.txt";
     const std::string writeBuff = "{ \"hello\": \"world\" }\n";
 
     fileSystem.writeFile(testFilePath, writeBuff.c_str(), writeBuff.size());

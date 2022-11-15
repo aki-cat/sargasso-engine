@@ -14,8 +14,8 @@ static const common::Log logger("Viewport");
 static constexpr void dirtyWarning(const Viewport& viewport, const char* funcName) {
     if (viewport.isDirty()) {
         logger.warning(
-            "@%s() Querying value of dirty viewport (%p). Run `clearDirty()` method first to avoid "
-            "issues.\n",
+            "@%s() Querying value of dirty viewport (%p). "
+            "Run `clearDirty()` method first to avoid issues.\n",
             funcName, &viewport);
     }
 }
@@ -94,7 +94,7 @@ void Viewport::clearDirty() {
     const float aspect = getAspect();
     const float height = .5f * _height / _unit;
     const float width = aspect * height;
-    char errMessage[32];
+    char errMessage[128];
     sml::Mat4 projection;
 
     switch (_projType) {
@@ -109,7 +109,7 @@ void Viewport::clearDirty() {
             break;
         default:
             std::snprintf(errMessage, 32, "Invalid ProjectionType: %d", _projType);
-            throw std::invalid_argument(errMessage);
+            throw std::invalid_argument((const char*) errMessage);
     }
 }
 

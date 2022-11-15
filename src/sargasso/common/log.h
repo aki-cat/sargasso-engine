@@ -65,7 +65,7 @@ class Log {
     // Output pointers
     static std::string _out;
     static std::string _err;
-    static const char* _unused;
+    static const std::string _unused;
 };
 
 // Constructors

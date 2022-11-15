@@ -5,7 +5,7 @@
 
 using sargasso::common::Log;
 
-const char* Log::_unused = "\0";
+const std::string Log::_unused = "\0";
 std::string Log::_out = Log::_unused;
 std::string Log::_err = Log::_unused;
 

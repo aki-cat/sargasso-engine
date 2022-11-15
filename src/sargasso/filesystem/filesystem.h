@@ -4,7 +4,6 @@
 #include "sargasso/common/typedefs.h"
 #include "sargasso/project_config.h"
 
-#include <filesystem>
 #include <unordered_map>
 
 namespace sargasso {
@@ -14,11 +13,11 @@ enum FileMode { kRead, kWrite, kAppend };
 
 // This immutable instance is just as a means to get internally stored file.
 struct FileHandle {
-    FileHandle(const std::filesystem::path& filePath, FileMode mode, void* handle)
+    FileHandle(const std::string& filePath, FileMode mode, void* handle)
         : filePath(filePath), mode(mode), handle(handle) {}
     FileHandle() = delete;
 
-    const std::filesystem::path filePath;
+    const std::string filePath;
     const FileMode mode;
     const void* handle;
 };
@@ -45,12 +44,12 @@ class FileSystem : public FileSystemInitializer {
     // PUBLIC API
 
     // Return executable directory path.
-    const std::filesystem::path& getExecutableDirectory() const;
+    std::string getExecutableDirectory() const;
     // Return user directory path.
-    const std::filesystem::path& getUserDirectory() const;
+    std::string getUserDirectory() const;
 
-    bool isFile(const std::filesystem::path& path) const;
-    bool isDirectory(const std::filesystem::path& path) const;
+    bool isFile(const std::string& path) const;
+    bool isDirectory(const std::string& path) const;
 
     /**
      * @brief
@@ -59,7 +58,7 @@ class FileSystem : public FileSystemInitializer {
      * @param mode
      * @return FileHandle
      */
-    FileHandle openFile(const std::filesystem::path& path, FileMode mode);
+    FileHandle openFile(const std::string& path, FileMode mode);
     bool closeFile(const FileHandle& fileHandle);
 
     // These two are for common operations, but they might not be the best in terms of efficiency.
@@ -72,15 +71,15 @@ class FileSystem : public FileSystemInitializer {
      * @param maxByteCount
      * @return std::string
      */
-    const std::string readFile(const std::filesystem::path& filePath, size_t maxByteCount);
+    std::string readFile(const std::string& filePath, size_t maxByteCount);
 
     // Writes to a file up to 'byteCount' bytes. If file does not exist, it is created.
-    void writeFile(const std::filesystem::path& filePath, const char* data, size_t byteCount);
+    void writeFile(const std::string& filePath, const char* data, size_t byteCount);
 
    private:
     const ProjectConfig& _projectConfig;
-    const std::filesystem::path _executablePath;
-    const std::filesystem::path _prefsDirectory;
+    const std::string _executablePath;
+    const std::string _prefsDirectory;
     std::unordered_map<const void*, const FileHandle> _openedFiles;
 };
 

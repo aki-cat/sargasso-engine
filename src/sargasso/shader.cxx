@@ -24,13 +24,13 @@ void ShaderProgram::use() const {
 }
 
 void ShaderProgram::setMat4Uniform(const std::string& var, const sml::Mat4& value) const {
-    const int mat4Location = glGetUniformLocation(_shaderProgram, var.c_str());
+    const int mat4Location = glGetUniformLocation(_shaderProgram, (const char*) var.c_str());
     glUniformMatrix4fv(mat4Location, 1, false, (const float*) &value);
 }
 
 uint ShaderProgram::compileShader(const ShaderType shaderType, const std::string& shaderCode) {
     uint shader = glCreateShader(shaderType);
-    const char* rawCode = shaderCode.c_str();
+    const char* rawCode = (const char*) shaderCode.c_str();
     glShaderSource(shader, 1, &rawCode, NULL);
     glCompileShader(shader);
 
