@@ -7,10 +7,10 @@
 
 using sargasso::Engine;
 using sargasso::ProjectConfig;
+using sargasso::uint;
 using sargasso::common::Log;
 using sargasso::common::Reference;
 using sargasso::geometry::Rect;
-using sargasso::uint;
 
 const uint WINDOW_WIDTH = 1024;
 const uint WINDOW_HEIGHT = 576;
@@ -71,8 +71,9 @@ void Game::load() {
     }
 }
 
-void Game::update(const double) {
+void Game::update(const double dt) {
     static const Log logger("Game::update()");
+    logger.debug("FPS = %.3f", 1.0 / dt);
 }
 
 void Game::draw() {
