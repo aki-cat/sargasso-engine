@@ -4,6 +4,7 @@
 #include "sargasso/common/typedefs.h"
 #include "sargasso/project_config.h"
 
+#include <string>
 #include <unordered_map>
 
 namespace sargasso {
