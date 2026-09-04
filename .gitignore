@@ -27,3 +27,6 @@ CMakeFiles/
 Makefile
 bin/
 cmake_install.cmake
+
+# Clangd
+.cache/
