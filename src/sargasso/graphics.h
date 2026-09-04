@@ -10,8 +10,8 @@
 
 #include <GL/gl3w.h>
 #include <GLFW/glfw3.h>
-#include <cstdint>
 #include <map>
+#include <sml/color.h>
 #include <sml/constants.h>
 #include <sml/matrix4.h>
 
@@ -34,7 +34,7 @@ class Graphics {
     void drawMesh(const geometry::Mesh& mesh, const sml::Mat4& transform);
 
     // specific drawing methods
-    common::Reference<geometry::Rect> newRect(float w, float h);
+    common::Reference<geometry::Rect> newRect(float w, float h, const sml::Color& color);
     void drawRect(const common::Reference<geometry::Rect>& rect);
 
     // mutable viewport methods

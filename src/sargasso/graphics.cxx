@@ -9,8 +9,8 @@
 
 #include <GL/gl3w.h>
 #include <GLFW/glfw3.h>
-#include <cstdint>
 #include <map>
+#include <sml/color.h>
 #include <sml/constants.h>
 #include <sml/matrix4.h>
 
@@ -56,8 +56,8 @@ void Graphics::drawMesh(const geometry::Mesh& mesh, const sml::Mat4& transform) 
     glDrawElements(GL_TRIANGLES, (GLsizei) (mesh.getTriPlaneCount() * 3), GL_UNSIGNED_INT, NULL);
 }
 
-common::Reference<geometry::Rect> Graphics::newRect(float w, float h) {
-    common::Reference<geometry::Rect> rect = new geometry::Rect(w, h);
+common::Reference<geometry::Rect> Graphics::newRect(float w, float h, const sml::Color& color) {
+    common::Reference<geometry::Rect> rect = new geometry::Rect(w, h, color);
     loadMesh(rect->getMesh());
     return rect;
 }

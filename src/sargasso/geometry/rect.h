@@ -4,7 +4,6 @@
 #include "sargasso/geometry/mesh.h"
 #include "sargasso/geometry/vertex.h"
 
-#include <random>
 #include <sml/color.h>
 #include <sml/matrix4.h>
 #include <sml/vector3.h>
@@ -22,17 +21,19 @@ inline sml::Color randColor() {
 
 class Rect {
    public:
-    Rect(float width, float height)
+    Rect(float width, float height, const sml::Color& color)
         : _width(width),
           _height(height),
           _transform(sml::Mat4::identity()),
           _mesh(
               std::vector<Vertex>{
-                  Vertex{sml::Vec3(-.5f * width, -.5f * height, 0), sml::Color::white(), {}, 0.f, 0.f},
-                  Vertex{sml::Vec3(+.5f * width, -.5f * height, 0), sml::Color::white(), {}, 1.f, 0.f},
-                  Vertex{sml::Vec3(+.5f * width, +.5f * height, 0), sml::Color::white(), {}, 1.f, 1.f},
-                  Vertex{sml::Vec3(-.5f * width, +.5f * height, 0), sml::Color::white(), {}, 0.f, 1.f}},
+                  Vertex{sml::Vec3(-.5f * width, -.5f * height, 0), color, {}, {0.f, 0.f}},
+                  Vertex{sml::Vec3(+.5f * width, -.5f * height, 0), color, {}, {1.f, 0.f}},
+                  Vertex{sml::Vec3(+.5f * width, +.5f * height, 0), color, {}, {1.f, 1.f}},
+                  Vertex{sml::Vec3(-.5f * width, +.5f * height, 0), color, {}, {0.f, 1.f}}},
               std::vector<IndexTriPlane>{IndexTriPlane{0, 1, 2}, IndexTriPlane{2, 3, 0}}) {}
+
+    Rect(float width, float height) : Rect(width, height, sml::Color::white()) {}
 
     const Mesh& getMesh() const {
         return *&_mesh;
@@ -40,6 +41,14 @@ class Rect {
 
     const sml::Mat4& getTransform() const {
         return _transform;
+    }
+
+    float width() const {
+        return _width;
+    }
+
+    float height() const {
+        return _height;
     }
 
     void setTransform(const sml::Mat4& transform) {

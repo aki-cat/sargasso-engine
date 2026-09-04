@@ -1,6 +1,9 @@
 
 #include <cstdlib>
+#include <sargasso/common/log.h>
 #include <sargasso/engine.h>
+#include <sargasso/geometry/rect.h>
+#include <sml/color.h>
 #include <sml/sml.h>
 #include <string>
 
@@ -60,7 +63,7 @@ void Game::load() {
     float unit = 1.f;
     for (uint x = 0; x < WIDTH_UNITS; x++) {
         for (uint y = 0; y < HEIGHT_UNITS; y++) {
-            auto rect = _graphics.newRect(unit, unit);
+            auto rect = _graphics.newRect(unit, unit, sml::Color::random());
             const float posX = .5f * unit + x * unit - unit * WIDTH_UNITS * .5f;
             const float posY = .5f * unit + y * unit - unit * HEIGHT_UNITS * .5f;
             const sml::Vec3 pos(posX, posY, 0);

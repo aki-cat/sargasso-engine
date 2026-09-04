@@ -4,7 +4,7 @@
 #include "sargasso/geometry/vertex.h"
 
 #include <cstdlib>
-#include <cstdint>
+#include <sml/color.h>
 #include <vector>
 
 namespace sargasso {
