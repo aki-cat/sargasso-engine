@@ -1,5 +1,4 @@
 
-#include <cstdint>
 #include <cstdlib>
 #include <sargasso/engine.h>
 #include <sml/sml.h>

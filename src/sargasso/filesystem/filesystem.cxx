@@ -1,10 +1,7 @@
 #include "sargasso/filesystem/filesystem.h"
 
 #include "sargasso/common/log.h"
-#include "sargasso/common/typedefs.h"
-#include "sargasso/config.h"
 
-#include <exception>
 #include <filesystem>
 #include <physfs.h>
 #include <sstream>
@@ -156,8 +153,8 @@ std::string FileSystem::readFile(const std::string& filePath, size_t maxByteCoun
 void FileSystem::writeFile(const std::string& filePath, const char* data, size_t maxByteCount) {
     const auto fileHandle = openFile(filePath, FileMode::kWrite);
 
-    CHECK_SUCCESS(PHYSFS_writeBytes(FileReference{fileHandle.handle}, data, maxByteCount) ==
-                  maxByteCount);
+    CHECK_SUCCESS(static_cast<size_t>(PHYSFS_writeBytes(FileReference{fileHandle.handle}, data,
+                                                        maxByteCount)) == maxByteCount);
     CHECK_SUCCESS(closeFile(fileHandle));
 }
 
@@ -194,7 +191,7 @@ bool FileSystem::closeFile(const FileHandle& fileHandle) {
 // private
 
 // Set game project directory, where we'll read the game's definition data from.
-static bool setGameDirectory(const FileSystem& fileSystem) {
+static bool setGameDirectory(const FileSystem& ) {
     if (!PHYSFS_isInit()) {
         return false;
     }

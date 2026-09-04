@@ -1,7 +1,7 @@
 #ifndef SARGASSO_PROJECT_CONFIG_H_
 #define SARGASSO_PROJECT_CONFIG_H_
 
-#include <cstdint>
+#include "sargasso/common/typedefs.h"
 
 namespace sargasso {
 

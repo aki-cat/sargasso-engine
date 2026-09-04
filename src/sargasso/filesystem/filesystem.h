@@ -1,7 +1,6 @@
 #ifndef SARGASSO_FILESYSTEM_FILESYSTEM_H_
 #define SARGASSO_FILESYSTEM_FILESYSTEM_H_
 
-#include "sargasso/common/typedefs.h"
 #include "sargasso/project_config.h"
 
 #include <string>
