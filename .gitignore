@@ -5,8 +5,7 @@
 .sconsign.dblite
 
 # Build
-/minimal/build/
-/build/
+build/
 /lib/
 /bin/
 *.o
