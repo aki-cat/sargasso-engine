@@ -19,9 +19,6 @@ class Mesh {
     explicit Mesh(const std::vector<Vertex>& vertices, const std::vector<IndexTriPlane>& triPlanes)
         : _vertices(vertices), _triPlanes(triPlanes) {}
 
-    Mesh(const Mesh&) = delete;
-    Mesh& operator=(const Mesh&) = delete;
-
     size_t getVertexCount() const {
         return _vertices.size();
     }

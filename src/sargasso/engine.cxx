@@ -8,8 +8,6 @@
 #include <algorithm>
 #include <chrono>
 #include <cstdlib>
-#include <exception>
-#include <random>
 
 namespace sargasso {
 

@@ -1,5 +1,6 @@
 #include "sargasso/graphics.h"
 
+#include "sargasso/common/log.h"
 #include "sargasso/common/reference.h"
 #include "sargasso/common/typedefs.h"
 #include "sargasso/geometry/mesh.h"
@@ -13,6 +14,7 @@
 #include <sml/color.h>
 #include <sml/constants.h>
 #include <sml/matrix4.h>
+#include <stdexcept>
 
 namespace sargasso {
 
@@ -51,7 +53,20 @@ void Graphics::drawMesh(const geometry::Mesh& mesh, const sml::Mat4& transform) 
     _shaderProgram->use();
     _shaderProgram->setMat4Uniform("projMatrix", getProjection());
     _shaderProgram->setMat4Uniform("transform", transform);
-    uint vaoId = _vaoIds.at(&mesh);
+
+    uint vaoId;
+    {
+        auto pair = _vaoIds.find(&mesh);
+        if (pair == _vaoIds.end()) {
+            loadMesh(mesh);
+        }
+        try {
+            vaoId = _vaoIds.at(&mesh);
+        } catch (const std::out_of_range& e) {
+            common::Log("Graphics::drawMesh()").error(e.what());
+        }
+    }
+
     glBindVertexArray(vaoId);
     glDrawElements(GL_TRIANGLES, (GLsizei) (mesh.getTriPlaneCount() * 3), GL_UNSIGNED_INT, NULL);
 }

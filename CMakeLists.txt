@@ -9,14 +9,16 @@ message(STATUS "CMAKE_BUILD_TYPE is '${CMAKE_BUILD_TYPE}'")
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/src")
 
-file(GLOB_RECURSE EXAMPLE_ALL_SOURCE_FILES "${PROJECT_SOURCE_DIR}/example/*.cxx")
-
-add_executable(Sample ${EXAMPLE_ALL_SOURCE_FILES})
+add_executable(SampleRect "${PROJECT_SOURCE_DIR}/example/rect.cxx")
+add_executable(SampleCube "${PROJECT_SOURCE_DIR}/example/cube.cxx")
 
 if(MSVC)
-    target_compile_options(Sample PRIVATE /W3 /WX /Od)
+    target_compile_options(SampleRect PRIVATE /W3 /WX /Od)
+    target_compile_options(SampleCube PRIVATE /W3 /WX /Od)
 else(MSVC)
-    target_compile_options(Sample PRIVATE -Wextra -pedantic -Werror -Wall -static-libgcc -static-libstdc++)
+    target_compile_options(SampleRect PRIVATE -Wextra -pedantic -Werror -Wall -static-libgcc -static-libstdc++ -O0)
+    target_compile_options(SampleCube PRIVATE -Wextra -pedantic -Werror -Wall -static-libgcc -static-libstdc++ -O0)
 endif(MSVC)
 
-target_link_libraries(Sample SargassoEngine)
+target_link_libraries(SampleRect SargassoEngine)
+target_link_libraries(SampleCube SargassoEngine)

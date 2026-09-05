@@ -22,7 +22,6 @@ const uint HEIGHT_UNITS = (uint) (1.f * WINDOW_HEIGHT / PPU);
 const uint WIDTH_UNITS = (uint) (1.f * HEIGHT_UNITS * WINDOW_WIDTH / WINDOW_HEIGHT);
 
 Reference<Rect> sampleRects[WIDTH_UNITS][HEIGHT_UNITS];
-float rWidth, rHeight;
 
 class Game : public Engine {
    public:
@@ -37,7 +36,7 @@ class Game : public Engine {
 
 int main(int, const char** argv) {
     static const Log logger("main");
-    logger.info("[%s] Starting example project...", argv[0]);
+    logger.info("[%s] Starting example project RECT...", argv[0]);
 
     try {
         const ProjectConfig projectConfig = {"Example Project", "coffeecat", "1.0", WINDOW_WIDTH,
